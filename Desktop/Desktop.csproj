@@ -1,0 +1,548 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{29F5765B-0EB4-4646-A4B6-872845BD9A16}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Desktop</RootNamespace>
+    <AssemblyName>Desktop</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\Mirandinha\Desktop\PublicacaoSisGUAPA\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>9</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon_sisguapa.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>SisGUAPA.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr3.Runtime.3.5.2-rc1\lib\net40-client\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper, Version=27.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.27.2.1\lib\net47\CsvHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf, Version=3.19.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Protobuf.3.19.1\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.4.0.4\lib\net461\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4, Version=1.2.16.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.1.2.16\lib\net46\K4os.Compression.LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Compression.LZ4.Streams, Version=1.2.16.0, Culture=neutral, PublicKeyToken=2186fa9121ef231d, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Compression.LZ4.Streams.1.2.16\lib\net46\K4os.Compression.LZ4.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="K4os.Hash.xxHash, Version=1.0.7.0, Culture=neutral, PublicKeyToken=32cd54395057cec3, processorArchitecture=MSIL">
+      <HintPath>..\packages\K4os.Hash.xxHash.1.0.7\lib\net46\K4os.Hash.xxHash.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=8.0.27.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.27\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=5.3.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernate.5.3.10\lib\net461\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq.EagerFetching, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.EagerFetching.2.2.0\lib\net45\Remotion.Linq.EagerFetching.dll</HintPath>
+    </Reference>
+    <Reference Include="Renci.SshNet, Version=2020.0.1.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\packages\SSH.NET.2020.0.1\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.115.5\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.115.5\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tulpep.NotificationWindow, Version=1.1.38.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tulpep.NotificationWindow.1.1.38\lib\net40\Tulpep.NotificationWindow.dll</HintPath>
+    </Reference>
+    <Reference Include="Ubiety.Dns.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.27\lib\net452\Ubiety.Dns.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ZstdNet, Version=1.4.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.8.0.27\lib\net452\ZstdNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\AnimalAuxiliar.cs" />
+    <Compile Include="Classes\Email.cs" />
+    <Compile Include="Classes\Enumeracoes.cs" />
+    <Compile Include="Classes\FuncoesGerais.cs" />
+    <Compile Include="Classes\GeraLog.cs" />
+    <Compile Include="Classes\Global.cs" />
+    <Compile Include="Classes\Telas.cs" />
+    <Compile Include="Forms\FormCadastroAtendimento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroAtendimento.Designer.cs">
+      <DependentUpon>FormCadastroAtendimento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroHospedagem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroHospedagem.Designer.cs">
+      <DependentUpon>FormCadastroHospedagem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroLarTemporario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroLarTemporario.Designer.cs">
+      <DependentUpon>FormCadastroLarTemporario.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroColaboradorExterno.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroColaboradorExterno.Designer.cs">
+      <DependentUpon>FormCadastroColaboradorExterno.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroAdocao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroAdocao.Designer.cs">
+      <DependentUpon>FormCadastroAdocao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAgendamentoAtendimento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAgendamentoAtendimento.Designer.cs">
+      <DependentUpon>FormAgendamentoAtendimento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroColaborador.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroColaborador.Designer.cs">
+      <DependentUpon>FormCadastroColaborador.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroPatologia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroPatologia.Designer.cs">
+      <DependentUpon>FormCadastroPatologia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroTipoAtendimento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroTipoAtendimento.Designer.cs">
+      <DependentUpon>FormCadastroTipoAtendimento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormConsultaAdocao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormConsultaAdocao.Designer.cs">
+      <DependentUpon>FormConsultaAdocao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormConsultaAtendimento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormConsultaAtendimento.Designer.cs">
+      <DependentUpon>FormConsultaAtendimento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormConsultaEntidade.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormConsultaEntidade.Designer.cs">
+      <DependentUpon>FormConsultaEntidade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormConsultaTratamento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormConsultaTratamento.Designer.cs">
+      <DependentUpon>FormConsultaTratamento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormEncerraHospedagem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEncerraHospedagem.Designer.cs">
+      <DependentUpon>FormEncerraHospedagem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormEstatisticas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEstatisticas.Designer.cs">
+      <DependentUpon>FormEstatisticas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormConsultaHospedagem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormConsultaHospedagem.Designer.cs">
+      <DependentUpon>FormConsultaHospedagem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormLoginNovo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormLoginNovo.Designer.cs">
+      <DependentUpon>FormLoginNovo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroMedicamento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroMedicamento.Designer.cs">
+      <DependentUpon>FormCadastroMedicamento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormRealizaAtendimento.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormRealizaAtendimento.Designer.cs">
+      <DependentUpon>FormRealizaAtendimento.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormRegras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormRegras.Designer.cs">
+      <DependentUpon>FormRegras.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Relatorios\Campos\ImpAnimal.cs" />
+    <Compile Include="Relatorios\Campos\ImpAdotante.cs" />
+    <Compile Include="Relatorios\CSVs\CSVAnimal.cs" />
+    <Compile Include="Forms\FormCadastroAnimal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroAnimal.Designer.cs">
+      <DependentUpon>FormCadastroAnimal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroAnimalAuxiliar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroAnimalAuxiliar.Designer.cs">
+      <DependentUpon>FormCadastroAnimalAuxiliar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormBase.Designer.cs">
+      <DependentUpon>FormBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormConsultaAnimal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormConsultaAnimal.Designer.cs">
+      <DependentUpon>FormConsultaAnimal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormCadastroEntidade.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormCadastroEntidade.Designer.cs">
+      <DependentUpon>FormCadastroEntidade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormLogin.Designer.cs">
+      <DependentUpon>FormLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Relatorios\CSVs\FabricaCSV.cs" />
+    <Compile Include="Relatorios\PDFs\FabricaPDF.cs" />
+    <Compile Include="Relatorios\PDFs\ItensPDF.cs" />
+    <Compile Include="Relatorios\PDFs\PDFArquivo.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="icon_sisguapa.ico" />
+    <None Include="packages.config" />
+    <None Include="Resources\entidades_48.png" />
+    <None Include="Resources\atendimentos_48.png" />
+    <None Include="Resources\lar_temporario_481.png" />
+    <None Include="Resources\pet_48.png" />
+    <None Include="Resources\adocao_48_.png" />
+    <None Include="Resources\entidade_48.png" />
+    <None Include="Resources\lar_temporario.png" />
+    <None Include="Resources\adocao_481.png" />
+    <None Include="Resources\icons8-shelter-48.png" />
+    <None Include="Resources\adocao_48.png" />
+    <None Include="Resources\pata_botao_48.png" />
+    <None Include="Resources\pata_48.png" />
+    <None Include="Resources\atendimento_48.png" />
+    <None Include="Resources\tratamento_48.png" />
+    <None Include="Resources\lar_temporario_48.png" />
+    <None Include="Resources\reagendar_azul_24.png" />
+    <None Include="Resources\reagendar_24.png" />
+    <None Include="Resources\realizar_cancelar_24.png" />
+    <None Include="Resources\realizar_ok_24.png" />
+    <None Include="Resources\realizar_24.png" />
+    <None Include="Resources\icons8-sair-24.png" />
+    <None Include="Resources\icons8-pet-24.png" />
+    <None Include="Resources\pet_24_verde.png" />
+    <None Include="Resources\pet_24.png" />
+    <None Include="Resources\icons8-login-arredondado-à-direita-50.png" />
+    <None Include="Resources\icons8-login-arredondado-à-direita-48.png" />
+    <None Include="Resources\icons8-login-arredondado-à-direita-75.png" />
+    <None Include="Resources\icons8-trancar-50.png" />
+    <None Include="Resources\icons8-desligar-50 %281%29.png" />
+    <None Include="Resources\icons8-desligar-100.png" />
+    <None Include="Resources\icons8-desligar-50.png" />
+    <None Include="Resources\icons8-conta-de-login-da-conta-da-nuvem-50.png" />
+    <None Include="Resources\icons8-conta-de-login-da-conta-da-nuvem-30.png" />
+    <None Include="Resources\icons8-esqueci-a-senha-30.png" />
+    <None Include="Resources\animais_abrigo1.png" />
+    <None Include="Resources\icons8-fechar-janela-50.png" />
+    <None Include="Resources\icons8-entrar-48.png" />
+    <None Include="Resources\icons8-calendar-48.png" />
+    <None Include="Resources\calendario-48.png" />
+    <None Include="Resources\tooltip-24.png" />
+    <None Include="Resources\prontuario-24.png" />
+    <None Include="Resources\icons8-medical-history-49.png" />
+    <None Include="Repositorio.Entidades.Animal.datasource" />
+    <None Include="Resources\estatistica-48.png" />
+    <EmbeddedResource Include="Forms\FormCadastroAtendimento.resx">
+      <DependentUpon>FormCadastroAtendimento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroHospedagem.resx">
+      <DependentUpon>FormCadastroHospedagem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroLarTemporario.resx">
+      <DependentUpon>FormCadastroLarTemporario.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroColaboradorExterno.resx">
+      <DependentUpon>FormCadastroColaboradorExterno.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroAdocao.resx">
+      <DependentUpon>FormCadastroAdocao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormAgendamentoAtendimento.resx">
+      <DependentUpon>FormAgendamentoAtendimento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroColaborador.resx">
+      <DependentUpon>FormCadastroColaborador.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroPatologia.resx">
+      <DependentUpon>FormCadastroPatologia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroTipoAtendimento.resx">
+      <DependentUpon>FormCadastroTipoAtendimento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormConsultaAdocao.resx">
+      <DependentUpon>FormConsultaAdocao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormConsultaAtendimento.resx">
+      <DependentUpon>FormConsultaAtendimento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormConsultaEntidade.resx">
+      <DependentUpon>FormConsultaEntidade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormConsultaTratamento.resx">
+      <DependentUpon>FormConsultaTratamento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormEncerraHospedagem.resx">
+      <DependentUpon>FormEncerraHospedagem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormEstatisticas.resx">
+      <DependentUpon>FormEstatisticas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroAnimal.resx">
+      <DependentUpon>FormCadastroAnimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroAnimalAuxiliar.resx">
+      <DependentUpon>FormCadastroAnimalAuxiliar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormBase.resx">
+      <DependentUpon>FormBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormConsultaAnimal.resx">
+      <DependentUpon>FormConsultaAnimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroEntidade.resx">
+      <DependentUpon>FormCadastroEntidade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormConsultaHospedagem.resx">
+      <DependentUpon>FormConsultaHospedagem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormLoginNovo.resx">
+      <DependentUpon>FormLoginNovo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormLogin.resx">
+      <DependentUpon>FormLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormCadastroMedicamento.resx">
+      <DependentUpon>FormCadastroMedicamento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormRealizaAtendimento.resx">
+      <DependentUpon>FormRealizaAtendimento.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormRegras.resx">
+      <DependentUpon>FormRegras.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Include="InfraNHibernate\NHibernateHelper.cs" />
+    <Content Include="DBLocalSQLite.db.sqbpro">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Desktop_TemporaryKey.pfx" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="hibernate.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\salvar-241.png" />
+    <None Include="Resources\cancelar-24.png" />
+    <None Include="Resources\salvar-24.png" />
+    <None Include="Resources\animais_abrigo.png" />
+    <None Include="Imagens\Csv-24.png" />
+    <None Include="Imagens\Pdf-24.png" />
+    <None Include="Imagens\Novo-24.png" />
+    <None Include="Imagens\Lixeira-24.png" />
+    <None Include="Imagens\Editar-lapis-24.png" />
+    <None Include="Imagens\Editar-24.png" />
+    <None Include="Imagens\Adicionar-24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Repositorio\Repositorio.csproj">
+      <Project>{a3bc473a-f5f0-4015-910b-39a4c8948553}</Project>
+      <Name>Repositorio</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Import Project="packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+</Project>
