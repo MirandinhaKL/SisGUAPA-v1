@@ -329,6 +329,7 @@
             this.txtID.Name = "txtID";
             this.txtID.Size = new System.Drawing.Size(119, 20);
             this.txtID.TabIndex = 2;
+            this.txtID.TextChanged += new System.EventHandler(this.txtID_TextChanged);
             // 
             // label30
             // 

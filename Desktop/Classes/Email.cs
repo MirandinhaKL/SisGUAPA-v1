@@ -72,8 +72,7 @@ namespace Desktop.Classes
                 {
                     return emailNaoEnviado;
                 }
-
-
+                
                 return string.Empty;
             }
         }

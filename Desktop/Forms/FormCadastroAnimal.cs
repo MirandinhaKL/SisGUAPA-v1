@@ -163,6 +163,12 @@ namespace Desktop.Forms
                 dadosValidos = false;
             }
 
+            if (dtpNascimento.Value > DateTime.Now)
+            {
+                errorTxt.SetError(dtpNascimento, "A data de nascimento dever ser anterior ou iagual ao dia de hoje.");
+                dadosValidos = false;
+            }
+
             if (!dadosValidos)
                 tabCadastroAnimal.SelectedTab = tabAnimal;
 

@@ -36,6 +36,7 @@ namespace Desktop.Forms
             CarregarComboStauts();
             CarregarComboCastrado();
             CarregarComboFaixaEtaria();
+            CarregarAnimais();
         }
 
         private void CarregarTooltips()
@@ -208,12 +209,20 @@ namespace Desktop.Forms
                     AnimaisFiltrados = AnimalAuxiliar.GetTodasIdadesClassificadas(AnimaisFiltrados, idade);
             }
 
+            CarregarListViewAnimais(AnimaisFiltrados);
+
+            this.Cursor = Cursors.Default;
+            return AnimaisFiltrados?.Count > 0;
+        }
+
+        private void CarregarListViewAnimais(List<Animal> animais)
+        {
             lvAnimal.Items.Clear();
             var contaLinha = 0;
 
-            if (AnimaisFiltrados.Any())
+            if (animais.Any())
             {
-                foreach (var item in AnimaisFiltrados)
+                foreach (var item in animais)
                 {
                     var lvi = new ListViewItem();
 
@@ -234,9 +243,6 @@ namespace Desktop.Forms
                     lvAnimal.Items.Add(lvi);
                 }
             }
-
-            this.Cursor = Cursors.Default;
-            return AnimaisFiltrados?.Count > 0;
         }
 
         private void btnLimpar_Click(object sender, EventArgs e)
@@ -402,6 +408,24 @@ namespace Desktop.Forms
             if (Convert.ToInt32(lvAnimal.SelectedItems[0].SubItems[0].Text) is int idAnimal)
                 animal = Animais.FirstOrDefault(k => k.Id == idAnimal);
             return animal;
+        }
+
+        private void txtID_TextChanged(object sender, EventArgs e)
+        {
+            var filtro = txtID.Text == string.Empty ? string.Empty : txtID.Text.ToLower();
+
+            if (filtro.Length > 0)
+            {
+                var animaisFiltrados = Animais.FindAll(
+                    animal => animal.Identificacao.ToLower().Contains(filtro) ||
+                              animal.Nome.ToLower().Contains(txtID.Text));
+
+                CarregarListViewAnimais(animaisFiltrados);
+            }
+            else
+            {
+                CarregarListViewAnimais(Animais);
+            }
         }
     }
 }

@@ -259,7 +259,7 @@ namespace Desktop.Forms
                 {
                     FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
                     CarregaListViewAdocoes(_adotante.Adocoes);
-                    LimparCamposAdocao();
+                    this.Close();
                 }
                 else
                 {
@@ -613,5 +613,3 @@ namespace Desktop.Forms
         #endregion Eventos
     }
 }
-
-

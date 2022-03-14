@@ -239,7 +239,7 @@
             this.panel6.Controls.Add(this.label17);
             this.panel6.Location = new System.Drawing.Point(9, 22);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(352, 144);
+            this.panel6.Size = new System.Drawing.Size(355, 144);
             this.panel6.TabIndex = 34;
             // 
             // txtCEP
