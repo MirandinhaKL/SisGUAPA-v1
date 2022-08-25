@@ -1,5 +1,6 @@
 ﻿using Desktop.Classes;
 using Repositorio.Classes;
+using Repositorio.ClassesGerais;
 using Repositorio.Entidades;
 using System;
 using System.Collections.Generic;
@@ -92,47 +93,47 @@ namespace Desktop.Forms
             {
                 var medicamento = (Medicamento)cbMedicamento1.Items[cbMedicamento1.SelectedIndex];
                 tratamento.Medicamento1 = medicamento;
-                tratamento.EnumStatusMedicacao1 = (int)Enumeracoes.EnumStatusMedicacao.naoIniciado;
+                tratamento.EnumStatusMedicacao1 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoIniciado;
                 possuiTratamento = true;
             }
             else
-                tratamento.EnumStatusMedicacao1 = (int)Enumeracoes.EnumStatusMedicacao.naoPossui;
+                tratamento.EnumStatusMedicacao1 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoPossui;
 
             if (cbMedicamento2.SelectedIndex > 0)
             {
                 var medicamento = (Medicamento)cbMedicamento2.Items[cbMedicamento2.SelectedIndex];
                 tratamento.Medicamento2 = medicamento;
-                tratamento.EnumStatusMedicacao2 = (int)Enumeracoes.EnumStatusMedicacao.naoIniciado;
+                tratamento.EnumStatusMedicacao2 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoIniciado;
             }
             else
-                tratamento.EnumStatusMedicacao2 = (int)Enumeracoes.EnumStatusMedicacao.naoPossui;
+                tratamento.EnumStatusMedicacao2 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoPossui;
 
             if (cbMedicamento3.SelectedIndex > 0)
             {
                 var medicamento = (Medicamento)cbMedicamento3.Items[cbMedicamento3.SelectedIndex];
                 tratamento.Medicamento3 = medicamento;
-                tratamento.EnumStatusMedicacao3 = (int)Enumeracoes.EnumStatusMedicacao.naoIniciado;
+                tratamento.EnumStatusMedicacao3 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoIniciado;
             }
             else
-                tratamento.EnumStatusMedicacao3 = (int)Enumeracoes.EnumStatusMedicacao.naoPossui;
+                tratamento.EnumStatusMedicacao3 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoPossui;
 
             if (cbMedicamento4.SelectedIndex > 0)
             {
                 var medicamento = (Medicamento)cbMedicamento4.Items[cbMedicamento4.SelectedIndex];
                 tratamento.Medicamento4 = medicamento;
-                tratamento.EnumStatusMedicacao4 = (int)Enumeracoes.EnumStatusMedicacao.naoIniciado;
+                tratamento.EnumStatusMedicacao4 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoIniciado;
             }
             else
-                tratamento.EnumStatusMedicacao4 = (int)Enumeracoes.EnumStatusMedicacao.naoPossui;
+                tratamento.EnumStatusMedicacao4 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoPossui;
 
             if (cbMedicamento5.SelectedIndex > 0)
             {
                 var medicamento = (Medicamento)cbMedicamento5.Items[cbMedicamento5.SelectedIndex];
                 tratamento.Medicamento5 = medicamento;
-                tratamento.EnumStatusMedicacao5 = (int)Enumeracoes.EnumStatusMedicacao.naoIniciado;
+                tratamento.EnumStatusMedicacao5 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoIniciado;
             }
             else
-                tratamento.EnumStatusMedicacao5 = (int)Enumeracoes.EnumStatusMedicacao.naoPossui;
+                tratamento.EnumStatusMedicacao5 = (int)EnumeracoesClasses.EnumStatusMedicacao.naoPossui;
 
             if (possuiTratamento)
                 tratamento.EnumStatusTratamento = (int)Enumeracoes.EnumStatusTratamento.naoIniciado;

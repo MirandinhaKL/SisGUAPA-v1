@@ -16,12 +16,14 @@ namespace Repositorio.Entidades
         public virtual DateTime DataExecucao { get; set; }
         public virtual int EnumStatusControleMedicação { get; set; }
 
-
         #region Relacionamentos
 
         public virtual Entidade Entidade { get; set; }
+        public virtual Tratamento Tratamento { get; set; }
         public virtual Medicamento Medicamento { get; set; }
         
+        //public virtual Atendimento Atendimento { get; set; }
+
         #endregion
     }
 }

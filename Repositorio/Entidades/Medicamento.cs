@@ -11,7 +11,7 @@ namespace Repositorio.Entidades
     {
         public Medicamento() 
         {
-            ControlesMedicamento = new List<ControleMedicamento>();
+            //ControlesMedicamento = new List<ControleMedicamento>();
         }
 
         #region PropriedadesHibernate
@@ -31,19 +31,19 @@ namespace Repositorio.Entidades
         #region Relacionamentos
 
         public virtual Entidade Entidade { get; set; }
-        public virtual IList<ControleMedicamento> ControlesMedicamento { get; protected set; }
+        //public virtual IList<ControleMedicamento> ControlesMedicamento { get; protected set; }
 
-        public virtual void AddControleMedicamento(ControleMedicamento controle)
-        {
-            controle.Medicamento = this;
-            ControlesMedicamento.Add(controle);
-        }
+        //public virtual void AddControleMedicamento(ControleMedicamento controle)
+        //{
+        //    controle.Medicamento = this;
+        //    ControlesMedicamento.Add(controle);
+        //}
 
-        public virtual void RemoveAdocao(ControleMedicamento controle)
-        {
-            controle.Medicamento = this;
-            ControlesMedicamento.Remove(controle);
-        }
+        //public virtual void RemoveAdocao(ControleMedicamento controle)
+        //{
+        //    controle.Medicamento = this;
+        //    ControlesMedicamento.Remove(controle);
+        //}
 
         #endregion
     }

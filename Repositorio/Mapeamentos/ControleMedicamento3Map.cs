@@ -5,9 +5,9 @@ using Repositorio.Entidades;
  */
 namespace Repositorio.Mapeamentos
 {
-    public class ControleMedicamentoMap : ClassMap<ControleMedicamento>
+    public class ControleMedicamento3Map : ClassMap<ControleMedicamento>
     {
-        public ControleMedicamentoMap()
+        public ControleMedicamento3Map()
         {
             Id(k => k.Id);
 
@@ -15,10 +15,10 @@ namespace Repositorio.Mapeamentos
             Map(k => k.EnumStatusControleMedicação);
 
             References(k => k.Entidade);
-            References(k => k.Medicamento);
-            //HasOne(k => k.Medicamento).Cascade.All().PropertyRef("ControleMedicamento");
+            References(k => k.Tratamento).Cascade.All().Not.LazyLoad();
+            References(k => k.Medicamento).Cascade.All().Not.LazyLoad();
 
-            Table("controle_medicamento");
+            Table("controle_medicamento3");
         }
     }
 }

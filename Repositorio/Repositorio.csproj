@@ -124,6 +124,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassesGerais\EnumeracoesClasses.cs" />
     <Compile Include="ClassesGerais\GeraLog.cs" />
     <Compile Include="ClassesGerais\TabelasDB.cs" />
     <Compile Include="DAO\ControleMedicamentoDAO.cs" />
@@ -187,10 +188,17 @@
     <Compile Include="ClassesGerais\EnumeracoesRep.cs" />
     <Compile Include="FluentySessionFactory.cs" />
     <Compile Include="ICrudDao.cs" />
+    <Compile Include="Interfaces\IAtendimentoService.cs" />
+    <Compile Include="Interfaces\IMedicamentoService.cs" />
+    <Compile Include="Interfaces\ITratamentoService.cs" />
     <Compile Include="Mapeamentos\AdocaoMap.cs" />
     <Compile Include="Mapeamentos\AtendimentoMap.cs" />
     <Compile Include="Mapeamentos\AdotanteMap.cs" />
-    <Compile Include="Mapeamentos\ControleMedicamentoMap.cs" />
+    <Compile Include="Mapeamentos\ControleMedicamento5Map.cs" />
+    <Compile Include="Mapeamentos\ControleMedicamento4Map.cs" />
+    <Compile Include="Mapeamentos\ControleMedicamento3Map.cs" />
+    <Compile Include="Mapeamentos\ControleMedicamento2Map.cs" />
+    <Compile Include="Mapeamentos\ControleMedicamento1Map.cs" />
     <Compile Include="Mapeamentos\EnderecoEntidadeMap.cs" />
     <Compile Include="Mapeamentos\EnderecoLarTemporarioMap.cs" />
     <Compile Include="Mapeamentos\EnderecoColaboradorExternoMap.cs" />
@@ -218,6 +226,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositorioCrudDao.cs" />
+    <Compile Include="Servicos\AgendamentoMedicamentoService.cs" />
+    <Compile Include="Servicos\AtendimentoService.cs" />
+    <Compile Include="Servicos\ControleMedicamentoService.cs" />
+    <Compile Include="Servicos\MedicamentoService.cs" />
+    <Compile Include="Servicos\TratamentoService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

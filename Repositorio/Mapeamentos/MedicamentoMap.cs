@@ -24,7 +24,7 @@ namespace Repositorio.Mapeamentos
             Map(k => k.Quantidade);
 
             References(k => k.Entidade);
-            HasMany(k => k.ControlesMedicamento).Cascade.All().Not.LazyLoad();
+            //HasMany(k => k.ControlesMedicamento).Cascade.All().Not.LazyLoad();
 
             Table("medicamento");
         }

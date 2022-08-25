@@ -7,6 +7,7 @@ namespace Repositorio
 {
     public class FluentySessionFactory
     {
+        //TODO: Utilizar uma interface para ambas bases
         private static string DadosDaConexao =
            "Server = localhost; " +
            "Database = sisguapa; " +

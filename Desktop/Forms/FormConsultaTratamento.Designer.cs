@@ -208,6 +208,7 @@
             this.btnAdiar.Text = "Adiar";
             this.btnAdiar.UseVisualStyleBackColor = true;
             this.btnAdiar.Visible = false;
+            this.btnAdiar.Click += new System.EventHandler(this.btnAdiar_Click);
             // 
             // lvTratamentos
             // 

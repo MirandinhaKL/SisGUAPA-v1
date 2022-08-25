@@ -68,8 +68,59 @@ namespace Repositorio.Classes
                         var dados = from a in Session.Query<Atendimento>()
                                     where a.Tratamento != null && a.Tratamento.EnumStatusTratamento != 0 && a.Entidade.Id == entidadeId
                                     select a;
+
                         Transaction.Commit();
-                        return dados.ToList();
+
+                        var result = dados.ToList();
+
+                        var dataFiltered = new List<Atendimento>();
+
+                        foreach (var item in result)
+                        {
+                            var controles1 = item.Tratamento.ControlesMedicamento1?.ToList();
+                            var controlesFiltrados1 = controles1?.FindAll(k => k.Medicamento?.Id == item.Tratamento.Medicamento1?.Id);
+
+                            var controles2 = item.Tratamento.ControlesMedicamento2?.ToList();
+                            var controlesFiltrados2 = controles2?.FindAll(k => k.Medicamento?.Id == item.Tratamento.Medicamento2?.Id);
+
+                            var controles3 = item.Tratamento.ControlesMedicamento3?.ToList();
+                            var controlesFiltrados3 = controles3?.FindAll(k => k.Medicamento?.Id == item.Tratamento.Medicamento3?.Id);
+
+                            var controles4 = item.Tratamento.ControlesMedicamento4?.ToList();
+                            var controlesFiltrados4 = controles4?.FindAll(k => k.Medicamento?.Id == item.Tratamento.Medicamento4?.Id);
+
+                            var controles5 = item.Tratamento.ControlesMedicamento5?.ToList();
+                            var controlesFiltrados5 = controles5?.FindAll(k => k.Medicamento?.Id == item.Tratamento.Medicamento5?.Id);
+
+                            item.Tratamento.RemoveControlesMedicamento(1);
+                            item.Tratamento.RemoveControlesMedicamento(2);
+                            item.Tratamento.RemoveControlesMedicamento(3);
+                            item.Tratamento.RemoveControlesMedicamento(4);
+                            item.Tratamento.RemoveControlesMedicamento(5);
+
+                            if (item.Tratamento.Medicamento1 != null) 
+                                foreach (var cont1 in controlesFiltrados1)
+                                    item.Tratamento.AddControleMedicamento1(cont1);
+
+                            if (item.Tratamento.Medicamento2 != null)
+                                foreach (var cont2 in controlesFiltrados2)
+                                    item.Tratamento.AddControleMedicamento2(cont2);
+
+                            if (item.Tratamento.Medicamento3 != null)
+                                foreach (var cont3 in controlesFiltrados3)
+                                    item.Tratamento.AddControleMedicamento3(cont3);
+
+                            if (item.Tratamento.Medicamento4 != null)
+                                foreach (var cont4 in controlesFiltrados4)
+                                    item.Tratamento.AddControleMedicamento4(cont4);
+
+                            if (item.Tratamento.Medicamento5 != null)
+                                foreach (var cont5 in controlesFiltrados5)
+                                    item.Tratamento.AddControleMedicamento5(cont5);
+
+                            dataFiltered.Add(item);
+                        }
+                        return dataFiltered;
                     }
                     catch (Exception exception)
                     {

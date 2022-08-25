@@ -1,20 +1,27 @@
 ﻿using Desktop.Classes;
+using Desktop.DependencyInjection;
 using Repositorio.Classes;
+using Repositorio.ClassesGerais;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Desktop.Forms
 {
     public partial class FormConsultaTratamento : Form
     {
+        private ITratamentoService _tratamentoService;
+        private IAtendimentoService _atendimentoService;
+        private IMedicamentoService _medicamentoService;
+
+        private Atendimento _atendimento;
+
+
         private List<Tratamento> _tratamentos = new List<Tratamento>();
         private List<Atendimento> _atendimentos = new List<Atendimento>();
 
@@ -25,11 +32,19 @@ namespace Desktop.Forms
         public FormConsultaTratamento()
         {
             InitializeComponent();
+            InitializeServices();
             CarregarTooltips();
             CarregarTratamentos(monthCalendar.SelectionRange.Start);
         }
 
-        private void AdicionarItemNoListView(Atendimento atendimento, Medicamento medicamento, int ordemMedicamento,int  idControleTratamento, DateTime data, string stautsTratamento)
+        private void InitializeServices()
+        {
+            _tratamentoService = IocKernel.Get<ITratamentoService>();
+            _atendimentoService = IocKernel.Get<IAtendimentoService>();
+            _medicamentoService = IocKernel.Get<IMedicamentoService>();
+        }
+
+        private void AdicionarItemNoListView(Atendimento atendimento, Medicamento medicamento, int ordemMedicamento, int idControleTratamento, DateTime data, string stautsTratamento)
         {
             var lvi = new ListViewItem();
 
@@ -46,8 +61,8 @@ namespace Desktop.Forms
 
             if (stautsTratamento.ToLower() == "não iniciado")
                 lvi.BackColor = Color.Yellow;
-           
-            else if(stautsTratamento.ToLower() == "realizado")
+
+            else if (stautsTratamento.ToLower() == "realizado")
                 lvi.BackColor = Color.LightGreen;
 
             else if (stautsTratamento.ToLower() == "não realizado")
@@ -60,12 +75,12 @@ namespace Desktop.Forms
         {
             var descricao = string.Empty;
 
-            descricao += $"{medicamento.Nome}: {medicamento.Quantidade.ToString("N2")} {FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumUnidadeMedicamentos)medicamento.EnumUnidadeMedicamentos).ToLower()} ";
-           
+            descricao += $"{medicamento.Nome}: {medicamento.Quantidade.ToString("N2")} {FuncoesGerais.GetDescricaoEnum((EnumeracoesClasses.EnumUnidadeMedicamentos)medicamento.EnumUnidadeMedicamentos).ToLower()} ";
+
             var duracao = medicamento.Duracao > 0 ? $"por {medicamento.Duracao} dias - " : "sem previsão de término - ";
             descricao += duracao;
-           
-            var frequencia = FuncoesGerais.GetDescricaoFrequenciaIngestao(medicamento.EnumFrequenciaIngestao, medicamento.AuxiliarX, medicamento.AuxiliarY, medicamento.DiasDaSemana).ToLower();
+
+            var frequencia = EnumeracoesClasses.GetDescricaoFrequenciaIngestao(medicamento.EnumFrequenciaIngestao, medicamento.AuxiliarX, medicamento.AuxiliarY, medicamento.DiasDaSemana).ToLower();
             descricao += frequencia;
 
             return descricao;
@@ -73,7 +88,7 @@ namespace Desktop.Forms
 
         private void AdicionarTratamentosNaoIniciadosNoListView(Atendimento atendimento)
         {
-            var statusNaoIniciado = (int)Enumeracoes.EnumStatusMedicacao.naoIniciado;
+            var statusNaoIniciado = (int)EnumeracoesClasses.EnumStatusMedicacao.naoIniciado;
             var descricaoStatusNaoIniciado = FuncoesGerais.GetDescricaoEnum(Enumeracoes.EnumStatusTratamento.naoIniciado);
 
             if (atendimento.Tratamento.EnumStatusMedicacao1 == statusNaoIniciado)
@@ -95,26 +110,26 @@ namespace Desktop.Forms
 
         private bool PodeAdicionarItem(int enumStatusMedicacao)
         {
-            return enumStatusMedicacao == (int)Enumeracoes.EnumStatusMedicacao.agendado ||
-                   enumStatusMedicacao == (int)Enumeracoes.EnumStatusMedicacao.encerrado ||
-                   enumStatusMedicacao == (int)Enumeracoes.EnumStatusMedicacao.iniciado;
+            return enumStatusMedicacao == (int)EnumeracoesClasses.EnumStatusMedicacao.agendado ||
+                   enumStatusMedicacao == (int)EnumeracoesClasses.EnumStatusMedicacao.encerrado ||
+                   enumStatusMedicacao == (int)EnumeracoesClasses.EnumStatusMedicacao.iniciado;
         }
 
         private string GetDescricaoStatusTratamento(int enumStatusControleMedicação)
         {
             SetNumerosTratamentos(enumStatusControleMedicação);
-            return FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumStatusControleMedicação)enumStatusControleMedicação);
+            return FuncoesGerais.GetDescricaoEnum((EnumeracoesClasses.EnumStatusControleMedicação)enumStatusControleMedicação);
         }
 
         private void SetNumerosTratamentos(int enumStatusControleMedicação)
         {
-            if (enumStatusControleMedicação == (int)Enumeracoes.EnumStatusControleMedicação.realizado)
+            if (enumStatusControleMedicação == (int)EnumeracoesClasses.EnumStatusControleMedicação.realizado)
             {
                 _numTratamentosRealizados++;
                 _numAgendamentos++;
             }
 
-            if (enumStatusControleMedicação == (int)Enumeracoes.EnumStatusControleMedicação.naoRealizado)
+            if (enumStatusControleMedicação == (int)EnumeracoesClasses.EnumStatusControleMedicação.naoRealizado)
             {
                 _numTratamentosNaoRealizados++;
                 _numAgendamentos++;
@@ -123,11 +138,11 @@ namespace Desktop.Forms
 
         private void AdicionarTratamentosIniciadosNoListView(Atendimento atendimento, DateTime dataFiltro)
         {
-            var enumStatusCancelado = (int)Enumeracoes.EnumStatusControleMedicação.cancelado;
+            var enumStatusCancelado = (int)EnumeracoesClasses.EnumStatusControleMedicação.cancelado;
 
             if (PodeAdicionarItem(atendimento.Tratamento.EnumStatusMedicacao1))
             {
-                foreach (var controle in atendimento.Tratamento.Medicamento1.ControlesMedicamento)
+                foreach (var controle in atendimento.Tratamento.ControlesMedicamento1)
                 {
                     if (controle.DataExecucao.Date == dataFiltro.Date && controle.EnumStatusControleMedicação != enumStatusCancelado)
                     {
@@ -139,7 +154,7 @@ namespace Desktop.Forms
 
             if (PodeAdicionarItem(atendimento.Tratamento.EnumStatusMedicacao2))
             {
-                foreach (var controle in atendimento.Tratamento.Medicamento2.ControlesMedicamento)
+                foreach (var controle in atendimento.Tratamento.ControlesMedicamento2)
                 {
                     if (controle.DataExecucao.Date == dataFiltro.Date && controle.EnumStatusControleMedicação != enumStatusCancelado)
                     {
@@ -151,7 +166,7 @@ namespace Desktop.Forms
 
             if (PodeAdicionarItem(atendimento.Tratamento.EnumStatusMedicacao3))
             {
-                foreach (var controle in atendimento.Tratamento.Medicamento3.ControlesMedicamento)
+                foreach (var controle in atendimento.Tratamento.ControlesMedicamento3)
                 {
                     if (controle.DataExecucao.Date == dataFiltro.Date && controle.EnumStatusControleMedicação != enumStatusCancelado)
                     {
@@ -163,7 +178,7 @@ namespace Desktop.Forms
 
             if (PodeAdicionarItem(atendimento.Tratamento.EnumStatusMedicacao4))
             {
-                foreach (var controle in atendimento.Tratamento.Medicamento4.ControlesMedicamento)
+                foreach (var controle in atendimento.Tratamento.ControlesMedicamento4)
                 {
                     if (controle.DataExecucao.Date == dataFiltro.Date && controle.EnumStatusControleMedicação != enumStatusCancelado)
                     {
@@ -175,7 +190,7 @@ namespace Desktop.Forms
 
             if (PodeAdicionarItem(atendimento.Tratamento.EnumStatusMedicacao5))
             {
-                foreach (var controle in atendimento.Tratamento.Medicamento5.ControlesMedicamento)
+                foreach (var controle in atendimento.Tratamento.ControlesMedicamento5)
                 {
                     if (controle.DataExecucao.Date == dataFiltro.Date && controle.EnumStatusControleMedicação != enumStatusCancelado)
                     {
@@ -197,19 +212,19 @@ namespace Desktop.Forms
             _numTratamentosRealizados = 0;
             _numTratamentosNaoRealizados = 0;
 
-            _atendimentos = AtendimentoDAO.GetAtendimentoComTratamento(Global.Entidade.Id);
+            _atendimentos = _atendimentoService.GetAtendimentoComTratamento(Global.Entidade.Id);
 
             foreach (var atendimento in _atendimentos)
                 _tratamentos.Add(atendimento.Tratamento);
-            
-            
+
+
             if (_tratamentos.Any())
             {
                 foreach (var atendimento in _atendimentos)
                 {
                     if (dataFiltro.Date == DateTime.Today)
                         AdicionarTratamentosNaoIniciadosNoListView(atendimento);
-                    
+
                     AdicionarTratamentosIniciadosNoListView(atendimento, dataFiltro);
                 }
             }
@@ -235,40 +250,51 @@ namespace Desktop.Forms
 
         private void CarregarTooltips()
         {
-            toolTip.SetToolTip(btnImprimir, "Imprime um arquivo com os compromissos agendados na data selecionada no calendário.");
+            toolTip.SetToolTip(btnImprimir, _tratamentoService.MensagemTooltip);
         }
 
-        private void ConfirmarTratamento(Atendimento atendimento, int ordemMedicamento, int controleId)
+        private void ConfirmarTratamento(int ordemMedicamento, int controleId)
         {
-            var statusRealizado = (int)Enumeracoes.EnumStatusControleMedicação.realizado;
+            var statusRealizado = (int)EnumeracoesClasses.EnumStatusControleMedicação.realizado;
 
             if (ordemMedicamento == 1)
             {
-                var controle = atendimento.Tratamento.Medicamento1.ControlesMedicamento.FirstOrDefault(k => k.Id == controleId );
-                controle.EnumStatusControleMedicação = statusRealizado;
+                _atendimento.Tratamento.ControlesMedicamento1.FirstOrDefault(k => k.Id == controleId).EnumStatusControleMedicação = statusRealizado;
+
+                //var controle = _atendimento.Tratamento.ControlesMedicamento1.FirstOrDefault(k => k.Id == controleId );
+                //controle.EnumStatusControleMedicação = statusRealizado;
             }
             else if (ordemMedicamento == 2)
             {
-                var controle = atendimento.Tratamento.Medicamento2.ControlesMedicamento.FirstOrDefault(k => k.Id == controleId);
-                controle.EnumStatusControleMedicação = statusRealizado;
+                _atendimento.Tratamento.ControlesMedicamento2.FirstOrDefault(k => k.Id == controleId).EnumStatusControleMedicação = statusRealizado;
+
+                //var controle = _atendimento.Tratamento.ControlesMedicamento2.FirstOrDefault(k => k.Id == controleId);
+                //controle.EnumStatusControleMedicação = statusRealizado;
             }
             else if (ordemMedicamento == 3)
             {
-                var controle = atendimento.Tratamento.Medicamento3.ControlesMedicamento.FirstOrDefault(k => k.Id == controleId);
-                controle.EnumStatusControleMedicação = statusRealizado;
+                _atendimento.Tratamento.ControlesMedicamento3.FirstOrDefault(k => k.Id == controleId).EnumStatusControleMedicação = statusRealizado;
+
+                //var controle = _atendimento.Tratamento.ControlesMedicamento3.FirstOrDefault(k => k.Id == controleId);
+                //controle.EnumStatusControleMedicação = statusRealizado;
             }
             else if (ordemMedicamento == 4)
             {
-                var controle = atendimento.Tratamento.Medicamento4.ControlesMedicamento.FirstOrDefault(k => k.Id == controleId);
-                controle.EnumStatusControleMedicação = statusRealizado;
+                _atendimento.Tratamento.ControlesMedicamento4.FirstOrDefault(k => k.Id == controleId).EnumStatusControleMedicação = statusRealizado;
+
+                //var controle = _atendimento.Tratamento.ControlesMedicamento4.FirstOrDefault(k => k.Id == controleId);
+                //controle.EnumStatusControleMedicação = statusRealizado;
             }
             else if (ordemMedicamento == 5)
             {
-                var controle = atendimento.Tratamento.Medicamento5.ControlesMedicamento.FirstOrDefault(k => k.Id == controleId);
-                controle.EnumStatusControleMedicação = statusRealizado;
+                //var controle = _atendimento.Tratamento.ControlesMedicamento5.FirstOrDefault(k => k.Id == controleId);
+                //controle.EnumStatusControleMedicação = statusRealizado;
+                _atendimento.Tratamento.ControlesMedicamento5.FirstOrDefault(k => k.Id == controleId).EnumStatusControleMedicação = statusRealizado;
+
             }
 
-            if (AtendimentoDAO.Salvar(atendimento))
+            if (TratamentoDAO.Salvar(_atendimento.Tratamento))
+            //if (AtendimentoDAO.Salvar(_atendimento))
             {
                 FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
                 CarregarTratamentos(monthCalendar.SelectionRange.Start);
@@ -281,33 +307,51 @@ namespace Desktop.Forms
             //}
         }
 
-        private void AlterStatusParaCanceladoDoControleDosMedicamentos(Medicamento medicamento, int controleMedicamentoId)
+        private List<ControleMedicamento> GetControleMedicamentosAserCancelados(Tratamento tratamento, int indexMedicamento, int controleMedicamentoId)
         {
-            var controle = medicamento.ControlesMedicamento.Where(k => k.Id >= controleMedicamentoId).ToList();
+            var controlesACancelar = new List<ControleMedicamento>();
+
+            //if (indexMedicamento == 1)
+            //    controlesACancelar.AddRange(tratamento.ControlesMedicamento1.Where(k => k.Id >= controleMedicamentoId).ToList());
+            //else if (indexMedicamento == 2)
+            //    controlesACancelar.AddRange(tratamento.ControlesMedicamento2.Where(k => k.Id >= controleMedicamentoId).ToList());
+            //else if (indexMedicamento == 3)
+            //    controlesACancelar.AddRange(tratamento.ControlesMedicamento3.Where(k => k.Id >= controleMedicamentoId).ToList());
+            //else if (indexMedicamento == 4)
+            //    controlesACancelar.AddRange(tratamento.ControlesMedicamento4.Where(k => k.Id >= controleMedicamentoId).ToList());
+            //else if (indexMedicamento == 5)
+            //    controlesACancelar.AddRange(tratamento.ControlesMedicamento5.Where(k => k.Id >= controleMedicamentoId).ToList());
+
+            return controlesACancelar;
+        }
+
+        private void AlterStatusParaCanceladoDoControleDosMedicamentos(Tratamento tratamento, int indexMedicamento, int controleMedicamentoId)
+        {
+            var controle = GetControleMedicamentosAserCancelados(tratamento, indexMedicamento, controleMedicamentoId);
 
             if (controle.Any())
             {
                 foreach (var item in controle)
-                    item.EnumStatusControleMedicação = (int)Enumeracoes.EnumStatusControleMedicação.cancelado;
+                    item.EnumStatusControleMedicação = (int)EnumeracoesClasses.EnumStatusControleMedicação.cancelado;
             }
         }
 
         private void CancelarTratamento(Atendimento atendimento, int ordemMedicamento, int controleId)
         {
             if (ordemMedicamento == 1)
-                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento.Medicamento1, controleId);
+                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento, 1, controleId);
 
             else if (ordemMedicamento == 2)
-                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento.Medicamento2, controleId) ;
+                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento, 2, controleId);
 
             else if (ordemMedicamento == 3)
-                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento.Medicamento3, controleId);
+                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento, 3, controleId);
 
             else if (ordemMedicamento == 4)
-                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento.Medicamento4, controleId);
+                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento, 4, controleId);
 
             else if (ordemMedicamento == 5)
-                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento.Medicamento5, controleId);
+                AlterStatusParaCanceladoDoControleDosMedicamentos(atendimento.Tratamento, 5, controleId);
 
             if (AtendimentoDAO.Salvar(atendimento))
             {
@@ -316,10 +360,36 @@ namespace Desktop.Forms
             }
         }
 
-        private Medicamento GeraAgendamentoDiarioPorXvezesAoDia(Medicamento medicamento)
+        private void GeraAgendamentoDiarioPorXvezesAoDia(int index)
         {
-            var numeroDeVezeAoDia = medicamento.AuxiliarX;
-            var duracaoEmDiasDoTratamento = medicamento.Duracao;
+            int numeroDeVezeAoDia = 0, duracaoEmDiasDoTratamento = 0;
+
+            if (index == 1)
+            {
+                numeroDeVezeAoDia = _atendimento.Tratamento.Medicamento1.AuxiliarX;
+                duracaoEmDiasDoTratamento = _atendimento.Tratamento.Medicamento1.Duracao;
+            }
+            else if (index == 2)
+            {
+                numeroDeVezeAoDia = _atendimento.Tratamento.Medicamento2.AuxiliarX;
+                duracaoEmDiasDoTratamento = _atendimento.Tratamento.Medicamento2.Duracao;
+            }
+            else if (index == 3)
+            {
+                numeroDeVezeAoDia = _atendimento.Tratamento.Medicamento3.AuxiliarX;
+                duracaoEmDiasDoTratamento = _atendimento.Tratamento.Medicamento3.Duracao;
+            }
+            else if (index == 4)
+            {
+                numeroDeVezeAoDia = _atendimento.Tratamento.Medicamento4.AuxiliarX;
+                duracaoEmDiasDoTratamento = _atendimento.Tratamento.Medicamento4.Duracao;
+            }
+            else if (index == 5)
+            {
+                numeroDeVezeAoDia = _atendimento.Tratamento.Medicamento5.AuxiliarX;
+                duracaoEmDiasDoTratamento = _atendimento.Tratamento.Medicamento5.Duracao;
+            }
+
             var intervaloDeTempo = 1d;
 
             if (numeroDeVezeAoDia > 0)
@@ -333,17 +403,17 @@ namespace Desktop.Forms
                 var controle = new ControleMedicamento()
                 {
                     Entidade = Global.Entidade,
-                    EnumStatusControleMedicação = (int)Enumeracoes.EnumStatusControleMedicação.naoRealizado,
+                    EnumStatusControleMedicação = (int)EnumeracoesClasses.EnumStatusControleMedicação.naoRealizado,
                     DataExecucao = data
                 };
-                medicamento.AddControleMedicamento(controle);
+
+                AdicionaControleMedicamento(index, controle);
+
                 data = data.AddMilliseconds(intervaloDeTempo);
             }
-
-            return medicamento;
         }
 
-        private Medicamento GeraAgendamentoDiarioAcadaXhoras(Medicamento medicamento)
+        private Medicamento GeraAgendamentoDiarioAcadaXhoras(Tratamento tratamento, Medicamento medicamento, int index)
         {
             var intervaloMilisegundos = medicamento.AuxiliarX * 3600000;
             var duracaoEmDiasDoTratamento = medicamento.Duracao;
@@ -358,17 +428,19 @@ namespace Desktop.Forms
                 var controle = new ControleMedicamento()
                 {
                     Entidade = Global.Entidade,
-                    EnumStatusControleMedicação = (int)Enumeracoes.EnumStatusControleMedicação.naoRealizado,
+                    EnumStatusControleMedicação = (int)EnumeracoesClasses.EnumStatusControleMedicação.naoRealizado,
                     DataExecucao = data
                 };
-                medicamento.AddControleMedicamento(controle);
+
+                //AdicionaControleMedicamento(index, tratamento, controle);
+
                 data = data.AddMilliseconds(intervaloMilisegundos);
             }
 
             return medicamento;
         }
 
-        private Medicamento GeraAgendamentoAcadaXdias(Medicamento medicamento)
+        private Medicamento GeraAgendamentoAcadaXdias(Tratamento tratamento, Medicamento medicamento, int index)
         {
             var intervaloDias = medicamento.AuxiliarX;
             var duracaoEmDiasDoTratamento = medicamento.Duracao;
@@ -382,17 +454,19 @@ namespace Desktop.Forms
                 var controle = new ControleMedicamento()
                 {
                     Entidade = Global.Entidade,
-                    EnumStatusControleMedicação = (int)Enumeracoes.EnumStatusControleMedicação.naoRealizado,
+                    EnumStatusControleMedicação = (int)EnumeracoesClasses.EnumStatusControleMedicação.naoRealizado,
                     DataExecucao = data
                 };
-                medicamento.AddControleMedicamento(controle);
+
+                //AdicionaControleMedicamento(index, tratamento, controle);
+
                 data = data.AddDays(intervaloDias);
             }
 
             return medicamento;
         }
 
-        private Medicamento GeraAgendamentoEmCertosDiasDaSemana(Medicamento medicamento)
+        private Medicamento GeraAgendamentoEmCertosDiasDaSemana(Tratamento tratamento, Medicamento medicamento, int index)
         {
             var diasSemana = medicamento.DiasDaSemana;
             var duracaoEmDiasDoTratamento = medicamento.Duracao;
@@ -437,18 +511,18 @@ namespace Desktop.Forms
                     var controle = new ControleMedicamento()
                     {
                         Entidade = Global.Entidade,
-                        EnumStatusControleMedicação = (int)Enumeracoes.EnumStatusControleMedicação.naoRealizado,
+                        EnumStatusControleMedicação = (int)EnumeracoesClasses.EnumStatusControleMedicação.naoRealizado,
                         DataExecucao = data
                     };
 
-                    medicamento.AddControleMedicamento(controle);
+                    //AdicionaControleMedicamento(index, tratamento, controle);
                 }
                 data = data.AddDays(1);
             }
             return medicamento;
         }
 
-        private Medicamento GeraAgendamentoEmCiclosDeDiasAtivosEinativos(Medicamento medicamento)
+        private void GeraAgendamentoEmCiclosDeDiasAtivosEinativos(Tratamento tratamento, Medicamento medicamento, int index)
         {
             var numDiasAtivos = medicamento.AuxiliarX;
             var numDiasInativos = medicamento.AuxiliarY;
@@ -465,11 +539,12 @@ namespace Desktop.Forms
                     var controle = new ControleMedicamento()
                     {
                         Entidade = Global.Entidade,
-                        EnumStatusControleMedicação = (int)Enumeracoes.EnumStatusControleMedicação.naoRealizado,
+                        EnumStatusControleMedicação = (int)EnumeracoesClasses.EnumStatusControleMedicação.naoRealizado,
                         DataExecucao = data
                     };
 
-                    medicamento.AddControleMedicamento(controle);
+                    AdicionaControleMedicamento(index, controle);
+
                     data = data.AddDays(1);
                     contaDiasAtivos++;
                 }
@@ -484,92 +559,109 @@ namespace Desktop.Forms
                     contaDiasInativos = 1;
                 }
             }
-            return medicamento;
         }
 
-        private void SelecionaTipoAgendamentoConfigurado(Medicamento medicamento)
+        private void AdicionaControleMedicamento(int index, ControleMedicamento controle)
         {
-            var frequenciaIngestao = (int)medicamento.EnumFrequenciaIngestao;
-
-            switch (frequenciaIngestao)
+            if (index == 1)
             {
-                case (int)Enumeracoes.EnumFrequenciaIngestao.diariamenteXvezesDia:
-                    GeraAgendamentoDiarioPorXvezesAoDia(medicamento);
+                controle.Medicamento = _atendimento.Tratamento.Medicamento1;
+                _atendimento.Tratamento.AddControleMedicamento1(controle);
+            }
+            else if (index == 2)
+            {
+                controle.Medicamento = _atendimento.Tratamento.Medicamento2;
+                _atendimento.Tratamento.AddControleMedicamento2(controle);
+            }
+
+            else if (index == 3)
+                _atendimento.Tratamento.ControlesMedicamento3.Add(controle);
+            else if (index == 4)
+                _atendimento.Tratamento.ControlesMedicamento4.Add(controle);
+            else if (index == 5)
+                _atendimento.Tratamento.ControlesMedicamento5.Add(controle);
+        }
+
+        private void SelecionaTipoAgendamentoConfigurado(int frequenciaIngestaoMedicamento, int index)
+        {
+            switch (frequenciaIngestaoMedicamento)
+            {
+                case (int)EnumeracoesClasses.EnumFrequenciaIngestao.diariamenteXvezesDia:
+                    GeraAgendamentoDiarioPorXvezesAoDia(index);
                     break;
 
-                case (int)Enumeracoes.EnumFrequenciaIngestao.diariamenteCadaXhoras:
-                    GeraAgendamentoDiarioAcadaXhoras(medicamento);
-                    break;
+                    //case (int)EnumeracoesClasses.EnumFrequenciaIngestao.diariamenteCadaXhoras:
+                    //    GeraAgendamentoDiarioAcadaXhoras(tratamento, medicamento, index);
+                    //    break;
 
-                case (int)Enumeracoes.EnumFrequenciaIngestao.cadaXdias:
-                    GeraAgendamentoAcadaXdias(medicamento);
-                    break;
+                    //case (int)EnumeracoesClasses.EnumFrequenciaIngestao.cadaXdias:
+                    //    GeraAgendamentoAcadaXdias(tratamento, medicamento, index);
+                    //    break;
 
-                case (int)Enumeracoes.EnumFrequenciaIngestao.diasDaSemana:
-                    GeraAgendamentoEmCertosDiasDaSemana(medicamento);
-                    break;
+                    //case (int)EnumeracoesClasses.EnumFrequenciaIngestao.diasDaSemana:
+                    //    GeraAgendamentoEmCertosDiasDaSemana(tratamento, medicamento, index);
+                    //    break;
 
-                case (int)Enumeracoes.EnumFrequenciaIngestao.ciclosXativosYinativos:
-                    GeraAgendamentoEmCiclosDeDiasAtivosEinativos(medicamento);
-                    break;
+                    //case (int)EnumeracoesClasses.EnumFrequenciaIngestao.ciclosXativosYinativos:
+                    //    GeraAgendamentoEmCiclosDeDiasAtivosEinativos(tratamento, medicamento, index);
+                    //    break;
             }
         }
 
-        private void GerarAgendamentosMedicacao(Atendimento atendimento, int ordemMedicamento)
+        private void GerarAgendamentosMedicacao(int ordemMedicamento)
         {
             if (ordemMedicamento == 1)
             {
-                atendimento.Tratamento.InicioMedicacao1 = DateTime.Now;
-                atendimento.Tratamento.EnumStatusMedicacao1 = (int)Enumeracoes.EnumStatusMedicacao.agendado;
-                SelecionaTipoAgendamentoConfigurado(atendimento.Tratamento.Medicamento1);
+                _atendimento.Tratamento.InicioMedicacao1 = DateTime.Now;
+                _atendimento.Tratamento.EnumStatusMedicacao1 = (int)EnumeracoesClasses.EnumStatusMedicacao.agendado;
+
+                var frequenciaIngestao = (int)_atendimento.Tratamento.Medicamento1.EnumFrequenciaIngestao;
+
+                SelecionaTipoAgendamentoConfigurado(frequenciaIngestao, 1);
             }
-            else if(ordemMedicamento == 2)
+            else if (ordemMedicamento == 2)
             {
-                atendimento.Tratamento.InicioMedicacao2 = DateTime.Now;
-                atendimento.Tratamento.EnumStatusMedicacao2 = (int)Enumeracoes.EnumStatusMedicacao.agendado;
-                SelecionaTipoAgendamentoConfigurado(atendimento.Tratamento.Medicamento2); 
+                _atendimento.Tratamento.InicioMedicacao2 = DateTime.Now;
+                _atendimento.Tratamento.EnumStatusMedicacao2 = (int)EnumeracoesClasses.EnumStatusMedicacao.agendado;
+
+                var frequenciaIngestao = (int)_atendimento.Tratamento.Medicamento2.EnumFrequenciaIngestao;
+
+                SelecionaTipoAgendamentoConfigurado(frequenciaIngestao, 2);
             }
             else if (ordemMedicamento == 3)
             {
-                atendimento.Tratamento.InicioMedicacao3 = DateTime.Now;
-                atendimento.Tratamento.EnumStatusMedicacao3 = (int)Enumeracoes.EnumStatusMedicacao.agendado;
-                SelecionaTipoAgendamentoConfigurado(atendimento.Tratamento.Medicamento3);
+                _atendimento.Tratamento.InicioMedicacao3 = DateTime.Now;
+                _atendimento.Tratamento.EnumStatusMedicacao3 = (int)EnumeracoesClasses.EnumStatusMedicacao.agendado;
+
+                var frequenciaIngestao = (int)_atendimento.Tratamento.Medicamento3.EnumFrequenciaIngestao;
+
+                //SelecionaTipoAgendamentoConfigurado(_atendimento.Tratamento, _atendimento.Tratamento.Medicamento3, frequenciaIngestao, 3);
             }
             else if (ordemMedicamento == 4)
             {
-                atendimento.Tratamento.InicioMedicacao4 = DateTime.Now;
-                atendimento.Tratamento.EnumStatusMedicacao4 = (int)Enumeracoes.EnumStatusMedicacao.agendado;
-                SelecionaTipoAgendamentoConfigurado(atendimento.Tratamento.Medicamento4);
+                _atendimento.Tratamento.InicioMedicacao4 = DateTime.Now;
+                _atendimento.Tratamento.EnumStatusMedicacao4 = (int)EnumeracoesClasses.EnumStatusMedicacao.agendado;
+
+                var frequenciaIngestao = (int)_atendimento.Tratamento.Medicamento4.EnumFrequenciaIngestao;
+
+                //SelecionaTipoAgendamentoConfigurado(_atendimento.Tratamento, _atendimento.Tratamento.Medicamento4, frequenciaIngestao, 4);
             }
             else if (ordemMedicamento == 5)
             {
-                atendimento.Tratamento.InicioMedicacao5 = DateTime.Now;
-                atendimento.Tratamento.EnumStatusMedicacao5 = (int)Enumeracoes.EnumStatusMedicacao.agendado;
-                SelecionaTipoAgendamentoConfigurado(atendimento.Tratamento.Medicamento5);
+                _atendimento.Tratamento.InicioMedicacao5 = DateTime.Now;
+                _atendimento.Tratamento.EnumStatusMedicacao5 = (int)EnumeracoesClasses.EnumStatusMedicacao.agendado;
+
+                var frequenciaIngestao = (int)_atendimento.Tratamento.Medicamento5.EnumFrequenciaIngestao;
+
+                //SelecionaTipoAgendamentoConfigurado(_atendimento.Tratamento, _atendimento.Tratamento.Medicamento5, frequenciaIngestao, 5);
             }
 
-            if (AtendimentoDAO.Salvar(atendimento))
+            // TODO: VERIFICAR SE ESSE SALVAR ESTÁ OK = 05/07/22
+            if (AtendimentoDAO.Salvar(_atendimento))
             {
                 FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
                 CarregarTratamentos(monthCalendar.SelectionRange.Start);
             }
-        }
-
-        private Medicamento GetMedicamentoSelecionado(int ordem, Tratamento tratamento)
-        {
-            var medicamento = new Medicamento();
-            if (ordem == 1)
-                medicamento = tratamento.Medicamento1;
-            else if (ordem == 2)
-                medicamento = tratamento.Medicamento2;
-            else if (ordem == 3)
-                medicamento = tratamento.Medicamento3;
-            else if (ordem == 4)
-                medicamento = tratamento.Medicamento4;
-            else if (ordem == 5)
-                medicamento = tratamento.Medicamento5;
-
-            return medicamento;
         }
 
         private int GetStatusTratamento(int ordem, Tratamento tratamento)
@@ -598,22 +690,22 @@ namespace Desktop.Forms
                 {
                     if (Convert.ToInt32(lvTratamentos.SelectedItems[0].SubItems[1].Text) is int idTratamento)
                     {
-                        var atendimento = _atendimentos.Find(k => k.Id == idAtendimento && k.Tratamento.Id == idTratamento);
-                        var tratamento = atendimento.Tratamento;
+                        _atendimento = _atendimentos.Find(k => k.Id == idAtendimento && k.Tratamento.Id == idTratamento);
+                        //var tratamento = atendimento.Tratamento;
                         var ordemMedicamento = Convert.ToInt32(lvTratamentos.SelectedItems[0].SubItems[2].Text);
 
-                        var medicamento = GetMedicamentoSelecionado(ordemMedicamento, tratamento);
-                        var enumStatusMedicamento = GetStatusTratamento(ordemMedicamento, tratamento);
+                        var medicamento = _atendimentoService.GetMedicamento(_atendimento.Tratamento, ordemMedicamento);
+                        var enumStatusMedicamento = _atendimentoService.GetStatusMedicacaoEmUmTratamento(ordemMedicamento, _atendimento.Tratamento);
 
-                        if (enumStatusMedicamento == (int)Enumeracoes.EnumStatusMedicacao.naoIniciado)
+                        if (enumStatusMedicamento == (int)EnumeracoesClasses.EnumStatusMedicacao.naoIniciado)
                         {
                             var mensagem = "Você tem certeza que deseja realizar o início do tratamento? Serão agendados todos os tratamentos baseados na data e hora atual.";
                             var resultado = MessageBox.Show(mensagem, "Agendamento do(s) tratamento(s)", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
                             if (resultado.Equals(DialogResult.OK) || resultado.Equals(DialogResult.Yes))
-                                GerarAgendamentosMedicacao(atendimento, ordemMedicamento);
+                                GerarAgendamentosMedicacao(ordemMedicamento);
                         }
-                        else if (enumStatusMedicamento == (int)Enumeracoes.EnumStatusMedicacao.agendado || enumStatusMedicamento == (int)Enumeracoes.EnumStatusMedicacao.iniciado)
+                        else if (enumStatusMedicamento == (int)EnumeracoesClasses.EnumStatusMedicacao.agendado || enumStatusMedicamento == (int)EnumeracoesClasses.EnumStatusMedicacao.iniciado)
                         {
                             var mensagem = "Você confirma que o tratamento foi realizado na data e hora agendada?";
                             var resultado = MessageBox.Show(mensagem, "Tratamento realizado", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
@@ -622,7 +714,7 @@ namespace Desktop.Forms
                             {
                                 if (Convert.ToInt32(lvTratamentos.SelectedItems[0].SubItems[3].Text) is int controleId)
                                 {
-                                    ConfirmarTratamento(atendimento, ordemMedicamento, controleId);
+                                    ConfirmarTratamento(ordemMedicamento, controleId);
                                 }
                             }
                         }
@@ -653,8 +745,7 @@ namespace Desktop.Forms
 
                     if (Convert.ToInt32(lvTratamentos.SelectedItems[0].SubItems[2].Text) is int ordemMedicamento)
                     {
-                        var medicamento = GetMedicamentoSelecionado(ordemMedicamento, atendimento.Tratamento);
-
+                        var medicamento = _atendimentoService.GetMedicamento(atendimento.Tratamento, ordemMedicamento);
                         var mensagem = "Você tem certeza que deseja cancelar o tratamento? Todos os demais horários agendados para este tratamento serão cancelados.";
                         var resultado = MessageBox.Show(mensagem, "Cancelamento", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
@@ -668,6 +759,11 @@ namespace Desktop.Forms
                     }
                 }
             }
+        }
+
+        private void btnAdiar_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

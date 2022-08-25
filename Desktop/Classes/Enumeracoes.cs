@@ -362,44 +362,7 @@ namespace Desktop.Classes
             cancelado = 2,
         }
 
-        public enum EnumUnidadeMedicamentos
-        {
-            [Description("Comprimido(s)")]
-            comprimido = 0,
-            [Description("Cápsula(s)")]
-            capsula = 1,
-            [Description("Gota(s)")]
-            gota = 2,
-            [Description("Grama(s)")]
-            grama = 3,
-            [Description("Inalação(ões)")]
-            instalacao = 4,
-            [Description("Injeção(ões)")]
-            injecao = 5,
-            [Description("Miligrama(s)")]
-            miligrama = 6,
-            [Description("Mililitro(s)")]
-            mililitro = 7,
-            [Description("Pedaço(s)")]
-            pedaco = 8,
-            [Description("Pulverização(ões)")]
-            pulverizacao = 9,
-            [Description("Sache(s)")]
-            sache = 10,
-            [Description("Supositório(s)")]
-            supositorio = 11,
-            [Description("Unidade(s)")]
-            unidade = 12
-        }
-
-        public enum EnumFrequenciaIngestao
-        {
-            diariamenteXvezesDia = 0,
-            diariamenteCadaXhoras = 1,
-            cadaXdias = 2,
-            diasDaSemana = 3,
-            ciclosXativosYinativos = 4
-        }
+      
 
         /// <summary>
         /// Status dos tratamentos cadastrados nos atendimentos.
@@ -420,24 +383,7 @@ namespace Desktop.Classes
             parcialmenteIniciado = 5
         }
 
-        /// <summary>
-        /// Status dos tratamentos cadastradoss nos atendimentos.
-        /// </summary>
-        public enum EnumStatusMedicacao
-        {
-            [Description("Não possui")]
-            naoPossui = 0,
-            [Description("Não iniciado")]
-            naoIniciado = 1,
-            [Description("Iniciado")]
-            iniciado = 2,
-            [Description("Encerrado")]
-            encerrado = 3,
-            [Description("Cancelado")]
-            cancelado = 4,
-            [Description("Agendado")]
-            agendado = 5,
-        }
+   
 
 
         /// <summary>
@@ -454,17 +400,6 @@ namespace Desktop.Classes
         }
 
 
-        /// <summary>
-        /// O estado da execução atendimento: realizado ou não.
-        /// </summary>
-        public enum EnumStatusControleMedicação
-        {
-            [Description("Não realizado")]
-            naoRealizado = 0,
-            [Description("Realizado")]
-            realizado = 1,
-            [Description("Cancelado")]
-            cancelado = 2,
-        }
+     
     }
 }

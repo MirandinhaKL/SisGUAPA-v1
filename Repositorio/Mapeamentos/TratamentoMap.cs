@@ -3,7 +3,7 @@ using Repositorio.Entidades;
 
 /*
 * Criado em: 23/11/2020
-* Última alteração em: 
+* Última alteração em: 05/07/2022
 */
 
 namespace Repositorio.Mapeamentos
@@ -35,13 +35,21 @@ namespace Repositorio.Mapeamentos
             Map(k => k.FimMedicacao5);
 
             References(k => k.Entidade);
+            References(k => k.Atendimento).Not.LazyLoad();
+
             References(k => k.Medicamento1).Cascade.All().Not.LazyLoad();
             References(k => k.Medicamento2).Cascade.All().Not.LazyLoad();
             References(k => k.Medicamento3).Cascade.All().Not.LazyLoad();
             References(k => k.Medicamento4).Cascade.All().Not.LazyLoad();
             References(k => k.Medicamento5).Cascade.All().Not.LazyLoad();
 
-            HasOne(k => k.Atendimento).Cascade.All().PropertyRef("Tratamento");
+            HasMany(k => k.ControlesMedicamento1).Cascade.All().Not.LazyLoad();
+            HasMany(k => k.ControlesMedicamento2).Cascade.All().Not.LazyLoad();
+            HasMany(k => k.ControlesMedicamento3).Cascade.All().Not.LazyLoad();
+            HasMany(k => k.ControlesMedicamento4).Cascade.All().Not.LazyLoad();
+            HasMany(k => k.ControlesMedicamento5).Cascade.All().Not.LazyLoad();
+
+            //HasOne(k => k.Atendimento).Cascade.All().PropertyRef("Tratamento");
             
             Table("tratamento");
         }

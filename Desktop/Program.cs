@@ -1,10 +1,6 @@
-﻿using Desktop.Forms;
-using Desktop.InfraNHibernate;
+﻿using Desktop.DependencyInjection;
 using SisGUAPA.Forms;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SisGUAPA
@@ -21,6 +17,10 @@ namespace SisGUAPA
             Console.Read();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // Starts dependecy injection
+            IocKernel.Initialize(new IocConfigurations());
+
             Application.Run(new FormLoginNovo());
         }
     }
