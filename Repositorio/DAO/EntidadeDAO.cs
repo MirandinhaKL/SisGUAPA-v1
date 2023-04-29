@@ -1,10 +1,9 @@
-﻿using Repositorio.ClassesGerais;
+﻿using NHibernate;
+using NHibernate.Criterion;
 using Repositorio.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repositorio.Classes
 {
@@ -23,5 +22,37 @@ namespace Repositorio.Classes
             return usuariosInstituicao.FirstOrDefault();
         }
 
+        public bool EntidadeExiste(string email)
+        {
+            using (ISession Session = FluentySessionFactory.AbrirSession())
+            {
+                using (ITransaction Transaction = Session.BeginTransaction())
+                {
+                    try
+                    {
+                        IList<Entidade> dados = Session.CreateCriteria<Entidade>()
+                            .Add(Restrictions.Eq("Email", email))
+                            .List<Entidade>();
+                        
+                        Transaction.Commit();
+
+                        if (dados is null || !dados.Any())
+                            return false;
+                        else
+                            return true;
+                    }
+                    catch (Exception exception)
+                    {
+                        if (!Transaction.WasCommitted)
+                        {
+                            Transaction.Rollback();
+                        }
+                        Console.WriteLine(exception.Message);
+                        throw new Exception("Erro ao obter os dados entidade: " + exception.Message);
+                    }
+                }
+            }
+         
+        }
     }
 }

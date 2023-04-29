@@ -22,16 +22,6 @@ namespace SisGUAPA.Forms
             toolTip.SetToolTip(BtnSenha, "Envia por e-mail a senha cadastrada");
         }
 
-        private void linkCadastro_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-          
-        }
-
-        private void linkSenha_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            EnviarEmailComSenha();
-        }
-
         private void EnviarEmailComSenha()
         {
             this.Cursor = Cursors.WaitCursor;

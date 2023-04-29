@@ -25,7 +25,7 @@ namespace Repositorio.Entidades
         #endregion
 
         #region Referencias
-        //public virtual EnderecoEntidade EnderecoEntidade { get; set; }
+        public virtual EnderecoEntidade EnderecoEntidade { get; set; }
         public virtual IList<Usuario> Usuarios { get; set; }
 
         #endregion
@@ -41,6 +41,5 @@ namespace Repositorio.Entidades
             usuario.Entidade = this;
             Usuarios.Remove(usuario);
         }
-
     }
 }

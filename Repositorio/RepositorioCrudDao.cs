@@ -98,6 +98,7 @@ namespace Repositorio
                 }
             }
         }
+        
         public T GetPorId(int id)
         {
             using (ISession Session = FluentySessionFactory.AbrirSession())
@@ -172,7 +173,7 @@ namespace Repositorio
                             return null;
                         }
                         Console.WriteLine(exception.Message);
-                        throw new Exception("Erro ao inserir entidade: " + exception.Message);
+                        throw new Exception("Erro ao obter os dados entidade: " + exception.Message);
                     }
                 }
             }

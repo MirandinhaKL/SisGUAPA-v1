@@ -23,5 +23,6 @@ namespace SisGUAPA
 
             Application.Run(new FormLoginNovo());
         }
+
     }
 }

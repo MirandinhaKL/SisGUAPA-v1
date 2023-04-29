@@ -8,6 +8,8 @@ namespace Desktop.DependencyInjection
     {
         public override void Load()
         {
+            Bind<IEntidadeService>().To<EntidadeService>().InSingletonScope();
+            Bind<IUsuarioService>().To<UsuarioService>().InSingletonScope();
             Bind<ITratamentoService>().To<TratamentoService>().InSingletonScope();
             Bind<IAtendimentoService>().To<AtendimentoService>().InSingletonScope();
             Bind<IMedicamentoService>().To<MedicamentoService>().InSingletonScope();

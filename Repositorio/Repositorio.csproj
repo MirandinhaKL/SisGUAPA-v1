@@ -189,8 +189,10 @@
     <Compile Include="FluentySessionFactory.cs" />
     <Compile Include="ICrudDao.cs" />
     <Compile Include="Interfaces\IAtendimentoService.cs" />
+    <Compile Include="Interfaces\IEntidadeService.cs" />
     <Compile Include="Interfaces\IMedicamentoService.cs" />
     <Compile Include="Interfaces\ITratamentoService.cs" />
+    <Compile Include="Interfaces\IUsuarioService.cs" />
     <Compile Include="Mapeamentos\AdocaoMap.cs" />
     <Compile Include="Mapeamentos\AtendimentoMap.cs" />
     <Compile Include="Mapeamentos\AdotanteMap.cs" />
@@ -229,8 +231,10 @@
     <Compile Include="Servicos\AgendamentoMedicamentoService.cs" />
     <Compile Include="Servicos\AtendimentoService.cs" />
     <Compile Include="Servicos\ControleMedicamentoService.cs" />
+    <Compile Include="Servicos\EntidadeService.cs" />
     <Compile Include="Servicos\MedicamentoService.cs" />
     <Compile Include="Servicos\TratamentoService.cs" />
+    <Compile Include="Servicos\UsuarioService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

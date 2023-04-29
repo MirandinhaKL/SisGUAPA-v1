@@ -19,9 +19,9 @@ namespace Repositorio.Mapeamentos
             Map(k => k.Telefone);
 
             HasMany(k => k.Usuarios).Cascade.All().Not.LazyLoad();
-            //References(k => k.EnderecoEntidade).Unique().Cascade.All().Not.LazyLoad();
+            References(k => k.EnderecoEntidade).Cascade.All().Not.LazyLoad();
 
-            Table("entidade");
+            Table("Entidade");
         }
     }
 }

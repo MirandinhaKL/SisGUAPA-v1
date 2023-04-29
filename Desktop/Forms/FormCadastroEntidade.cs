@@ -1,30 +1,45 @@
 ﻿using Desktop.Classes;
-using Repositorio.Classes;
+using Desktop.DependencyInjection;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
-using System.IO;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace SisGUAPA.Forms
 {
     public partial class FormEntidade : Form
     {
+        private IEntidadeService _entidadeService;
+        private IUsuarioService _usuarioService;
+
         public FormEntidade()
         {
             InitializeComponent();
+            InitializeServices();
             CarregaComboBoxTipoEntidade();
             CarregaComboBoxEstadosBrasil();
         }
 
-        private int SalvarEntidade()
+        private void InitializeServices()
         {
-            if (DadosValidos())
-            {
-                var usuarioDAO = new UsuarioDAO();
-                var entidadeDAO = new EntidadeDAO();
+            _entidadeService = IocKernel.Get<IEntidadeService>();
+            _usuarioService = IocKernel.Get<IUsuarioService>();
+        }
 
-                var endereco = new EnderecoEntidade()
+        private bool SalvarEntidade()
+        {
+            Entidade entidade = new Entidade()
+            {
+                TipoEntidade = comboTipoEntidade.SelectedIndex,
+                Nome = txtNome.Text,
+                Email = txtEmail.Text,
+                DataCadastro = DateTime.Now,
+                Estado = cbEstado.SelectedIndex,
+                Senha = txtSenha1.Text,
+                Telefone = txtTelefone.Text,
+                CNPJ = txtCNPJ.Text,
+                EnderecoEntidade = new EnderecoEntidade()
                 {
                     Estado = cbEstado.SelectedIndex,
                     CEP = txtCEP.Text,
@@ -32,51 +47,34 @@ namespace SisGUAPA.Forms
                     Numero = txtNumero.Text,
                     Complemento = txtComplemento.Text,
                     Bairro = txtBairro.Text,
-                    Cidade = txtCidade.Text,
-                };
-
-                var entidade = new Entidade()
-                {
-                    TipoEntidade = comboTipoEntidade.SelectedIndex,
-                    Nome = txtNome.Text,
-                    Email = txtEmail.Text,
-                    DataCadastro = DateTime.Now,
-                    Estado = cbEstado.SelectedIndex,
-                    Senha = txtSenha1.Text,
-                    Telefone = txtTelefone.Text,
-                    CNPJ = txtCNPJ.Text,
-                    //EnderecoEntidade = endereco
-                };
-
-                var idEntidade = (int) entidadeDAO.Inserir(entidade);
-
-                if (idEntidade != (int)Enumeracoes.EnumStatusDaAcao.FALHA)
-                {
-                    Usuario usuario = new Usuario()
-                    {
-                        Email = txtEmail.Text,
-                        Nome = txtNome.Text,
-                        Senha = txtSenha1.Text,
-                        GrauAcesso = (int)Enumeracoes.EnumGrauAcesso.Administrador,
-                        DataIngresso = DateTime.Now,
-                        Entidade = new Entidade { Id = idEntidade}
-                    };
-
-                    usuario.Id = (int) usuarioDAO.Inserir(usuario);
-                    Global.UsuarioLogado = usuario;
-                    Global.Entidade = usuario.Entidade;
-                    return Global.UsuarioLogado.Id;
+                    Cidade = txtCidade.Text
                 }
-                else
-                {
-                    return (int)Enumeracoes.EnumStatusDaAcao.FALHA;
-                }
+            };
 
-            }
-            else
+            entidade.Id = _entidadeService.SalvarEntidade(entidade);
+
+            if (entidade.Id == (int)Enumeracoes.EnumStatusDaAcao.FALHA)
+                return false;
+
+            Usuario usuario = new Usuario()
             {
-                return (int)Enumeracoes.EnumStatusDaAcao.FALHA;
-            }
+                Email = txtEmail.Text,
+                Nome = txtNome.Text,
+                Senha = txtSenha1.Text,
+                GrauAcesso = (int)Enumeracoes.EnumGrauAcesso.Administrador,
+                DataIngresso = DateTime.Now,
+                Entidade = entidade
+            };
+
+            usuario.Id = _usuarioService.SalvarUsuario(usuario);
+
+            if (entidade.Id == (int)Enumeracoes.EnumStatusDaAcao.FALHA)
+                return false;
+           
+            Global.UsuarioLogado = usuario;
+            Global.Entidade = usuario.Entidade;
+            
+            return true;
         }
 
         private void CarregaComboBoxTipoEntidade()
@@ -98,33 +96,34 @@ namespace SisGUAPA.Forms
 
         private bool DadosValidos()
         {
+            Dictionary<string, string> mensagensErro = _entidadeService.GetMensagemDadosInvalidos();
             bool dadosValidos = true;
 
             errorProvider.Clear();
 
             if (string.IsNullOrEmpty(txtNome.Text))
             {
-                errorProvider.SetError(txtNome, "Informe o nome da Entidade a qual este sistema irá gernciar os dados.");
+                errorProvider.SetError(txtNome, mensagensErro["NOME"]);
                 dadosValidos = false;
             }
             if (string.IsNullOrEmpty(txtEmail.Text))
             {
-                errorProvider.SetError(txtEmail, "Informe o e-mail da entidade que será utilizado para efetuar login neste sistema.");
+                errorProvider.SetError(txtEmail, mensagensErro["EMAIL"]);
                 dadosValidos = false;
             }
             if (string.IsNullOrEmpty(txtSenha1.Text))
             {
-                errorProvider.SetError(txtSenha1, "Informe a senha para utilização deste sistema.");
+                errorProvider.SetError(txtSenha1, mensagensErro["SENHA"]);
                 dadosValidos = false;
             }
             if (string.IsNullOrEmpty(txtSenha2.Text))
             {
-                errorProvider.SetError(txtSenha2, "Repita a senha informada no campo 'Senha'.");
+                errorProvider.SetError(txtSenha2, mensagensErro["SENHA_REP"]);
                 dadosValidos = false;
             }
             if (!txtSenha1.Text.Equals(txtSenha2.Text))
             {
-                errorProvider.SetError(txtSenha2, "A repetição da senha não confere.");
+                errorProvider.SetError(txtSenha2, mensagensErro["SENHA_REP_DIFERENTE"]);
                 dadosValidos = false;
             }
             return dadosValidos;
@@ -132,17 +131,25 @@ namespace SisGUAPA.Forms
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (SalvarEntidade() != (int)Enumeracoes.EnumStatusDaAcao.FALHA)
+            if (!DadosValidos())
+                return;
+
+            string emailJaCadastrado = _entidadeService.EntidadeJaSalva(txtEmail.Text);
+            if (!string.IsNullOrEmpty(emailJaCadastrado))
+            {
+                MessageBox.Show(emailJaCadastrado, "Atenção!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (SalvarEntidade())
             {
                 new FormBase().Show();
                 this.Hide();
             }
             else
             {
-                var caminhoExe = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string caminhoArquivo = Path.Combine(caminhoExe, "ArquivoLogErros");
-                MessageBox.Show("Falha ao cadastrar uma nova entidade no sistema. Verifique detalhes do erro em: " + caminhoArquivo,
-                    "Erro de cadastro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string mensagem = _entidadeService.GetMensagemDeErro()["SALVAR"];
+                MessageBox.Show(mensagem, "Erro de cadastro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

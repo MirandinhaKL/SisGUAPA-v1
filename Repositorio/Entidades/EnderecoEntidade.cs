@@ -1,6 +1,7 @@
 ﻿/*
  * Criada em: 01/11/21
  */
+
 namespace Repositorio.Entidades
 {
     public class EnderecoEntidade
@@ -17,6 +18,5 @@ namespace Repositorio.Entidades
 
         // Relacionamentos
         public virtual Entidade Entidade { get; set; }
-
     }
 }

@@ -2,6 +2,7 @@
 using Repositorio.Entidades;
 /*
  * Criado em: 01/11/21
+ * Alterado em: 06/04/23
  */
 namespace Repositorio.Mapeamentos
 {
@@ -19,10 +20,9 @@ namespace Repositorio.Mapeamentos
             Map(k => k.Complemento).Length(255);
             Map(k => k.CEP).Length(10);
 
-            //HasOne(k => k.Entidade);
-            //HasOne(k => k.Entidade).Cascade.All().PropertyRef("EnderecoAdotante");
+            References(k => k.Entidade);
 
-            Table("endereco_entidade");
+            Table("EnderecoEntidade");
         }
     }
 }

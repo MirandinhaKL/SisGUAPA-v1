@@ -393,7 +393,6 @@
     <None Include="Resources\tooltip-24.png" />
     <None Include="Resources\prontuario-24.png" />
     <None Include="Resources\icons8-medical-history-49.png" />
-    <None Include="Repositorio.Entidades.Animal.datasource" />
     <None Include="Resources\estatistica-48.png" />
     <EmbeddedResource Include="Forms\FormCadastroAtendimento.resx">
       <DependentUpon>FormCadastroAtendimento.cs</DependentUpon>
