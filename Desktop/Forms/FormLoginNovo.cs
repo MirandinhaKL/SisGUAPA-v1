@@ -1,100 +1,100 @@
 ﻿using Desktop.Classes;
-using Repositorio.Classes;
+using Desktop.DependencyInjection;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace SisGUAPA.Forms
 {
     public partial class FormLoginNovo : Form
     {
+        private IUsuarioService _usuarioService;
+        private IEmailService _emailService;
+
         public FormLoginNovo()
         {
             InitializeComponent();
+            InitializeServices();
             CarregarTooltips();
+        }
+
+        private void InitializeServices()
+        {
+            _usuarioService = IocKernel.Get<IUsuarioService>();
+            _emailService = IocKernel.Get<IEmailService>();
         }
 
         private void CarregarTooltips()
         {
-            toolTip.SetToolTip(btnSair, "Fecha o sistema");
-            toolTip.SetToolTip(btnLogin, "Efeuta o login no sistema");
-            toolTip.SetToolTip(btnCadastro, "Cria o cadastro no sistema");
-            toolTip.SetToolTip(BtnSenha, "Envia por e-mail a senha cadastrada");
+            toolTip.SetToolTip(btnSair, "Fecha o sistema.");
+            toolTip.SetToolTip(btnLogin, "Efeuta o login no sistema.");
+            toolTip.SetToolTip(btnCadastro, "Cria o cadastro no sistema.");
+            toolTip.SetToolTip(BtnSenha, "Envia por e-mail a senha cadastrada.");
         }
 
-        private void EnviarEmailComSenha()
+        //TODO: Envio do e-mail não esta funcionando.
+        private async void EnviarEmailComSenha()
         {
             this.Cursor = Cursors.WaitCursor;
-            var destinatario = txtEmail.Text;
 
-            if (string.IsNullOrEmpty(destinatario))
+            string destinatario = txtEmail.Text;
+
+            (bool, string) resultadoSenha = _usuarioService.GetSenha(destinatario);
+            if (!resultadoSenha.Item1)
             {
-                MessageBox.Show("É necessário informar o e-mail utilixado para efetuar o login neste sistema.", "Erro de preenchimento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(resultadoSenha.Item2, "Erro de preenchimento", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Cursor = Cursors.Default;
                 return;
             }
-            var senha = ObterSenha(destinatario);
 
-            if (string.IsNullOrEmpty(senha))
-                MessageBox.Show("O e-mail informado não está cadastrado neste sistema.", "Erro ao enviar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            (string destinatario, string titulo, string mensagem) camposEmail = _usuarioService.GetDadosEmailRecuperacaoSenha(destinatario, resultadoSenha.Item2);
+
+            string resultado = await _emailService.EnviarEmailAsync(camposEmail.destinatario, camposEmail.titulo, camposEmail.mensagem);
+
+            if (!string.IsNullOrEmpty(resultado))
+                MessageBox.Show(resultado, "Erro ao enviar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
-            {
-                var titulo = "SisGUAPA - Recuperação da senha";
-                var mensagem = "Olá, este é um e-mail automático enviado pelo SisGUAPA (Sistema de Gestão"
-                    + "Unificado para Associações de Proteção Animal).\r\n" +
-                    $"Conforme a sua solicitação a senha de acesso do sistema é: {senha}" +
-                    "\r\n Obrigada pelo seu contato!";
+                MessageBox.Show(_usuarioService.GetMensagemEnvioSenha(), "E-mail enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                var resultado = Email.EnviarEmailAsync(destinatario, titulo, mensagem);
-
-                if (!string.IsNullOrEmpty(resultado))
-                    MessageBox.Show(resultado, "Erro ao enviar", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
-                    MessageBox.Show("E-mail enviado com sucesso. Verifique a sua conta de e-mail para obter a sua senha.",
-                        "E-mail enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
             this.Cursor = Cursors.Default;
-        }
-
-        private string ObterSenha(string remetente)
-        {
-            return UsuarioDAO.GetPorLogin(remetente).Senha;
-        }
-
-        private void FormLoginNovo_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            var email = txtEmail.Text;
-            var senha = txtSenha.Text;
+            string email = txtEmail.Text;
+            string senha = txtSenha.Text;
+
+            Dictionary<string, string> mensagensErro = _usuarioService.GetMensagemDadosInvalidos();
+
+            if (email == string.Empty)
+            {
+                MessageBox.Show(mensagensErro["EMAIL"], "Ausência do e-mail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (senha == string.Empty)
+            {
+                MessageBox.Show(mensagensErro["SENHA"], "Ausência da senha", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             this.Cursor = Cursors.WaitCursor;
 
-            if (email == string.Empty)
-                MessageBox.Show("Por favor, informe o e-mail utilizado no cadastro do sistema.", "Ausência do e-mail", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Usuario usuario = _usuarioService.GetUsuario(email, senha);
 
-            else if (senha == string.Empty)
-                MessageBox.Show("Por favor, informe a senha utilizada no cadastro.", "Ausência da senha", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+            string mensagemErro = _usuarioService.UsuarioEhValido(usuario.Id);
+            if (!string.IsNullOrEmpty(mensagemErro))
+            {
+                MessageBox.Show(mensagemErro, "Falha ao logar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
             else
             {
-                var usuario = new UsuarioDAO().ValidarLogin(email, senha);
-
-                if (usuario.Id == 0)
-                    MessageBox.Show("O e-mail informado não está cadastrado no sistema.", "Falha ao logar", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                else if (usuario.Id == -1)
-                    MessageBox.Show("A senha informada é inválida.", "Falha ao logar", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                else if (usuario.Id > 0)
-                {
-                    Global.UsuarioLogado = usuario;
-                    Global.Entidade = new Entidade() { Id = usuario.Entidade.Id };
-                    new FormBase().Show();
-                    this.Hide();
-                }
+                Global.UsuarioLogado = usuario;
+                Global.Entidade = new Entidade() { Id = usuario.Entidade.Id };
+                new FormBase().Show();
+                this.Hide();
             }
             this.Cursor = Cursors.Default;
         }
@@ -114,11 +114,6 @@ namespace SisGUAPA.Forms
         private void btnSair_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

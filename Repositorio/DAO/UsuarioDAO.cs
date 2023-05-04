@@ -9,7 +9,7 @@ namespace Repositorio.Classes
     {
         public static Usuario Global { get; private set; }
 
-        public static Usuario GetPorLogin(string email)
+        public static Usuario GetPorEmail(string email)
         {
             using (ISession Session = FluentySessionFactory.AbrirSession())
             {
@@ -19,7 +19,7 @@ namespace Repositorio.Classes
 
         public Usuario ValidarLogin(string email, string senha)
         {
-            var usuario = GetPorLogin(email);
+            var usuario = GetPorEmail(email);
 
             if (usuario != null)
             {

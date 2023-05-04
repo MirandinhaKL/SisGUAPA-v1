@@ -35,7 +35,5 @@ namespace Repositorio.Entidades
         public virtual EnderecoUsuario EnderecoUsuario { get;set; }
 
         #endregion
-
-
     }
 }

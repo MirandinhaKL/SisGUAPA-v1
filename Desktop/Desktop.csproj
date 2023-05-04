@@ -176,7 +176,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\AnimalAuxiliar.cs" />
-    <Compile Include="Classes\Email.cs" />
     <Compile Include="Classes\Enumeracoes.cs" />
     <Compile Include="Classes\FuncoesGerais.cs" />
     <Compile Include="Classes\GeraLog.cs" />

@@ -24,7 +24,7 @@ namespace Repositorio.Mapeamentos
             References(k => k.Entidade);                ;
             References(k => k.EnderecoUsuario).Cascade.All().Not.LazyLoad();
 
-            Table("usuario");
+            Table("Usuario");
         }
     }
 }

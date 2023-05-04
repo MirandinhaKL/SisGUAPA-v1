@@ -60,38 +60,38 @@ namespace SisGUAPA.Forms
 
         private void EnviarEmailComSenha()
         {
-            var destinatario = txtEmail.Text;
+            //var destinatario = txtEmail.Text;
 
-            if (string.IsNullOrEmpty(destinatario))
-            {
-                MessageBox.Show("É necessário informar o e-mail utilixado para efetuar o login neste sistema.", "Erro de preenchimento", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            var senha = ObterSenha(destinatario);
+            //if (string.IsNullOrEmpty(destinatario))
+            //{
+            //    MessageBox.Show("É necessário informar o e-mail utilixado para efetuar o login neste sistema.", "Erro de preenchimento", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    return;
+            //}
+            //var senha = ObterSenha(destinatario);
 
-            if (string.IsNullOrEmpty(senha))
-                MessageBox.Show("O e-mail informado não está cadastrado neste sistema.", "Erro ao enviar", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else
-            {
-                var titulo = "SisGUAPA - Recuperação da senha";
-                var mensagem = "Olá, este é um e-mail automático enviado pelo SisGUAPA (Sistema de Gestão"
-                    + "Unificado para Associações de Proteção Animal).\r\n" +
-                    $"Conforme a sua solicitação a senha de acesso do sistema é: {senha}" +
-                    "\r\n Obrigada pelo seu contato!";
+            //if (string.IsNullOrEmpty(senha))
+            //    MessageBox.Show("O e-mail informado não está cadastrado neste sistema.", "Erro ao enviar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //else
+            //{
+            //    var titulo = "SisGUAPA - Recuperação da senha";
+            //    var mensagem = "Olá, este é um e-mail automático enviado pelo SisGUAPA (Sistema de Gestão"
+            //        + "Unificado para Associações de Proteção Animal).\r\n" +
+            //        $"Conforme a sua solicitação a senha de acesso do sistema é: {senha}" +
+            //        "\r\n Obrigada pelo seu contato!";
 
-                var resultado = Email.EnviarEmailAsync(destinatario, titulo, mensagem);
+            //    var resultado = Email.EnviarEmailAsync(destinatario, titulo, mensagem);
 
-                if (!string.IsNullOrEmpty(resultado))
-                    MessageBox.Show(resultado, "Erro ao enviar", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
-                    MessageBox.Show("E-mail enviado com sucesso. Verifique a sua conta de e-mail para obter a sua senha.",
-                        "E-mail enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            //    if (!string.IsNullOrEmpty(resultado))
+            //        MessageBox.Show(resultado, "Erro ao enviar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    else
+            //        MessageBox.Show("E-mail enviado com sucesso. Verifique a sua conta de e-mail para obter a sua senha.",
+            //            "E-mail enviado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //}
         }
 
         private string ObterSenha(string remetente)
         {
-            return UsuarioDAO.GetPorLogin(remetente).Senha;
+            return UsuarioDAO.GetPorEmail(remetente).Senha;
         }
     }
 }

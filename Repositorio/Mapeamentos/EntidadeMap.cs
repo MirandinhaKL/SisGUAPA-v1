@@ -7,7 +7,7 @@ namespace Repositorio.Mapeamentos
     {
         public EntidadeMap()
         {
-            Id(k => k.Id).GeneratedBy.Increment();
+            Id(k => k.Id).GeneratedBy.Identity();
 
             Map(k => k.Nome).Length(255);
             Map(k => k.Email).Length(255);

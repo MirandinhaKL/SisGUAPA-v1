@@ -189,6 +189,7 @@
     <Compile Include="FluentySessionFactory.cs" />
     <Compile Include="ICrudDao.cs" />
     <Compile Include="Interfaces\IAtendimentoService.cs" />
+    <Compile Include="Interfaces\IEmailService.cs" />
     <Compile Include="Interfaces\IEntidadeService.cs" />
     <Compile Include="Interfaces\IMedicamentoService.cs" />
     <Compile Include="Interfaces\ITratamentoService.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Servicos\AgendamentoMedicamentoService.cs" />
     <Compile Include="Servicos\AtendimentoService.cs" />
     <Compile Include="Servicos\ControleMedicamentoService.cs" />
+    <Compile Include="Servicos\EmailService.cs" />
     <Compile Include="Servicos\EntidadeService.cs" />
     <Compile Include="Servicos\MedicamentoService.cs" />
     <Compile Include="Servicos\TratamentoService.cs" />

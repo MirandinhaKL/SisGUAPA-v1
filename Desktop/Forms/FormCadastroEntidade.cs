@@ -11,7 +11,6 @@ namespace SisGUAPA.Forms
     public partial class FormEntidade : Form
     {
         private IEntidadeService _entidadeService;
-        private IUsuarioService _usuarioService;
 
         public FormEntidade()
         {
@@ -24,7 +23,6 @@ namespace SisGUAPA.Forms
         private void InitializeServices()
         {
             _entidadeService = IocKernel.Get<IEntidadeService>();
-            _usuarioService = IocKernel.Get<IUsuarioService>();
         }
 
         private bool SalvarEntidade()
@@ -39,38 +37,36 @@ namespace SisGUAPA.Forms
                 Senha = txtSenha1.Text,
                 Telefone = txtTelefone.Text,
                 CNPJ = txtCNPJ.Text,
-                EnderecoEntidade = new EnderecoEntidade()
-                {
-                    Estado = cbEstado.SelectedIndex,
-                    CEP = txtCEP.Text,
-                    Logradouro = txtLogradouro.Text,
-                    Numero = txtNumero.Text,
-                    Complemento = txtComplemento.Text,
-                    Bairro = txtBairro.Text,
-                    Cidade = txtCidade.Text
-                }
             };
 
-            entidade.Id = _entidadeService.SalvarEntidade(entidade);
+            var endereco = new EnderecoEntidade()
+            {
+                Estado = cbEstado.SelectedIndex,
+                CEP = txtCEP.Text,
+                Logradouro = txtLogradouro.Text,
+                Numero = txtNumero.Text,
+                Complemento = txtComplemento.Text,
+                Bairro = txtBairro.Text,
+                Cidade = txtCidade.Text,
+                Entidade = entidade
+            };
 
-            if (entidade.Id == (int)Enumeracoes.EnumStatusDaAcao.FALHA)
-                return false;
-
-            Usuario usuario = new Usuario()
+            var usuario = new Usuario()
             {
                 Email = txtEmail.Text,
                 Nome = txtNome.Text,
                 Senha = txtSenha1.Text,
                 GrauAcesso = (int)Enumeracoes.EnumGrauAcesso.Administrador,
-                DataIngresso = DateTime.Now,
-                Entidade = entidade
+                DataIngresso = DateTime.Now
             };
 
-            usuario.Id = _usuarioService.SalvarUsuario(usuario);
+            entidade.SetEnderecoEntidade(endereco);
+            entidade.AddUsuario(usuario);
 
+            entidade.Id = _entidadeService.SalvarEntidade(entidade);
             if (entidade.Id == (int)Enumeracoes.EnumStatusDaAcao.FALHA)
                 return false;
-           
+
             Global.UsuarioLogado = usuario;
             Global.Entidade = usuario.Entidade;
             
