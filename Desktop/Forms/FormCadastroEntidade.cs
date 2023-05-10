@@ -69,7 +69,7 @@ namespace SisGUAPA.Forms
 
             Global.UsuarioLogado = usuario;
             Global.Entidade = usuario.Entidade;
-            
+
             return true;
         }
 
@@ -79,7 +79,7 @@ namespace SisGUAPA.Forms
             {
                 foreach (Enumeracoes.EnumTipoEntidades item in FuncoesGerais.ConverterEnumParaLista<Enumeracoes.EnumTipoEntidades>())
                     this.comboTipoEntidade.Items.Add(item.GetDescricaoEnum());
-                
+
                 this.comboTipoEntidade.SelectedIndex = (int)Enumeracoes.EnumTipoEntidades.ONG;
             }
         }
@@ -148,5 +148,16 @@ namespace SisGUAPA.Forms
                 MessageBox.Show(mensagem, "Erro de cadastro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #region Eventos associados ao fechamento da janela
+
+        public delegate void CustomFormCloseHandler(object sender, FormClosedEventArgs e);
+        public event CustomFormCloseHandler CustomFormClose;
+        private void FormEntidade_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            CustomFormClose(sender, e);
+        }
+
+        #endregion
     }
 }

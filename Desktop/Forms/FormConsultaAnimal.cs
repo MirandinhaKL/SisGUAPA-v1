@@ -1,7 +1,9 @@
 ﻿using Desktop.Classes;
+using Desktop.DependencyInjection;
 using Desktop.Relatorios.PDFs;
 using Repositorio.DAO;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,6 +16,7 @@ namespace Desktop.Forms
 {
     public partial class FormConsultaAnimal : Form
     {
+        private IAnimalService _animalService;
         private List<Animal> Animais = new List<Animal>();
         private List<AnimalEspecie> Especies = new List<AnimalEspecie>();
         private List<AnimalPorte> Portes = new List<AnimalPorte>();
@@ -28,6 +31,7 @@ namespace Desktop.Forms
         {
             InitializeComponent();
             EnumTipoTela = enumTipoTela;
+            InitializeServices();
             AjustarExibicaoBotoes();
             CarregarTooltips();
             CarregarComboEspecie();
@@ -39,6 +43,11 @@ namespace Desktop.Forms
             CarregarAnimais();
         }
 
+        private void InitializeServices()
+        {
+            _animalService = IocKernel.Get<IAnimalService>();
+        } 
+        
         private void CarregarTooltips()
         {
             toolTipNovo.SetToolTip(btnNovo, "Permite cadastrar um novo animal no sistema.");
@@ -154,9 +163,8 @@ namespace Desktop.Forms
         {
             this.Cursor = Cursors.WaitCursor;
 
-            Animais = AnimalDAO.GetTodosRegistros(Global.Entidade.Id).OrderBy(k => k.Nome).ToList();
-           
-            var AnimaisFiltrados = Animais.OrderBy(k => k.Identificacao).ToList();
+            Animais = _animalService.GetAnimais(Global.Entidade.Id);
+            List<Animal> AnimaisFiltrados = Animais.OrderBy(k => k.Identificacao).ToList();
 
             if (EnumTipoTela == Enumeracoes.EnumTipoTela.Consulta)
                 AnimaisFiltrados = AnimaisFiltrados.Where(k => k.AnimalStatus == (int)Enumeracoes.EnumStatusAnimal.Disponível).ToList();

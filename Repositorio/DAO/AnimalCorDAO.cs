@@ -1,30 +1,21 @@
-﻿using Repositorio.Entidades;
-using System;
+﻿using NHibernate;
+using Repositorio.Entidades;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
+/*
+ * Alterado em: 04/05/23
+ */
 namespace Repositorio.DAO
 {
     public class AnimalCorDAO : RepositorioCrudDao<AnimalCor>
     {
-        public static int Salvar(AnimalCor cor)
-        {
-            return (int)new AnimalCorDAO().Inserir(cor);
-        }
-
-        public static bool Atualizar(AnimalCor cor)
-        {
-            return new AnimalCorDAO().Alterar(cor);
-        }
-
-        public static string Apagar(AnimalCor cor)
-            => new AnimalCorDAO().Excluir(cor);
-        
         public static List<AnimalCor> GetTodosRegistros(int entidadeId)
         {
-            return new AnimalCorDAO().Consultar(entidadeId).Where(k => k.Entidade.Id == entidadeId).ToList();
+            using (ISession Session = FluentySessionFactory.AbrirSession())
+            {
+                return Session.Query<AnimalCor>().Where(k => k.Entidade.Id == entidadeId).ToList();
+            }
         }
     }
 }

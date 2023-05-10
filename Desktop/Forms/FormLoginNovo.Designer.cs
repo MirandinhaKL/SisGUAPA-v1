@@ -141,6 +141,7 @@
             this.txtSenha.PasswordChar = '*';
             this.txtSenha.Size = new System.Drawing.Size(171, 25);
             this.txtSenha.TabIndex = 1;
+            this.txtSenha.Text = "123456";
             // 
             // label2
             // 
@@ -160,6 +161,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(171, 25);
             this.txtEmail.TabIndex = 0;
+            this.txtEmail.Text = "karine.lm@hotmail.com";
             // 
             // label1
             // 

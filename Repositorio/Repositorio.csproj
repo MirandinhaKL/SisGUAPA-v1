@@ -188,6 +188,7 @@
     <Compile Include="ClassesGerais\EnumeracoesRep.cs" />
     <Compile Include="FluentySessionFactory.cs" />
     <Compile Include="ICrudDao.cs" />
+    <Compile Include="Interfaces\IAnimalService.cs" />
     <Compile Include="Interfaces\IAtendimentoService.cs" />
     <Compile Include="Interfaces\IEmailService.cs" />
     <Compile Include="Interfaces\IEntidadeService.cs" />
@@ -230,6 +231,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositorioCrudDao.cs" />
     <Compile Include="Servicos\AgendamentoMedicamentoService.cs" />
+    <Compile Include="Servicos\AnimalService.cs" />
     <Compile Include="Servicos\AtendimentoService.cs" />
     <Compile Include="Servicos\ControleMedicamentoService.cs" />
     <Compile Include="Servicos\EmailService.cs" />

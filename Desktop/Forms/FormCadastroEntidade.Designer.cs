@@ -469,6 +469,7 @@
             this.Name = "FormEntidade";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Cadastro da entidade";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormEntidade_FormClosed);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panel6.ResumeLayout(false);

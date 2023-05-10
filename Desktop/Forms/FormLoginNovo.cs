@@ -46,6 +46,7 @@ namespace SisGUAPA.Forms
             {
                 MessageBox.Show(resultadoSenha.Item2, "Erro de preenchimento", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Cursor = Cursors.Default;
+                txtEmail.Focus();
                 return;
             }
 
@@ -107,8 +108,14 @@ namespace SisGUAPA.Forms
         private void btnCadastro_Click(object sender, EventArgs e)
         {
             FormEntidade formONG = new FormEntidade();
+            formONG.CustomFormClose += CloseListener;
             formONG.Show();
             this.Hide();
+        }
+
+        private void CloseListener(object sender, EventArgs e)
+        {
+            this.Show();
         }
 
         private void btnSair_Click(object sender, EventArgs e)

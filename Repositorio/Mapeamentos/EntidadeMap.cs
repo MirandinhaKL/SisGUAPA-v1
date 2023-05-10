@@ -19,6 +19,12 @@ namespace Repositorio.Mapeamentos
             Map(k => k.Telefone);
 
             HasMany(k => k.Usuarios).Cascade.All().Not.LazyLoad();
+            HasMany(k => k.CoresAnimal).Cascade.All().Not.LazyLoad();
+            HasMany(k => k.PortesAnimal).Cascade.All().Not.LazyLoad();
+            HasMany(k => k.EspeciesAnimal).Cascade.All().Not.LazyLoad();
+            HasMany(k => k.MotivosRecolhimentoAnimal).Cascade.All().Not.LazyLoad();
+            HasMany(k => k.MotivosFalecimentoAnimal).Cascade.All().Not.LazyLoad();
+
             References(k => k.EnderecoEntidade).Cascade.All().Not.LazyLoad();
 
             Table("Entidade");

@@ -12,6 +12,7 @@ namespace Desktop.DependencyInjection
 
             Bind<IEntidadeService>().To<EntidadeService>().InSingletonScope();
             Bind<IUsuarioService>().To<UsuarioService>().InSingletonScope();
+            Bind<IAnimalService>().To<AnimalService>().InSingletonScope();
             Bind<ITratamentoService>().To<TratamentoService>().InSingletonScope();
             Bind<IAtendimentoService>().To<AtendimentoService>().InSingletonScope();
             Bind<IMedicamentoService>().To<MedicamentoService>().InSingletonScope();

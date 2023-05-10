@@ -1,38 +1,46 @@
 ﻿using Desktop.Classes;
+using Desktop.DependencyInjection;
 using Repositorio.DAO;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Desktop.Forms
 {
     public partial class FormCadastroAnimalAuxiliar : Form
     {
-        private List<AnimalCor> Cores = new List<AnimalCor>();
-        private List<AnimalPorte> Portes = new List<AnimalPorte>();
-        private List<AnimalEspecie> Especies = new List<AnimalEspecie>();
-        private List<MotivoRecolhimento> MotivosRecolhimento = new List<MotivoRecolhimento>();
-        private List<MotivoFalecimento> MotivosFalecimento = new List<MotivoFalecimento>();
+        private IAnimalService _animalService;
 
-        private int TelaSelecionada = FormCadastroAnimal.TelaSelecionada;
-        private int AcaoBotao = 0;
+        private List<AnimalCor> _cores = new List<AnimalCor>();
+        private List<AnimalPorte> _portes = new List<AnimalPorte>();
+        private List<AnimalEspecie> _especies = new List<AnimalEspecie>();
+        private List<MotivoRecolhimento> _motivosRecolhimento = new List<MotivoRecolhimento>();
+        private List<MotivoFalecimento> _motivosFalecimento = new List<MotivoFalecimento>();
 
-        private AnimalCor AnimalCor;
-        private AnimalPorte AnimalPorte;
-        private AnimalEspecie AnimalEspecie;
-        private MotivoRecolhimento MotivoRecolhimento;
-        private MotivoFalecimento MotivoFalecimento;
+        private int _telaSelecionada = FormCadastroAnimal.TelaSelecionada;
+        private int _acaoBotao = 0;
+
+        private AnimalCor _animalCor;
+        private AnimalPorte _animalPorte;
+        private AnimalEspecie _animalEspecie;
+        private MotivoRecolhimento _motivoRecolhimento;
+        private MotivoFalecimento _motivoFalecimento;
 
         public FormCadastroAnimalAuxiliar()
         {
             InitializeComponent();
+            InitializeServices();
             ControlarEstadoComponentes(true);
             ControlarVisibilidadeBotoes(false);
             CarregarListView();
+        }
+
+        private void InitializeServices()
+        {
+            _animalService = IocKernel.Get<IAnimalService>();
         }
 
         private void ControlarEstadoComponentes(bool habilita)
@@ -46,36 +54,36 @@ namespace Desktop.Forms
         private void CarregarListView()
         {
             this.Cursor = Cursors.WaitCursor;
-            switch (TelaSelecionada)
+            switch (_telaSelecionada)
             {
                 case (int)Enumeracoes.EnumTelaAuxiliar.Cor:
-                    Cores.Clear();
-                    Cores = AnimalCorDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-                    MontaListView(Cores);
+                    _cores.Clear();
+                    _cores = _animalService.GetCoresOrdenadasPorNome(Global.Entidade.Id);
+                    MontaListView(_cores);
                     break;
 
                 case (int)Enumeracoes.EnumTelaAuxiliar.Porte:
-                    Portes.Clear();
-                    Portes = AnimalPorteDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-                    MontaListView(Portes);
+                    _portes.Clear();
+                    _portes = _animalService.GetPortesOrdenadosPorNome(Global.Entidade.Id);
+                    MontaListView(_portes);
                     break;
 
                 case (int)Enumeracoes.EnumTelaAuxiliar.Especie:
-                    Especies.Clear();
-                    Especies = AnimalEspecieDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-                    MontaListView(Especies);
+                    _especies.Clear();
+                    _especies = _animalService.GetEspeciesOrdenadasPorNome(Global.Entidade.Id);
+                    MontaListView(_especies);
                     break;
 
                 case (int)Enumeracoes.EnumTelaAuxiliar.MotivoRecolhimento:
-                    MotivosRecolhimento.Clear();
-                    MotivosRecolhimento = MotivoRecolhimentoDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-                    MontaListView(MotivosRecolhimento);
+                    _motivosRecolhimento.Clear();
+                    _motivosRecolhimento = _animalService.GetMotivosRecolhimentosOrdenadosPorNome(Global.Entidade.Id);
+                    MontaListView(_motivosRecolhimento);
                     break;
 
                 case (int)Enumeracoes.EnumTelaAuxiliar.MotivoFalecimento:
-                    MotivosFalecimento.Clear();
-                    MotivosFalecimento = MotivoFalecimentoDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-                    MontaListView(MotivosFalecimento);
+                    _motivosFalecimento.Clear();
+                    _motivosFalecimento = _animalService.GetMotivosFalecimentoOrdenadosPorNome(Global.Entidade.Id);
+                    MontaListView(_motivosFalecimento);
                     break;
 
                 default:
@@ -125,7 +133,7 @@ namespace Desktop.Forms
             ControlarVisibilidadeBotoes(false);
             txtDescricao.Focus();
             txtDescricao.Select();
-            AcaoBotao = (int)Enumeracoes.EnumAcaoBotao.Novo;
+            _acaoBotao = (int)Enumeracoes.EnumAcaoBotao.Novo;
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
@@ -144,117 +152,108 @@ namespace Desktop.Forms
                 errTxtDescricao.SetError(txtDescricao, "Informe uma descrição para salvar o registro.");
                 return;
             }
+            string descricao = txtDescricao.Text;
+            bool resultado = false;
+
+            if (_acaoBotao == (int)Enumeracoes.EnumAcaoBotao.Novo)
+            {
+                switch (_telaSelecionada)
+                {
+                    case (int)Enumeracoes.EnumTelaAuxiliar.Cor:
+                        AnimalCor cor = new AnimalCor()
+                        {
+                            Entidade = Global.Entidade,
+                            Descricao = descricao
+                        };
+                        resultado = _animalService.SalvarOuAtualizarCor(cor);
+                        break;
+
+                    case (int)Enumeracoes.EnumTelaAuxiliar.Porte:
+                        AnimalPorte porte = new AnimalPorte()
+                        {
+                            Entidade = Global.Entidade,
+                            Descricao = descricao
+                        };
+                        resultado = _animalService.SalvarOuAtualizarPorte(porte);
+                        break;
+
+                    case (int)Enumeracoes.EnumTelaAuxiliar.Especie:
+                        AnimalEspecie especie = new AnimalEspecie()
+                        {
+                            Entidade = Global.Entidade,
+                            Descricao = descricao
+                        };
+                        resultado = _animalService.SalvarOuAtualizarEspecie(especie);
+                        break;
+
+                    case (int)Enumeracoes.EnumTelaAuxiliar.MotivoRecolhimento:
+                        MotivoRecolhimento motivo = new MotivoRecolhimento()
+                        {
+                            Entidade = Global.UsuarioLogado.Entidade,
+                            Descricao = descricao
+                        };
+                        resultado = _animalService.SalvarOuAtualizarMotivoRecolhimento(motivo);
+                        break;
+
+                    case (int)Enumeracoes.EnumTelaAuxiliar.MotivoFalecimento:
+                        MotivoFalecimento motivoFalecimento = new MotivoFalecimento()
+                        {
+                            Entidade = Global.UsuarioLogado.Entidade,
+                            Descricao = descricao
+                        };
+                        resultado = _animalService.SalvarOuAtualizarMotivoFalecimento(motivoFalecimento);
+                        break;
+
+                    default:
+                        break;
+                }
+                if (resultado)
+                    FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
+                else
+                    FuncoesGerais.MensagemCRUDFalha(Enumeracoes.EnumMensagemErroAoUsuario.Salvar);
+            }
             else
             {
-                string descricao = txtDescricao.Text;
-
-                if (AcaoBotao == (int)Enumeracoes.EnumAcaoBotao.Novo)
+                switch (_telaSelecionada)
                 {
-                    var resultado = (int)Enumeracoes.EnumStatusDaAcao.FALHA;
+                    case (int)Enumeracoes.EnumTelaAuxiliar.Cor:
+                        _animalCor.Descricao = descricao;
+                        resultado = _animalService.SalvarOuAtualizarCor(_animalCor);
+                        break;
 
-                    switch (TelaSelecionada)
-                    {
+                    case (int)Enumeracoes.EnumTelaAuxiliar.Porte:
+                        _animalPorte.Descricao = descricao;
+                        resultado = _animalService.SalvarOuAtualizarPorte(_animalPorte);
+                        break;
 
-                        case (int)Enumeracoes.EnumTelaAuxiliar.Cor:
-                            AnimalCor cor = new AnimalCor()
-                            {
-                                Entidade = Global.UsuarioLogado.Entidade,
-                                Descricao = descricao
-                            };
-                            
-                            resultado = AnimalCorDAO.Salvar(cor);
-                            break;
+                    case (int)Enumeracoes.EnumTelaAuxiliar.Especie:
+                        _animalEspecie.Descricao = descricao;
+                        resultado = _animalService.SalvarOuAtualizarEspecie(_animalEspecie);
+                        break;
 
-                        case (int)Enumeracoes.EnumTelaAuxiliar.Porte:
-                            AnimalPorte porte = new AnimalPorte()
-                            {
-                                Entidade = Global.UsuarioLogado.Entidade,
-                                Descricao = descricao
-                            };
-                            resultado = AnimalPorteDAO.Salvar(porte);
-                            break;
+                    case (int)Enumeracoes.EnumTelaAuxiliar.MotivoRecolhimento:
+                        _motivoRecolhimento.Descricao = descricao;
+                        resultado = _animalService.SalvarOuAtualizarMotivoRecolhimento(_motivoRecolhimento);
+                        break;
 
-                        case (int)Enumeracoes.EnumTelaAuxiliar.Especie:
-                            AnimalEspecie especie = new AnimalEspecie()
-                            {
-                                Entidade = Global.UsuarioLogado.Entidade,
-                                Descricao = descricao
-                            };
-                            resultado = AnimalEspecieDAO.Salvar(especie);
-                            break;
+                    case (int)Enumeracoes.EnumTelaAuxiliar.MotivoFalecimento:
+                        _motivoFalecimento.Descricao = descricao;
+                        resultado = _animalService.SalvarOuAtualizarMotivoFalecimento(_motivoFalecimento);
+                        break;
 
-                        case (int)Enumeracoes.EnumTelaAuxiliar.MotivoRecolhimento:
-                            MotivoRecolhimento motivo = new MotivoRecolhimento()
-                            {
-                                Entidade = Global.UsuarioLogado.Entidade,
-                                Descricao = descricao
-                            };
-                            resultado = MotivoRecolhimentoDAO.Salvar(motivo);
-                            break;
-
-                        case (int)Enumeracoes.EnumTelaAuxiliar.MotivoFalecimento:
-                            MotivoFalecimento motivoFalecimento = new MotivoFalecimento()
-                            {
-                                Entidade = Global.UsuarioLogado.Entidade,
-                                Descricao = descricao
-                            };
-                            resultado = MotivoFalecimentoDAO.Salvar(motivoFalecimento);
-                            break;
-
-                        default:
-                            break;
-                    }
-
-                    if (resultado != (int)Enumeracoes.EnumStatusDaAcao.FALHA)
-                        FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
-                    else
-                        FuncoesGerais.MensagemCRUDFalha(Enumeracoes.EnumMensagemErroAoUsuario.Salvar);
+                    default:
+                        break;
                 }
+
+                if (resultado)
+                    FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Editar);
                 else
-                {
-                    var resultado = false;
-
-                    switch (TelaSelecionada)
-                    {
-                        case (int)Enumeracoes.EnumTelaAuxiliar.Cor:
-                            AnimalCor.Descricao = descricao;
-                            resultado = AnimalCorDAO.Atualizar(AnimalCor);
-                            break;
-
-                        case (int)Enumeracoes.EnumTelaAuxiliar.Porte:
-                            AnimalPorte.Descricao = descricao;
-                            resultado = AnimalPorteDAO.Atualizar(AnimalPorte);
-                            break;
-
-                        case (int)Enumeracoes.EnumTelaAuxiliar.Especie:
-                            AnimalEspecie.Descricao = descricao;
-                            resultado = AnimalEspecieDAO.Atualizar(AnimalEspecie);
-                            break;
-
-                        case (int)Enumeracoes.EnumTelaAuxiliar.MotivoRecolhimento:
-                            MotivoRecolhimento.Descricao = descricao;
-                            resultado = MotivoRecolhimentoDAO.Atualizar(MotivoRecolhimento);
-                            break;
-
-                        case (int)Enumeracoes.EnumTelaAuxiliar.MotivoFalecimento:
-                            MotivoFalecimento.Descricao = descricao;
-                            resultado = MotivoFalecimentoDAO.Atualizar(MotivoFalecimento);
-                            break;
-
-                        default:
-                            break;
-                    }
-
-                    if (resultado)
-                        FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Editar);
-                    else
-                        FuncoesGerais.MensagemCRUDFalha(Enumeracoes.EnumMensagemErroAoUsuario.Editar);
-                }
-
-                CarregarListView();
-                ControlarEstadoComponentes(true);
-                ControlarVisibilidadeBotoes(false);
+                    FuncoesGerais.MensagemCRUDFalha(Enumeracoes.EnumMensagemErroAoUsuario.Editar);
             }
+
+            CarregarListView();
+            ControlarEstadoComponentes(true);
+            ControlarVisibilidadeBotoes(false);
         }
 
         private void lvCadastrados_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -283,35 +282,35 @@ namespace Desktop.Forms
 
         private void Excluir()
         {
-            var linhaSelecionada = lvCadastrados.SelectedItems[0];
-            var codigo = Convert.ToInt32(linhaSelecionada.SubItems[0].Text);
-            var resultado = string.Empty;
+            ListViewItem linhaSelecionada = lvCadastrados.SelectedItems[0];
+            int codigo = Convert.ToInt32(linhaSelecionada.SubItems[0].Text);
+            string resultado = string.Empty;
 
-            switch (TelaSelecionada)
+            switch (_telaSelecionada)
             {
                 case (int)Enumeracoes.EnumTelaAuxiliar.Cor:
-                    var corAtual = Cores.Find(k => k.Id == codigo);
-                    resultado = AnimalCorDAO.Apagar(corAtual);
+                    AnimalCor corAtual = _cores.Find(k => k.Id == codigo);
+                    resultado = _animalService.ExcluirCor(corAtual);
                     break;
 
                 case (int)Enumeracoes.EnumTelaAuxiliar.Porte:
-                    var porteAtual = Portes.Find(k => k.Id == codigo);
-                    resultado = AnimalPorteDAO.Apagar(porteAtual);
+                    AnimalPorte porteAtual = _portes.Find(k => k.Id == codigo);
+                    resultado = _animalService.ExcluirPorte(porteAtual);
                     break;
 
                 case (int)Enumeracoes.EnumTelaAuxiliar.Especie:
-                    var especieAtual = Especies.Find(k => k.Id == codigo);
-                    resultado = AnimalEspecieDAO.Apagar(especieAtual);
+                    AnimalEspecie especieAtual = _especies.Find(k => k.Id == codigo);
+                    resultado = _animalService.ExcluirEspecie(especieAtual);
                     break;
 
                 case (int)Enumeracoes.EnumTelaAuxiliar.MotivoRecolhimento:
-                    var motivo = MotivosRecolhimento.Find(k => k.Id == codigo);
-                    resultado = MotivoRecolhimentoDAO.Apagar(motivo);
+                    MotivoRecolhimento motivo = _motivosRecolhimento.Find(k => k.Id == codigo);
+                    resultado = _animalService.ExcluirMotivoRecolhimento(motivo);
                     break;
 
                 case (int)Enumeracoes.EnumTelaAuxiliar.MotivoFalecimento:
-                    var motivoFalecimento = MotivosFalecimento.Find(k => k.Id == codigo);
-                    resultado = MotivoFalecimentoDAO.Apagar(motivoFalecimento);
+                    MotivoFalecimento motivoFalecimento = _motivosFalecimento.Find(k => k.Id == codigo);
+                    resultado =  _animalService.ExcluirMotivoFalecimento(motivoFalecimento);
                     break;
 
                 default:
@@ -327,7 +326,7 @@ namespace Desktop.Forms
             }
             else
             {
-                var possuiChaveEstrangeira = resultado.ToLower().Contains("foreign key");
+                bool possuiChaveEstrangeira = resultado.ToLower().Contains("foreign key");
                 if (possuiChaveEstrangeira)
                     FuncoesGerais.MensagemFalhaRestricaoChave();
                 else
@@ -339,41 +338,41 @@ namespace Desktop.Forms
         {
             if (FuncoesGerais.LinhFoiSelecionadaNaListView(lvCadastrados, "editar"))
             {
-                AcaoBotao = (int)Enumeracoes.EnumAcaoBotao.Editar;
+                _acaoBotao = (int)Enumeracoes.EnumAcaoBotao.Editar;
                 ControlarEstadoComponentes(false);
                 ControlarVisibilidadeBotoes(true);
                 txtDescricao.Focus();
                 txtDescricao.Select();
 
-                var linhaSelecionada = lvCadastrados.SelectedItems[0];
-                var codigo = Convert.ToInt32(linhaSelecionada.SubItems[0].Text);
+                ListViewItem linhaSelecionada = lvCadastrados.SelectedItems[0];
+                int codigo = Convert.ToInt32(linhaSelecionada.SubItems[0].Text);
 
-                switch (TelaSelecionada)
+                switch (_telaSelecionada)
                 {
                     case (int)Enumeracoes.EnumTelaAuxiliar.Cor:
                        
-                        AnimalCor = Cores.Find(k => k.Id == codigo);
-                        txtDescricao.Text = AnimalCor.Descricao;
+                        _animalCor = _cores.Find(k => k.Id == codigo);
+                        txtDescricao.Text = _animalCor.Descricao;
                         break;
 
                     case (int)Enumeracoes.EnumTelaAuxiliar.Porte:
-                        AnimalPorte = Portes.Find(k => k.Id == codigo);
-                        txtDescricao.Text = AnimalPorte.Descricao;
+                        _animalPorte = _portes.Find(k => k.Id == codigo);
+                        txtDescricao.Text = _animalPorte.Descricao;
                         break;
 
                     case (int)Enumeracoes.EnumTelaAuxiliar.Especie:
-                        AnimalEspecie = Especies.Find(k => k.Id == codigo);
-                        txtDescricao.Text = AnimalEspecie.Descricao;
+                        _animalEspecie = _especies.Find(k => k.Id == codigo);
+                        txtDescricao.Text = _animalEspecie.Descricao;
                         break;
 
                     case (int)Enumeracoes.EnumTelaAuxiliar.MotivoRecolhimento:
-                        MotivoRecolhimento = MotivosRecolhimento.Find(k => k.Id == codigo);
-                        txtDescricao.Text = MotivoRecolhimento.Descricao;
+                        _motivoRecolhimento = _motivosRecolhimento.Find(k => k.Id == codigo);
+                        txtDescricao.Text = _motivoRecolhimento.Descricao;
                         break;
 
                     case (int)Enumeracoes.EnumTelaAuxiliar.MotivoFalecimento:
-                        MotivoFalecimento = MotivosFalecimento.Find(k => k.Id == codigo);
-                        txtDescricao.Text = MotivoFalecimento.Descricao;
+                        _motivoFalecimento = _motivosFalecimento.Find(k => k.Id == codigo);
+                        txtDescricao.Text = _motivoFalecimento.Descricao;
                         break;
 
                     default:
