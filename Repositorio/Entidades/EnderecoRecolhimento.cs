@@ -17,6 +17,7 @@ namespace Repositorio.Entidades
         // Relacionamentos
 
         public virtual Entidade Entidade { get; set; }
-
+        public virtual Animal Animal { get; set; }
+        public virtual Recolhimento Recolhimento { get; set; }
     }
 }

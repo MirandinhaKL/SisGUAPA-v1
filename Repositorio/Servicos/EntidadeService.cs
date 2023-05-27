@@ -10,7 +10,7 @@ namespace Repositorio.Servicos
         public Dictionary<string, string> GetMensagemDadosInvalidos()
         {
             Dictionary<string, string> map = new Dictionary<string, string>();
-            map.Add("NOME", "Informe o nome da Entidade a qual este sistema irá gernciar os dados.");
+            map.Add("NOME", "Informe o nome da Entidade a qual este sistema irá gerenciar os dados.");
             map.Add("EMAIL", "Informe o e-mail da entidade que será utilizado para efetuar login neste sistema.");
             map.Add("SENHA", "Informe a senha para utilização deste sistema.");
             map.Add("SENHA_REP", "Repita a senha informada no campo 'Senha'.");

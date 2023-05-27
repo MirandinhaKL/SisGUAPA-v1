@@ -50,10 +50,6 @@
             this.rbMacho = new System.Windows.Forms.RadioButton();
             this.rbGeneroNaoSabe = new System.Windows.Forms.RadioButton();
             this.numPeso = new System.Windows.Forms.NumericUpDown();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.txtDeficiencia = new System.Windows.Forms.TextBox();
-            this.rbDeficienteSim = new System.Windows.Forms.RadioButton();
-            this.rbDeficienteNao = new System.Windows.Forms.RadioButton();
             this.cbCor = new System.Windows.Forms.ComboBox();
             this.groupBoxCastrado = new System.Windows.Forms.GroupBox();
             this.rbCastradoSim = new System.Windows.Forms.RadioButton();
@@ -75,16 +71,20 @@
             this.label29 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtDeficiencia = new System.Windows.Forms.TextBox();
+            this.rbDeficienteSim = new System.Windows.Forms.RadioButton();
+            this.rbDeficienteNao = new System.Windows.Forms.RadioButton();
             this.tabOrigem = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label22 = new System.Windows.Forms.Label();
-            this.txtTelefone = new System.Windows.Forms.TextBox();
-            this.btnMotivo = new System.Windows.Forms.Button();
-            this.txtRecolhedor = new System.Windows.Forms.TextBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.maskCEP = new System.Windows.Forms.MaskedTextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.txtCidade = new System.Windows.Forms.TextBox();
             this.txtBairro = new System.Windows.Forms.TextBox();
@@ -101,10 +101,14 @@
             this.label10 = new System.Windows.Forms.Label();
             this.rtbObservacao = new System.Windows.Forms.RichTextBox();
             this.dtpRecolhimento = new System.Windows.Forms.DateTimePicker();
-            this.cbMotivo = new System.Windows.Forms.ComboBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.cbMotivo = new System.Windows.Forms.ComboBox();
+            this.txtRecolhedor = new System.Windows.Forms.TextBox();
+            this.txtTelefone = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.btnMotivo = new System.Windows.Forms.Button();
             this.errorTxt = new System.Windows.Forms.ErrorProvider(this.components);
             this.ofdImagemAnimal = new System.Windows.Forms.OpenFileDialog();
             this.toolTipCor = new System.Windows.Forms.ToolTip(this.components);
@@ -116,26 +120,22 @@
             this.toolTipMotivoRecolhimento = new System.Windows.Forms.ToolTip(this.components);
             this.btnCancelar = new System.Windows.Forms.Button();
             this.btnSalvar = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.maskCEP = new System.Windows.Forms.MaskedTextBox();
             this.tabCadastroAnimal.SuspendLayout();
             this.tabAnimal.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPeso)).BeginInit();
-            this.groupBox2.SuspendLayout();
             this.groupBoxCastrado.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picAnimal)).BeginInit();
             this.panel5.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.tabOrigem.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorTxt)).BeginInit();
-            this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorTxt)).BeginInit();
             this.SuspendLayout();
             // 
             // tabCadastroAnimal
@@ -404,53 +404,6 @@
             this.numPeso.Size = new System.Drawing.Size(51, 20);
             this.numPeso.TabIndex = 5;
             // 
-            // groupBox2
-            // 
-            this.groupBox2.BackColor = System.Drawing.Color.White;
-            this.groupBox2.Controls.Add(this.txtDeficiencia);
-            this.groupBox2.Controls.Add(this.rbDeficienteSim);
-            this.groupBox2.Controls.Add(this.rbDeficienteNao);
-            this.groupBox2.Location = new System.Drawing.Point(173, 13);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(125, 97);
-            this.groupBox2.TabIndex = 39;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Deficiente";
-            // 
-            // txtDeficiencia
-            // 
-            this.txtDeficiencia.Enabled = false;
-            this.txtDeficiencia.HideSelection = false;
-            this.txtDeficiencia.Location = new System.Drawing.Point(8, 66);
-            this.txtDeficiencia.MaxLength = 255;
-            this.txtDeficiencia.Name = "txtDeficiencia";
-            this.txtDeficiencia.Size = new System.Drawing.Size(97, 20);
-            this.txtDeficiencia.TabIndex = 14;
-            // 
-            // rbDeficienteSim
-            // 
-            this.rbDeficienteSim.AutoSize = true;
-            this.rbDeficienteSim.Location = new System.Drawing.Point(9, 43);
-            this.rbDeficienteSim.Name = "rbDeficienteSim";
-            this.rbDeficienteSim.Size = new System.Drawing.Size(42, 17);
-            this.rbDeficienteSim.TabIndex = 1;
-            this.rbDeficienteSim.Text = "Sim";
-            this.rbDeficienteSim.UseVisualStyleBackColor = true;
-            this.rbDeficienteSim.CheckedChanged += new System.EventHandler(this.rbDeficienteSim_CheckedChanged);
-            // 
-            // rbDeficienteNao
-            // 
-            this.rbDeficienteNao.AutoSize = true;
-            this.rbDeficienteNao.Checked = true;
-            this.rbDeficienteNao.Location = new System.Drawing.Point(9, 20);
-            this.rbDeficienteNao.Name = "rbDeficienteNao";
-            this.rbDeficienteNao.Size = new System.Drawing.Size(45, 17);
-            this.rbDeficienteNao.TabIndex = 13;
-            this.rbDeficienteNao.TabStop = true;
-            this.rbDeficienteNao.Text = "Não";
-            this.rbDeficienteNao.UseVisualStyleBackColor = true;
-            this.rbDeficienteNao.CheckedChanged += new System.EventHandler(this.rbDeficienteNao_CheckedChanged);
-            // 
             // cbCor
             // 
             this.cbCor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -660,6 +613,71 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Dados do animal";
             // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Location = new System.Drawing.Point(6, 33);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(470, 176);
+            this.panel1.TabIndex = 67;
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel7.Controls.Add(this.groupBox2);
+            this.panel7.Location = new System.Drawing.Point(6, 223);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(470, 128);
+            this.panel7.TabIndex = 68;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.BackColor = System.Drawing.Color.White;
+            this.groupBox2.Controls.Add(this.txtDeficiencia);
+            this.groupBox2.Controls.Add(this.rbDeficienteSim);
+            this.groupBox2.Controls.Add(this.rbDeficienteNao);
+            this.groupBox2.Location = new System.Drawing.Point(173, 13);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(125, 97);
+            this.groupBox2.TabIndex = 39;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Deficiente";
+            // 
+            // txtDeficiencia
+            // 
+            this.txtDeficiencia.Enabled = false;
+            this.txtDeficiencia.HideSelection = false;
+            this.txtDeficiencia.Location = new System.Drawing.Point(8, 66);
+            this.txtDeficiencia.MaxLength = 255;
+            this.txtDeficiencia.Name = "txtDeficiencia";
+            this.txtDeficiencia.Size = new System.Drawing.Size(97, 20);
+            this.txtDeficiencia.TabIndex = 14;
+            // 
+            // rbDeficienteSim
+            // 
+            this.rbDeficienteSim.AutoSize = true;
+            this.rbDeficienteSim.Location = new System.Drawing.Point(9, 43);
+            this.rbDeficienteSim.Name = "rbDeficienteSim";
+            this.rbDeficienteSim.Size = new System.Drawing.Size(42, 17);
+            this.rbDeficienteSim.TabIndex = 1;
+            this.rbDeficienteSim.Text = "Sim";
+            this.rbDeficienteSim.UseVisualStyleBackColor = true;
+            this.rbDeficienteSim.CheckedChanged += new System.EventHandler(this.rbDeficienteSim_CheckedChanged);
+            // 
+            // rbDeficienteNao
+            // 
+            this.rbDeficienteNao.AutoSize = true;
+            this.rbDeficienteNao.Checked = true;
+            this.rbDeficienteNao.Location = new System.Drawing.Point(9, 20);
+            this.rbDeficienteNao.Name = "rbDeficienteNao";
+            this.rbDeficienteNao.Size = new System.Drawing.Size(45, 17);
+            this.rbDeficienteNao.TabIndex = 13;
+            this.rbDeficienteNao.TabStop = true;
+            this.rbDeficienteNao.Text = "Não";
+            this.rbDeficienteNao.UseVisualStyleBackColor = true;
+            this.rbDeficienteNao.CheckedChanged += new System.EventHandler(this.rbDeficienteNao_CheckedChanged);
+            // 
             // tabOrigem
             // 
             this.tabOrigem.AllowDrop = true;
@@ -700,37 +718,6 @@
             this.label22.Size = new System.Drawing.Size(49, 13);
             this.label22.TabIndex = 61;
             this.label22.Text = "Telefone";
-            // 
-            // txtTelefone
-            // 
-            this.txtTelefone.Location = new System.Drawing.Point(117, 85);
-            this.txtTelefone.MaxLength = 255;
-            this.txtTelefone.Name = "txtTelefone";
-            this.txtTelefone.Size = new System.Drawing.Size(161, 20);
-            this.txtTelefone.TabIndex = 1;
-            // 
-            // btnMotivo
-            // 
-            this.btnMotivo.BackColor = System.Drawing.Color.Transparent;
-            this.btnMotivo.BackgroundImage = global::Desktop.Properties.Resources.Novo_24;
-            this.btnMotivo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnMotivo.FlatAppearance.BorderSize = 0;
-            this.btnMotivo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMotivo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMotivo.Location = new System.Drawing.Point(572, 33);
-            this.btnMotivo.Name = "btnMotivo";
-            this.btnMotivo.Size = new System.Drawing.Size(27, 24);
-            this.btnMotivo.TabIndex = 3;
-            this.btnMotivo.UseVisualStyleBackColor = false;
-            this.btnMotivo.Click += new System.EventHandler(this.btnMotivo_Click);
-            // 
-            // txtRecolhedor
-            // 
-            this.txtRecolhedor.Location = new System.Drawing.Point(117, 52);
-            this.txtRecolhedor.MaxLength = 255;
-            this.txtRecolhedor.Name = "txtRecolhedor";
-            this.txtRecolhedor.Size = new System.Drawing.Size(161, 20);
-            this.txtRecolhedor.TabIndex = 0;
             // 
             // panel4
             // 
@@ -784,6 +771,15 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(352, 144);
             this.panel6.TabIndex = 28;
+            // 
+            // maskCEP
+            // 
+            this.maskCEP.Location = new System.Drawing.Point(234, 44);
+            this.maskCEP.Mask = "00000-999";
+            this.maskCEP.Name = "maskCEP";
+            this.maskCEP.Size = new System.Drawing.Size(106, 20);
+            this.maskCEP.TabIndex = 3;
+            this.maskCEP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label23
             // 
@@ -932,15 +928,6 @@
             this.dtpRecolhimento.Size = new System.Drawing.Size(215, 20);
             this.dtpRecolhimento.TabIndex = 1;
             // 
-            // cbMotivo
-            // 
-            this.cbMotivo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbMotivo.FormattingEnabled = true;
-            this.cbMotivo.Location = new System.Drawing.Point(366, 36);
-            this.cbMotivo.Name = "cbMotivo";
-            this.cbMotivo.Size = new System.Drawing.Size(200, 21);
-            this.cbMotivo.TabIndex = 2;
-            // 
             // label12
             // 
             this.label12.AutoSize = true;
@@ -950,6 +937,54 @@
             this.label12.Size = new System.Drawing.Size(169, 13);
             this.label12.TabIndex = 13;
             this.label12.Text = "Observação / Ponto de referência";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(37, 234);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(30, 13);
+            this.label14.TabIndex = 3;
+            this.label14.Text = "Data";
+            // 
+            // panel8
+            // 
+            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel8.Controls.Add(this.cbMotivo);
+            this.panel8.Controls.Add(this.txtRecolhedor);
+            this.panel8.Controls.Add(this.txtTelefone);
+            this.panel8.Controls.Add(this.label15);
+            this.panel8.Controls.Add(this.btnMotivo);
+            this.panel8.Location = new System.Drawing.Point(9, 209);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(606, 133);
+            this.panel8.TabIndex = 62;
+            // 
+            // cbMotivo
+            // 
+            this.cbMotivo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbMotivo.FormattingEnabled = true;
+            this.cbMotivo.Location = new System.Drawing.Point(366, 36);
+            this.cbMotivo.Name = "cbMotivo";
+            this.cbMotivo.Size = new System.Drawing.Size(200, 21);
+            this.cbMotivo.TabIndex = 2;
+            // 
+            // txtRecolhedor
+            // 
+            this.txtRecolhedor.Location = new System.Drawing.Point(117, 52);
+            this.txtRecolhedor.MaxLength = 255;
+            this.txtRecolhedor.Name = "txtRecolhedor";
+            this.txtRecolhedor.Size = new System.Drawing.Size(161, 20);
+            this.txtRecolhedor.TabIndex = 0;
+            // 
+            // txtTelefone
+            // 
+            this.txtTelefone.Location = new System.Drawing.Point(117, 85);
+            this.txtTelefone.MaxLength = 255;
+            this.txtTelefone.Name = "txtTelefone";
+            this.txtTelefone.Size = new System.Drawing.Size(161, 20);
+            this.txtTelefone.TabIndex = 1;
             // 
             // label15
             // 
@@ -961,15 +996,20 @@
             this.label15.TabIndex = 5;
             this.label15.Text = "Motivo";
             // 
-            // label14
+            // btnMotivo
             // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(37, 234);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(30, 13);
-            this.label14.TabIndex = 3;
-            this.label14.Text = "Data";
+            this.btnMotivo.BackColor = System.Drawing.Color.Transparent;
+            this.btnMotivo.BackgroundImage = global::Desktop.Properties.Resources.Novo_24;
+            this.btnMotivo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnMotivo.FlatAppearance.BorderSize = 0;
+            this.btnMotivo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMotivo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMotivo.Location = new System.Drawing.Point(572, 33);
+            this.btnMotivo.Name = "btnMotivo";
+            this.btnMotivo.Size = new System.Drawing.Size(27, 24);
+            this.btnMotivo.TabIndex = 3;
+            this.btnMotivo.UseVisualStyleBackColor = false;
+            this.btnMotivo.Click += new System.EventHandler(this.btnMotivo_Click);
             // 
             // errorTxt
             // 
@@ -1033,53 +1073,13 @@
             this.btnSalvar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnSalvar.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalvar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSalvar.Location = new System.Drawing.Point(451, 418);
+            this.btnSalvar.Location = new System.Drawing.Point(451, 419);
             this.btnSalvar.Name = "btnSalvar";
             this.btnSalvar.Size = new System.Drawing.Size(100, 34);
             this.btnSalvar.TabIndex = 0;
             this.btnSalvar.Text = "     Salvar";
             this.btnSalvar.UseVisualStyleBackColor = false;
             this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Location = new System.Drawing.Point(6, 33);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(470, 176);
-            this.panel1.TabIndex = 67;
-            // 
-            // panel7
-            // 
-            this.panel7.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel7.Controls.Add(this.groupBox2);
-            this.panel7.Location = new System.Drawing.Point(6, 223);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(470, 128);
-            this.panel7.TabIndex = 68;
-            // 
-            // panel8
-            // 
-            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel8.Controls.Add(this.cbMotivo);
-            this.panel8.Controls.Add(this.txtRecolhedor);
-            this.panel8.Controls.Add(this.txtTelefone);
-            this.panel8.Controls.Add(this.label15);
-            this.panel8.Controls.Add(this.btnMotivo);
-            this.panel8.Location = new System.Drawing.Point(9, 209);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(606, 133);
-            this.panel8.TabIndex = 62;
-            // 
-            // maskCEP
-            // 
-            this.maskCEP.Location = new System.Drawing.Point(234, 44);
-            this.maskCEP.Mask = "00000-999";
-            this.maskCEP.Name = "maskCEP";
-            this.maskCEP.Size = new System.Drawing.Size(106, 20);
-            this.maskCEP.TabIndex = 3;
-            this.maskCEP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // FormCadastroAnimal
             // 
@@ -1101,13 +1101,14 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPeso)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBoxCastrado.ResumeLayout(false);
             this.groupBoxCastrado.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picAnimal)).EndInit();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.tabOrigem.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
@@ -1115,10 +1116,9 @@
             this.panel4.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorTxt)).EndInit();
-            this.panel7.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorTxt)).EndInit();
             this.ResumeLayout(false);
 
         }

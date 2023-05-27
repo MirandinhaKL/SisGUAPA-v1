@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+/*
+ * Alterado em: 15/05/23
+ */
 
 namespace Repositorio.Entidades
 {
@@ -19,10 +19,27 @@ namespace Repositorio.Entidades
         #endregion
 
         #region Relacionamentos
+
         public virtual Entidade Entidade { get; set; }
 
-        #endregion
+        public virtual Animal Animal { get; set; }
 
-        //testar MAPEAMENTO E CONTINUAR O CADASTRO NA ABA RECOLHIMENTO e FORM AUXILIAR COM CADASTRO DE MOTIVO RECOLHIMENTO.
+        public virtual MotivoRecolhimento MotivoRecolhimento { get; set; }
+
+        public virtual EnderecoRecolhimento EnderecoRecolhimento { get; set; }
+
+        public virtual void SetEnderecoRecolhimento(EnderecoRecolhimento endereco)
+        {
+            endereco.Recolhimento = this;
+            EnderecoRecolhimento = endereco;
+        }
+
+        public virtual void SetMotivoRecolhimento(MotivoRecolhimento motivo)
+        {
+            motivo.Recolhimento = this;
+            MotivoRecolhimento = motivo;
+        }
+
+        #endregion
     }
 }

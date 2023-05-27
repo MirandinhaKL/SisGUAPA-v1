@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentNHibernate.Mapping;
+﻿using FluentNHibernate.Mapping;
 using Repositorio.Entidades;
+
 /*
  * Criado em: 23/09/20
+ * Alterado em: 26/05/23
  */
 namespace Repositorio.Mapeamentos
 {
@@ -22,8 +19,11 @@ namespace Repositorio.Mapeamentos
             Map(k => k.Telefone);
 
             References(k => k.Entidade);
+            References(k => k.Animal);
+            References(k => k.EnderecoRecolhimento).Cascade.All().Not.LazyLoad();
+            References(k => k.MotivoRecolhimento);
 
-            Table("recolhimento");
+            Table("DadosRecolhimento");
         }
     }
 }

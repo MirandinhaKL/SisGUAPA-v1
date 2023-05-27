@@ -1,6 +1,5 @@
 ﻿using Desktop.Classes;
 using Desktop.DependencyInjection;
-using Repositorio.DAO;
 using Repositorio.Entidades;
 using Repositorio.Interfaces;
 using System;

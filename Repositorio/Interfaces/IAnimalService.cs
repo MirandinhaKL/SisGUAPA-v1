@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 /*
  * Criado em: 01/05/23 
+ * Atualizado em: 23/05/23
  */
 
 namespace Repositorio.Interfaces
@@ -10,6 +11,8 @@ namespace Repositorio.Interfaces
     public interface IAnimalService
     {
         List<Animal> GetAnimais(int idEntidade);
+
+        bool SalvarOuAtualizarAnimal(Animal animal);
 
         bool SalvarOuAtualizarCor(AnimalCor cor);
 
@@ -40,5 +43,15 @@ namespace Repositorio.Interfaces
         List<MotivoFalecimento> GetMotivosFalecimentoOrdenadosPorNome(int idEntidade);
 
         string ExcluirMotivoFalecimento(MotivoFalecimento motivo);
+
+        bool SalvarOuAtualizarRecolhimento(Recolhimento recolhimento);
+
+        string ExcluirRecolhimento(Recolhimento recolhimento);
+
+        Recolhimento GetDadosRecolhimentoById(int idAnimal);
+
+        EnderecoRecolhimento GetEnderecoRecolhimentoById(int idAnimal);
+
+        void SalvarDadosIniciaisDoSistema(Entidade entidade);
     }
 }

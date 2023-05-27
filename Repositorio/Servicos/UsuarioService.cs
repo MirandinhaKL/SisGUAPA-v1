@@ -39,7 +39,7 @@ namespace Repositorio.Servicos
             if (string.IsNullOrEmpty(email))
                 return (false, "É necessário informar o e-mail cadastrado para o envio da senha.");
 
-            string senha = ObterSenha(email);
+            var senha = ObterSenha(email);
             if (string.IsNullOrEmpty(senha))
                 return (false, "O e-mail informado não está cadastrado neste sistema.");
             
@@ -48,7 +48,8 @@ namespace Repositorio.Servicos
 
         private string ObterSenha(string email)
         {
-            return UsuarioDAO.GetPorEmail(email).Senha;
+            Usuario usuario = UsuarioDAO.GetPorEmail(email);
+            return usuario?.Senha;
         }
 
         public (string destinatario, string titulo, string mensagem) GetDadosEmailRecuperacaoSenha(string email, string senha)

@@ -11,6 +11,8 @@ namespace SisGUAPA.Forms
     public partial class FormEntidade : Form
     {
         private IEntidadeService _entidadeService;
+        private IControleSistemaService _sistemaService;
+        private IAnimalService _animalService;
 
         public FormEntidade()
         {
@@ -23,11 +25,13 @@ namespace SisGUAPA.Forms
         private void InitializeServices()
         {
             _entidadeService = IocKernel.Get<IEntidadeService>();
+            _sistemaService = IocKernel.Get<IControleSistemaService>();
+            _animalService = IocKernel.Get<IAnimalService>();
         }
 
         private bool SalvarEntidade()
         {
-            Entidade entidade = new Entidade()
+            var entidade = new Entidade()
             {
                 TipoEntidade = comboTipoEntidade.SelectedIndex,
                 Nome = txtNome.Text,
@@ -68,7 +72,7 @@ namespace SisGUAPA.Forms
                 return false;
 
             Global.UsuarioLogado = usuario;
-            Global.Entidade = usuario.Entidade;
+            Global.Entidade = entidade;
 
             return true;
         }
@@ -137,8 +141,12 @@ namespace SisGUAPA.Forms
                 return;
             }
 
+            this.Cursor = Cursors.WaitCursor;
             if (SalvarEntidade())
             {
+                _sistemaService.RegistrarCriacaoBaseDados();
+                _sistemaService.RegistrarCriacaoEntidade(Global.Entidade);
+                _animalService.SalvarDadosIniciaisDoSistema(Global.Entidade);
                 new FormBase().Show();
                 this.Hide();
             }
@@ -147,6 +155,7 @@ namespace SisGUAPA.Forms
                 string mensagem = _entidadeService.GetMensagemDeErro()["SALVAR"];
                 MessageBox.Show(mensagem, "Erro de cadastro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            this.Cursor = Cursors.Default;
         }
 
         #region Eventos associados ao fechamento da janela

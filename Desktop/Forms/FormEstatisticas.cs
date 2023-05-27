@@ -42,19 +42,19 @@ namespace Desktop.Forms
 
             if ((int)intervalo == (int)EnumIntervalo.Mensal)
             {
-                AnimaisFiltrado = AnimaisOriginal.FindAll(k => k.Recolhimento.DataRecolhimento.Month == DateTime.Today.Month && k.Recolhimento.DataRecolhimento.Year == DateTime.Today.Year);
+                AnimaisFiltrado = AnimaisOriginal.FindAll(k => k.DadosRecolhimento.DataRecolhimento.Month == DateTime.Today.Month && k.DadosRecolhimento.DataRecolhimento.Year == DateTime.Today.Year);
                 AdocoesFiltradas = AdocoesOriginal.FindAll(k => k.DataAdocao.Month == DateTime.Today.Month && k.DataAdocao.Year == DateTime.Today.Year);
             }
             else if ((int)intervalo == (int)EnumIntervalo.Anual)
             {
-                AnimaisFiltrado = AnimaisOriginal.FindAll(k => k.Recolhimento.DataRecolhimento.Year == DateTime.Today.Year);
+                AnimaisFiltrado = AnimaisOriginal.FindAll(k => k.DadosRecolhimento.DataRecolhimento.Year == DateTime.Today.Year);
                 AdocoesFiltradas = AdocoesOriginal.FindAll(k => k.DataAdocao.Year == DateTime.Today.Year);
             }
             else
             {
                 AnimaisFiltrado = AnimaisOriginal.Where(k =>
-                    DateTime.Compare(k.Recolhimento.DataRecolhimento.Date, dtpInicioIntervalo.Value.Date) >= 0 &&
-                    DateTime.Compare(k.Recolhimento.DataRecolhimento.Date, dtpFimIntervalo.Value.Date) <= 0).ToList();
+                    DateTime.Compare(k.DadosRecolhimento.DataRecolhimento.Date, dtpInicioIntervalo.Value.Date) >= 0 &&
+                    DateTime.Compare(k.DadosRecolhimento.DataRecolhimento.Date, dtpFimIntervalo.Value.Date) <= 0).ToList();
 
                 AdocoesFiltradas = AdocoesOriginal.Where(k =>
                     DateTime.Compare(k.DataAdocao.Date, dtpInicioIntervalo.Value.Date) >= 0 &&

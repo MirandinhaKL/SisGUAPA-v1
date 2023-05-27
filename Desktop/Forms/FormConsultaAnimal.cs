@@ -17,7 +17,7 @@ namespace Desktop.Forms
     public partial class FormConsultaAnimal : Form
     {
         private IAnimalService _animalService;
-        private List<Animal> Animais = new List<Animal>();
+        private List<Animal> _animais = new List<Animal>();
         private List<AnimalEspecie> Especies = new List<AnimalEspecie>();
         private List<AnimalPorte> Portes = new List<AnimalPorte>();
         private Dictionary<int, string> Generos = new Dictionary<int, string>();
@@ -147,7 +147,7 @@ namespace Desktop.Forms
 
         private void btnNovo_Click(object sender, EventArgs e)
         {
-            var formAnimal = new FormCadastroAnimal(new Animal());
+            FormCadastroAnimal formAnimal = new FormCadastroAnimal(new Animal());
             formAnimal.FormClosing += new FormClosingEventHandler(this.FormAnimal_FormClosing);
             formAnimal.ShowDialog();
             CarregarAnimais();
@@ -163,18 +163,18 @@ namespace Desktop.Forms
         {
             this.Cursor = Cursors.WaitCursor;
 
-            Animais = _animalService.GetAnimais(Global.Entidade.Id);
-            List<Animal> AnimaisFiltrados = Animais.OrderBy(k => k.Identificacao).ToList();
+            _animais = _animalService.GetAnimais(Global.Entidade.Id);
+            List<Animal> animaisFiltrados = _animais.OrderBy(k => k.Identificacao).ToList();
 
             if (EnumTipoTela == Enumeracoes.EnumTipoTela.Consulta)
-                AnimaisFiltrados = AnimaisFiltrados.Where(k => k.AnimalStatus == (int)Enumeracoes.EnumStatusAnimal.Disponível).ToList();
+                animaisFiltrados = animaisFiltrados.Where(k => k.AnimalStatus == (int)Enumeracoes.EnumStatusAnimal.Disponível).ToList();
 
             if (!string.IsNullOrEmpty(txtID.Text))
-                AnimaisFiltrados = AnimaisFiltrados.Where(k => k.Identificacao.ToString() == txtID.Text.ToLower() || k.Nome.ToLower() == txtID.Text.ToLower()).ToList();
+                animaisFiltrados = animaisFiltrados.Where(k => k.Identificacao.ToString() == txtID.Text.ToLower() || k.Nome.ToLower() == txtID.Text.ToLower()).ToList();
 
             var especie = (AnimalEspecie)cboEspecie.Items[cboEspecie.SelectedIndex];
             if (cboEspecie.SelectedIndex > 0)
-                AnimaisFiltrados = AnimaisFiltrados.Where(k => k.AnimalEspecie != null && k.AnimalEspecie.Id == especie.Id).ToList();
+                animaisFiltrados = animaisFiltrados.Where(k => k.AnimalEspecie != null && k.AnimalEspecie.Id == especie.Id).ToList();
 
             var genero = cboGenero.Text;
             if (cboGenero.SelectedIndex > 0)
@@ -182,13 +182,13 @@ namespace Desktop.Forms
                 if (!string.IsNullOrEmpty(genero))
                 {
                     var generoSelecionado = Generos.FirstOrDefault(k => k.Value == genero).Key;
-                    AnimaisFiltrados = AnimaisFiltrados.Where(k => k.Genero == generoSelecionado).ToList();
+                    animaisFiltrados = animaisFiltrados.Where(k => k.Genero == generoSelecionado).ToList();
                 }
             }
 
             var porte = (AnimalPorte)cboPorte.Items[cboPorte.SelectedIndex];
             if (cboPorte.SelectedIndex > 0)
-                AnimaisFiltrados = AnimaisFiltrados.Where(k => k.AnimalPorte != null && k.AnimalPorte.Id == porte.Id).ToList();
+                animaisFiltrados = animaisFiltrados.Where(k => k.AnimalPorte != null && k.AnimalPorte.Id == porte.Id).ToList();
 
             var statusAnimal = cboStatus.Text;
             if (cboStatus.SelectedIndex > 0)
@@ -196,7 +196,7 @@ namespace Desktop.Forms
                 if (!string.IsNullOrEmpty(statusAnimal))
                 {
                     var statusSelecionado = StatusAnimal.FirstOrDefault(k => k.Value == statusAnimal).Key;
-                    AnimaisFiltrados = AnimaisFiltrados.Where(k => k.AnimalStatus == statusSelecionado).ToList();
+                    animaisFiltrados = animaisFiltrados.Where(k => k.AnimalStatus == statusSelecionado).ToList();
                 }
             }
 
@@ -206,7 +206,7 @@ namespace Desktop.Forms
                 if (!string.IsNullOrEmpty(castrado))
                 {
                     var statusCastrado = CastradosStatus.FirstOrDefault(k => k.Value == castrado).Key;
-                    AnimaisFiltrados = AnimaisFiltrados.Where(k => k.Castrado == statusCastrado).ToList();
+                    animaisFiltrados = animaisFiltrados.Where(k => k.Castrado == statusCastrado).ToList();
                 }
             }
 
@@ -214,13 +214,13 @@ namespace Desktop.Forms
             if (cboIdade.SelectedIndex > 0)
             {
                 if (!string.IsNullOrEmpty(idade))
-                    AnimaisFiltrados = AnimalAuxiliar.GetTodasIdadesClassificadas(AnimaisFiltrados, idade);
+                    animaisFiltrados = AnimalAuxiliar.GetTodasIdadesClassificadas(animaisFiltrados, idade);
             }
 
-            CarregarListViewAnimais(AnimaisFiltrados);
+            CarregarListViewAnimais(animaisFiltrados);
 
             this.Cursor = Cursors.Default;
-            return AnimaisFiltrados?.Count > 0;
+            return animaisFiltrados?.Count > 0;
         }
 
         private void CarregarListViewAnimais(List<Animal> animais)
@@ -329,7 +329,7 @@ namespace Desktop.Forms
 
                     if (Convert.ToInt32(lvAnimal.SelectedItems[0].SubItems[0].Text) is int idAnimal)
                     {
-                        animal = Animais.Find(k => k.Id == idAnimal);
+                        animal = _animais.Find(k => k.Id == idAnimal);
                         var excluir = AnimalDAO.Apagar(animal);
 
                         if (string.IsNullOrEmpty(excluir))
@@ -414,7 +414,7 @@ namespace Desktop.Forms
         {
             var animal = new Animal();
             if (Convert.ToInt32(lvAnimal.SelectedItems[0].SubItems[0].Text) is int idAnimal)
-                animal = Animais.FirstOrDefault(k => k.Id == idAnimal);
+                animal = _animais.FirstOrDefault(k => k.Id == idAnimal);
             return animal;
         }
 
@@ -424,7 +424,7 @@ namespace Desktop.Forms
 
             if (filtro.Length > 0)
             {
-                var animaisFiltrados = Animais.FindAll(
+                var animaisFiltrados = _animais.FindAll(
                     animal => animal.Identificacao.ToLower().Contains(filtro) ||
                               animal.Nome.ToLower().Contains(txtID.Text));
 
@@ -432,7 +432,7 @@ namespace Desktop.Forms
             }
             else
             {
-                CarregarListViewAnimais(Animais);
+                CarregarListViewAnimais(_animais);
             }
         }
     }

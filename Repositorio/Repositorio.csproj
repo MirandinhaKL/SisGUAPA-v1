@@ -128,6 +128,7 @@
     <Compile Include="ClassesGerais\GeraLog.cs" />
     <Compile Include="ClassesGerais\TabelasDB.cs" />
     <Compile Include="DAO\ControleMedicamentoDAO.cs" />
+    <Compile Include="DAO\ControleSistemaDAO.cs" />
     <Compile Include="DAO\EnderecoEntidadeDAO.cs" />
     <Compile Include="DAO\HospedagemDAO.cs" />
     <Compile Include="DAO\ColaboradorExterno.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Entidades\Adotante.cs" />
     <Compile Include="Entidades\Animal.cs" />
     <Compile Include="Entidades\ControleMedicamento.cs" />
+    <Compile Include="Entidades\ControleSistema.cs" />
     <Compile Include="Entidades\Tratamento.cs" />
     <Compile Include="Entidades\Medicamento.cs" />
     <Compile Include="Entidades\Patologia.cs" />
@@ -190,6 +192,7 @@
     <Compile Include="ICrudDao.cs" />
     <Compile Include="Interfaces\IAnimalService.cs" />
     <Compile Include="Interfaces\IAtendimentoService.cs" />
+    <Compile Include="Interfaces\IControleSistemaService.cs" />
     <Compile Include="Interfaces\IEmailService.cs" />
     <Compile Include="Interfaces\IEntidadeService.cs" />
     <Compile Include="Interfaces\IMedicamentoService.cs" />
@@ -203,6 +206,7 @@
     <Compile Include="Mapeamentos\ControleMedicamento3Map.cs" />
     <Compile Include="Mapeamentos\ControleMedicamento2Map.cs" />
     <Compile Include="Mapeamentos\ControleMedicamento1Map.cs" />
+    <Compile Include="Mapeamentos\ControleSistemaMap.cs" />
     <Compile Include="Mapeamentos\EnderecoEntidadeMap.cs" />
     <Compile Include="Mapeamentos\EnderecoLarTemporarioMap.cs" />
     <Compile Include="Mapeamentos\EnderecoColaboradorExternoMap.cs" />
@@ -234,6 +238,7 @@
     <Compile Include="Servicos\AnimalService.cs" />
     <Compile Include="Servicos\AtendimentoService.cs" />
     <Compile Include="Servicos\ControleMedicamentoService.cs" />
+    <Compile Include="Servicos\ControleSistemaService.cs" />
     <Compile Include="Servicos\EmailService.cs" />
     <Compile Include="Servicos\EntidadeService.cs" />
     <Compile Include="Servicos\MedicamentoService.cs" />

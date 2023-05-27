@@ -21,6 +21,7 @@ namespace Repositorio.Mapeamentos
             Map(k => k.Imagem).CustomType("BinaryBlob");
             Map(k => k.DataFalecimento);
             Map(k => k.Hospedado);
+            Map(k => k.DataCadastro);
 
             References(k => k.Entidade);
             References(k => k.Usuario);
@@ -28,15 +29,13 @@ namespace Repositorio.Mapeamentos
             References(k => k.AnimalEspecie).Not.LazyLoad();
             References(k => k.AnimalPorte).Not.LazyLoad();
             References(k => k.MotivoFalecimento).Not.LazyLoad();
-            References(k => k.Adocao).Not.LazyLoad();
 
-            References(k => k.EnderecoRecolhimento).Cascade.All().Not.LazyLoad();
-            References(k => k.MotivoRecolhimento).Cascade.All().Not.LazyLoad();
-            References(k => k.Recolhimento).Cascade.All().Not.LazyLoad();
+            References(k => k.DadosRecolhimento).Cascade.All().Not.LazyLoad();
+
+            //References(k => k.Adocao).Not.LazyLoad();
             //HasMany(k => k.Hospedagens).Cascade.All().Not.LazyLoad();
 
-
-            Table("animal");
+            Table("Animal");
         }
     }
 }

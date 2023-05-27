@@ -8,6 +8,7 @@ namespace Desktop.DependencyInjection
     {
         public override void Load()
         {
+            Bind<IControleSistemaService>().To<ControleSistemaService>().InSingletonScope();
             Bind<IEmailService>().To<EmailService>().InSingletonScope();
 
             Bind<IEntidadeService>().To<EntidadeService>().InSingletonScope();

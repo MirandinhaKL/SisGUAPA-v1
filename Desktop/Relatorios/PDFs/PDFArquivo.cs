@@ -52,7 +52,7 @@ namespace Desktop.PDFs
                 FabricaPDF.InsereTextoNegritoENormal(pdf, $"{campos.Especie}:  ", animal.AnimalEspecie?.Descricao);
                 FabricaPDF.InsereTextoNegritoENormal(pdf, $"{campos.Genero}:  ", FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumGenero)animal.Genero));
                 FabricaPDF.InsereTextoNegritoENormal(pdf, $"{campos.Cor}:  ", animal.AnimalCor?.Descricao);
-                FabricaPDF.InsereTextoNegritoENormal(pdf, $"{campos.DataRecolhimento}:  ", animal.Recolhimento?.DataRecolhimento.ToShortDateString());
+                FabricaPDF.InsereTextoNegritoENormal(pdf, $"{campos.DataRecolhimento}:  ", animal.DadosRecolhimento?.DataRecolhimento.ToShortDateString());
                 FabricaPDF.InsereTextoNegritoENormal(pdf, $"{campos.Peso}:  ", $"{ animal.Peso} Kg");
                 FabricaPDF.InsereTextoNegritoENormal(pdf, $"{campos.Deficiencia}:  ", animal.Deficiencia == string.Empty ? "Não" : animal.Deficiencia);
             }

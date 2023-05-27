@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentNHibernate.Mapping;
+﻿using FluentNHibernate.Mapping;
 using Repositorio.Entidades;
+
 /*
  * Criado em: 23/09/20
- * Alterado em: 24/09/21
+ * Alterado em: 15/05/23
  */
 namespace Repositorio.Mapeamentos
 {
@@ -26,8 +22,10 @@ namespace Repositorio.Mapeamentos
             Map(k => k.CEP).Length(10);
 
             References(k => k.Entidade);
+            References(k => k.Animal);
+            References(k => k.Recolhimento);
 
-            Table("endereco_recolhimento");
+            Table("EnderecoRecolhimento");
         }
     }
 }

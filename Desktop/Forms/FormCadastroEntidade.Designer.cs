@@ -85,6 +85,7 @@
             this.txtSenha2.PasswordChar = '*';
             this.txtSenha2.Size = new System.Drawing.Size(132, 20);
             this.txtSenha2.TabIndex = 5;
+            this.txtSenha2.Text = "12345";
             // 
             // label6
             // 
@@ -103,6 +104,7 @@
             this.txtSenha1.PasswordChar = '*';
             this.txtSenha1.Size = new System.Drawing.Size(132, 20);
             this.txtSenha1.TabIndex = 4;
+            this.txtSenha1.Text = "12345";
             // 
             // label5
             // 
@@ -120,6 +122,7 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(133, 20);
             this.txtEmail.TabIndex = 1;
+            this.txtEmail.Text = "karine.lm@hotmail.com";
             // 
             // label9
             // 
@@ -137,6 +140,7 @@
             this.txtNome.Name = "txtNome";
             this.txtNome.Size = new System.Drawing.Size(133, 20);
             this.txtNome.TabIndex = 0;
+            this.txtNome.Text = "Karine Miranda";
             // 
             // label3
             // 
@@ -219,6 +223,7 @@
             this.txtCEP.Name = "txtCEP";
             this.txtCEP.Size = new System.Drawing.Size(110, 20);
             this.txtCEP.TabIndex = 1;
+            this.txtCEP.Text = "95180072";
             // 
             // label23
             // 
@@ -237,6 +242,7 @@
             this.txtCidade.Name = "txtCidade";
             this.txtCidade.Size = new System.Drawing.Size(128, 20);
             this.txtCidade.TabIndex = 6;
+            this.txtCidade.Text = "Farroupilha";
             // 
             // txtBairro
             // 
@@ -245,6 +251,7 @@
             this.txtBairro.Name = "txtBairro";
             this.txtBairro.Size = new System.Drawing.Size(120, 20);
             this.txtBairro.TabIndex = 5;
+            this.txtBairro.Text = "Nova Sardenha";
             // 
             // label13
             // 
@@ -263,6 +270,7 @@
             this.txtComplemento.Name = "txtComplemento";
             this.txtComplemento.Size = new System.Drawing.Size(128, 20);
             this.txtComplemento.TabIndex = 4;
+            this.txtComplemento.Text = "Casa L";
             // 
             // cbEstado
             // 
@@ -311,6 +319,7 @@
             this.txtLogradouro.Name = "txtLogradouro";
             this.txtLogradouro.Size = new System.Drawing.Size(327, 20);
             this.txtLogradouro.TabIndex = 2;
+            this.txtLogradouro.Text = "Rua Coronel Pena";
             // 
             // label18
             // 
@@ -339,6 +348,7 @@
             this.txtNumero.Name = "txtNumero";
             this.txtNumero.Size = new System.Drawing.Size(119, 20);
             this.txtNumero.TabIndex = 3;
+            this.txtNumero.Text = "125";
             // 
             // panel2
             // 
@@ -390,6 +400,7 @@
             this.txtCNPJ.Name = "txtCNPJ";
             this.txtCNPJ.Size = new System.Drawing.Size(133, 20);
             this.txtCNPJ.TabIndex = 3;
+            this.txtCNPJ.Text = "01756925054";
             // 
             // label8
             // 
@@ -407,6 +418,7 @@
             this.txtTelefone.Name = "txtTelefone";
             this.txtTelefone.Size = new System.Drawing.Size(132, 20);
             this.txtTelefone.TabIndex = 6;
+            this.txtTelefone.Text = "54991745945";
             // 
             // label4
             // 

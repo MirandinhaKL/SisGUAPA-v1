@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Repositorio.Entidades
 {
@@ -9,7 +8,7 @@ namespace Repositorio.Entidades
 
         public Animal()
         {
-            Atendimentos = new List<Atendimento>();
+            //Atendimentos = new List<Atendimento>();
             //Hospedagens = new List<Hospedagem>();
         }
 
@@ -26,35 +25,40 @@ namespace Repositorio.Entidades
         public virtual string Raca { get; set; }
         public virtual DateTime DataFalecimento { get; set; }
         public virtual bool Hospedado { get; set; }
+        public virtual DateTime DataCadastro { get; set; }
 
         #endregion
 
         #region Relacionamentos
         public virtual Entidade Entidade { get; set; }
-        public virtual Usuario Usuario { get; set; }
+        public virtual Usuario Usuario { get; set; } // usuário que efetuou o cadastro do animal
         public virtual AnimalCor AnimalCor { get; set; }
         public virtual AnimalEspecie AnimalEspecie { get; set; }
         public virtual AnimalPorte AnimalPorte { get; set; }
         public virtual MotivoFalecimento MotivoFalecimento { get; set; }
-        public virtual Recolhimento Recolhimento { get; set; }
-        public virtual MotivoRecolhimento MotivoRecolhimento { get; set; }
+        public virtual Recolhimento DadosRecolhimento { get; set; }
 
-        public virtual Adocao Adocao { get; set; }
-        public virtual EnderecoRecolhimento EnderecoRecolhimento { get; set; }
-        public virtual IList<Atendimento> Atendimentos { get; protected set; }
+        public virtual void SetDadosRecolhimento(Recolhimento recolhimento)
+        {
+            recolhimento.Animal = this;
+            DadosRecolhimento = recolhimento;
+        }
+
+        //public virtual Adocao Adocao { get; set; }
+        //public virtual IList<Atendimento> Atendimentos { get; protected set; }
         //public virtual IList<Hospedagem> Hospedagens { get; protected set; }
 
-        public virtual void AddAtendimento(Atendimento atendimento)
-        {
-            atendimento.Animal = this;
-            Atendimentos.Add(atendimento);
-        }
+        //public virtual void AddAtendimento(Atendimento atendimento)
+        //{
+        //    atendimento.Animal = this;
+        //    Atendimentos.Add(atendimento);
+        //}
 
-        public virtual void RemoveAtendimento(Atendimento atendimento)
-        {
-            atendimento.Animal = this;
-            Atendimentos.Remove(atendimento);
-        }
+        //public virtual void RemoveAtendimento(Atendimento atendimento)
+        //{
+        //    atendimento.Animal = this;
+        //    Atendimentos.Remove(atendimento);
+        //}
 
         //public virtual void AddHospedagem(Hospedagem hospedagem)
         //{

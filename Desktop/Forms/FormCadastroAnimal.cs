@@ -1,6 +1,7 @@
 ﻿using Desktop.Classes;
-using Repositorio.DAO;
+using Desktop.DependencyInjection;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,24 +14,28 @@ namespace Desktop.Forms
     public partial class FormCadastroAnimal : Form
     {
         public static int TelaSelecionada;
+
+        private IAnimalService _animalService;
+
         private int _idAnimal;
         private bool _isEdicao = false;
         private Animal _animal;
         private EnderecoRecolhimento _enderecoRecolhimento;
         private Recolhimento _recolhimento;
 
-        private List<AnimalCor> Cores = new List<AnimalCor>();
-        private List<AnimalPorte> Portes = new List<AnimalPorte>();
-        private List<AnimalEspecie> Especies = new List<AnimalEspecie>();
-        private Dictionary<int, string> StatusAnimal = new Dictionary<int, string>();
-        private List<MotivoRecolhimento> MotivosRecolhimento = new List<MotivoRecolhimento>();
-        private List<MotivoFalecimento> MotivosFalecimento = new List<MotivoFalecimento>();
+        private List<AnimalCor> _cores = new List<AnimalCor>();
+        private List<AnimalPorte> _portes = new List<AnimalPorte>();
+        private List<AnimalEspecie> _especies = new List<AnimalEspecie>();
+        private Dictionary<int, string> _statusAnimal = new Dictionary<int, string>();
+        private List<MotivoRecolhimento> _motivosRecolhimento = new List<MotivoRecolhimento>();
+        private List<MotivoFalecimento> _motivosFalecimento = new List<MotivoFalecimento>();
 
         public FormCadastroAnimal(Animal animalEditato)
         {
             this.Cursor = Cursors.WaitCursor;
 
             InitializeComponent();
+            InitializeServices();
             AjustarVisibilidadeButtonExcluirImagem(false);
             this.txtID.Focus();
             this.txtID.Select();
@@ -51,7 +56,12 @@ namespace Desktop.Forms
             
             this.Cursor = Cursors.Default;
         }
-            
+
+        private void InitializeServices()
+        {
+            _animalService = IocKernel.Get<IAnimalService>();
+        }
+
         private void CarregarToolTip()
         {
             toolTipCor.SetToolTip(btnCor, "Permite consultar, cadastrar, editar e excluir cores referentes aos animais.");
@@ -66,8 +76,8 @@ namespace Desktop.Forms
         private void SetAnimal(Animal animal)
         {
             _animal = animal;
-            _enderecoRecolhimento = animal?.EnderecoRecolhimento;
-            _recolhimento = animal?.Recolhimento;
+            _enderecoRecolhimento = animal?.DadosRecolhimento?.EnderecoRecolhimento;
+            _recolhimento = animal?.DadosRecolhimento;
             _isEdicao = animal != null && animal.Id > 0;
 
             if (_isEdicao) 
@@ -92,8 +102,8 @@ namespace Desktop.Forms
             SetImagemAnimal(animal.Imagem);
 
             // Aba origem
-            SetEndereco(animal.EnderecoRecolhimento);
-            SetOrigemRecolhimento(animal.Recolhimento);
+            SetOrigemRecolhimento(animal.DadosRecolhimento); // ver se a consulta do método precisa ser feita novamente, ou ao buscar os dados do animal essa info já vem. - 
+            SetEndereco(animal.DadosRecolhimento?.EnderecoRecolhimento);
         }
 
         private void SetImagemAnimal(byte[] imagem)
@@ -109,7 +119,7 @@ namespace Desktop.Forms
         {
             if (recolhimento?.Id != null)
             {
-                _recolhimento = RecolhimentoDAO.GetById(recolhimento.Id);
+                _recolhimento = _animalService.GetDadosRecolhimentoById(recolhimento.Id);
                 rtbObservacao.Text = _recolhimento.Observacao;
                 txtTelefone.Text = _recolhimento.Telefone;
                 txtRecolhedor.Text = _recolhimento.Recolhedor;
@@ -121,7 +131,7 @@ namespace Desktop.Forms
         {
             if (enderecoRecolhimento?.Id != null)
             {
-                _enderecoRecolhimento = EnderecoRecolhimentoDAO.GetById(enderecoRecolhimento.Id);
+                _enderecoRecolhimento = _animalService.GetEnderecoRecolhimentoById(enderecoRecolhimento.Id);
                 txtCidade.Text = _enderecoRecolhimento.Cidade;
                 txtBairro.Text = _enderecoRecolhimento.Bairro;
                 txtComplemento.Text = _enderecoRecolhimento.Complemento;
@@ -188,6 +198,9 @@ namespace Desktop.Forms
                     Telefone = txtTelefone.Text,
                 };
 
+                var motivoRecolhimento = cbMotivo.SelectedIndex == -1 ? null : (MotivoRecolhimento)cbMotivo.Items[cbMotivo.SelectedIndex];
+                recolhimento.SetMotivoRecolhimento(motivoRecolhimento);
+
                 var enderecoRecolhimento = new EnderecoRecolhimento()
                 {
                     Entidade = Global.UsuarioLogado.Entidade,
@@ -200,6 +213,7 @@ namespace Desktop.Forms
                     CEP = maskCEP.Text
                 };
 
+                recolhimento.SetEnderecoRecolhimento(enderecoRecolhimento);
 
                 _animal.Identificacao = txtID.Text;
                 _animal.Nome = txtNome.Text;
@@ -216,13 +230,16 @@ namespace Desktop.Forms
                 _animal.AnimalEspecie = (AnimalEspecie)cbEspecie.Items[cbEspecie.SelectedIndex];
                 _animal.AnimalStatus = GetStatusAnimal();
                 _animal.DataFalecimento = new DateTime();
-                _animal.Recolhimento = recolhimento;
-                _animal.MotivoRecolhimento = cbMotivo.SelectedIndex == -1 ? null : (MotivoRecolhimento)cbMotivo.Items[cbMotivo.SelectedIndex];
+                _animal.SetDadosRecolhimento(recolhimento);
+                //_animal.MotivoRecolhimento = cbMotivo.SelectedIndex == -1 ? null : (MotivoRecolhimento)cbMotivo.Items[cbMotivo.SelectedIndex];
                 _animal.MotivoFalecimento = GetMotivoFalecimento();
-                _animal.EnderecoRecolhimento = enderecoRecolhimento;
+                //_animal.EnderecoRecolhimento = enderecoRecolhimento;
                 _animal.Entidade = Global.Entidade;
 
-                if (AnimalDAO.Salvar(_animal))
+                if (!_isEdicao)
+                    _animal.DataCadastro = DateTime.Today;
+
+                if (_animalService.SalvarOuAtualizarAnimal(_animal))
                 {
                     FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
                     this.Close();
@@ -295,12 +312,12 @@ namespace Desktop.Forms
 
         private int GetStatusAnimal()
         {
-           return StatusAnimal.FirstOrDefault(k => k.Value == cbStatus.Text).Key;
+           return _statusAnimal.FirstOrDefault(k => k.Value == cbStatus.Text).Key;
         }
 
         private MotivoFalecimento GetMotivoFalecimento()
         {
-            var statusAnimal = GetStatusAnimal();
+            int statusAnimal = GetStatusAnimal();
 
             if (cbMotivoFalecimento.SelectedIndex == -1)
                 return null;
@@ -328,48 +345,48 @@ namespace Desktop.Forms
 
         public void CarregarComboCor()
         {
-            Cores = AnimalCorDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-            cbCor.DataSource = Cores;
+            _cores = _animalService.GetCoresOrdenadasPorNome(Global.Entidade.Id);
+            cbCor.DataSource = _cores;
             cbCor.DisplayMember = "Descricao";
 
             if (_isEdicao && _animal.AnimalCor != null)
-                cbCor.SelectedItem = Cores.Find(k => k.Id == _animal.AnimalCor.Id);
+                cbCor.SelectedItem = _cores.Find(k => k.Id == _animal.AnimalCor.Id);
             else
                 cbCor.SelectedIndex = -1;
         }
 
         private void CarregarComboPorte()
         {
-            Portes = AnimalPorteDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-            cbPorte.DataSource = Portes;
+            _portes = _animalService.GetPortesOrdenadosPorNome(Global.Entidade.Id);
+            cbPorte.DataSource = _portes;
             cbPorte.DisplayMember = "Descricao";
 
             if (_isEdicao && _animal.AnimalPorte != null)
-                cbPorte.SelectedItem = Portes.Find(k => k.Id == _animal.AnimalPorte.Id);
+                cbPorte.SelectedItem = _portes.Find(k => k.Id == _animal.AnimalPorte.Id);
             else
                 cbPorte.SelectedIndex = -1;
         }
 
         private void CarregarComboEspecie()
         {
-            Especies = AnimalEspecieDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-            cbEspecie.DataSource = Especies;
+            _especies = _animalService.GetEspeciesOrdenadasPorNome(Global.Entidade.Id);
+            cbEspecie.DataSource = _especies;
             cbEspecie.DisplayMember = "Descricao";
 
             if (_isEdicao && _animal.AnimalEspecie != null)
-                cbEspecie.SelectedItem = Especies.Find(k => k.Id == _animal.AnimalEspecie.Id);
+                cbEspecie.SelectedItem = _especies.Find(k => k.Id == _animal.AnimalEspecie.Id);
             else
                 cbEspecie.SelectedIndex = -1;
         }
 
         private void CarregarComboStauts()
         {
-            var status = FuncoesGerais.ConverterEnumParaLista<Enumeracoes.EnumStatusAnimal>();
+            IList<Enumeracoes.EnumStatusAnimal> status = FuncoesGerais.ConverterEnumParaLista<Enumeracoes.EnumStatusAnimal>();
 
             foreach (var item in status)
-                StatusAnimal.Add((int)item, FuncoesGerais.GetDescricaoEnum(item));
+                _statusAnimal.Add((int)item, FuncoesGerais.GetDescricaoEnum(item));
 
-            cbStatus.DataSource = StatusAnimal.OrderBy(k => k.Value).ToList();
+            cbStatus.DataSource = _statusAnimal.OrderBy(k => k.Value).ToList();
             cbStatus.DisplayMember = "Value";
 
             if (_isEdicao && _animal != null)
@@ -388,24 +405,24 @@ namespace Desktop.Forms
         // Salvar o endereço de recolhimento e carregar demais dados da edição.
         private void CarregaComboMotivoRecolhimento()
         {
-            MotivosRecolhimento = MotivoRecolhimentoDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-            cbMotivo.DataSource = MotivosRecolhimento;
+            _motivosRecolhimento = _animalService.GetMotivosRecolhimentosOrdenadosPorNome(Global.Entidade.Id);
+            cbMotivo.DataSource = _motivosRecolhimento;
             cbMotivo.DisplayMember = "Descricao";
 
-            if (_isEdicao && _animal.MotivoRecolhimento != null)
-                cbMotivo.SelectedItem = MotivosRecolhimento.Find(k => k.Id == _animal.MotivoRecolhimento.Id);
+            if (_isEdicao && _animal.DadosRecolhimento?.MotivoRecolhimento != null)
+                cbMotivo.SelectedItem = _motivosRecolhimento.Find(k => k.Id == _animal.DadosRecolhimento.MotivoRecolhimento.Id);
             else
                 cbMotivo.SelectedIndex = -1;
         }
 
         private void CarregaComboMotivoFalecimento()
         {
-            MotivosFalecimento = MotivoFalecimentoDAO.GetTodosRegistros(Global.UsuarioLogado.Entidade.Id).OrderBy(k => k.Descricao).ToList();
-            cbMotivoFalecimento.DataSource = MotivosFalecimento;
+            _motivosFalecimento = _animalService.GetMotivosFalecimentoOrdenadosPorNome(Global.Entidade.Id);
+            cbMotivoFalecimento.DataSource = _motivosFalecimento;
             cbMotivoFalecimento.DisplayMember = "Descricao";
 
             if (_isEdicao && _animal.MotivoFalecimento != null)
-                cbMotivoFalecimento.SelectedItem = MotivosFalecimento.Find(k => k.Id == _animal.MotivoFalecimento.Id);
+                cbMotivoFalecimento.SelectedItem = _motivosFalecimento.Find(k => k.Id == _animal.MotivoFalecimento.Id);
             else
                 cbMotivoFalecimento.SelectedIndex = -1;
         }
@@ -592,3 +609,5 @@ namespace Desktop.Forms
     }
 }
 
+//testar dados recolhimento
+//    tesar endereco recolhimento
