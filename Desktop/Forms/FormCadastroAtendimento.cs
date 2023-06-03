@@ -1,6 +1,8 @@
 ﻿using Desktop.Classes;
+using Desktop.DependencyInjection;
 using Repositorio.Classes;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,13 +10,18 @@ using System.Linq;
 using System.Windows.Forms;
 
 /*
- * Criado em: 12/11/
+ * Criado em: 12/11/20
+ * Alterado em: 29/05/23
  */
 
 namespace Desktop.Forms
 {
     public partial class FormCadastroAtendimento : Form
     {
+        private IAnimalService _animalService;
+        private IAtendimentoService _atendimentoService;
+        private IUsuarioService _usuarioService;
+        private IColaboradorExternoService _colaboradorExternoService;
 
         private IEnumerable<Usuario> _usuarios = new List<Usuario>();
         private IEnumerable<ColaboradorExterno> _colaboradores = new List<ColaboradorExterno>();
@@ -29,6 +36,7 @@ namespace Desktop.Forms
         public FormCadastroAtendimento()
         {
             InitializeComponent();
+            InitializeServices();
             CarregarTooltips();
             CarregarComboInterno();
             CarregarComboColaboradorExternos();
@@ -36,54 +44,26 @@ namespace Desktop.Forms
             CarregarComboPatologia();
         }
 
+        private void InitializeServices()
+        {
+            _animalService = IocKernel.Get<IAnimalService>();
+            _atendimentoService = IocKernel.Get<IAtendimentoService>();
+            _usuarioService = IocKernel.Get<IUsuarioService>();
+            _colaboradorExternoService = IocKernel.Get<IColaboradorExternoService>();
+        }
+
         private void CarregarComboTipoAtendimento()
         {
-            _tiposDeAtendimentos = TipoAtendimentoDAO.GetTodosRegistros(Global.Entidade.Id).ToList();
-            comboTipoAtendimento.DataSource = _tiposDeAtendimentos.OrderBy(k => k.Nome).ToList();
+            _tiposDeAtendimentos = _atendimentoService.GetTiposAtendimentosOrdenadosPorNome(Global.Entidade.Id);
+            comboTipoAtendimento.DataSource = _tiposDeAtendimentos;
             comboTipoAtendimento.DisplayMember = "Nome";
             comboTipoAtendimento.SelectedIndex = -1;
         }
 
         private void CarregarDadosAnimal()
         {
-            var dadosAnimal = string.Empty;
-
-            dadosAnimal += $"Identificação: {_animalSelecionado.Identificacao}, Nome: {_animalSelecionado.Nome}, Espécie: {_animalSelecionado.AnimalEspecie.Descricao}, " +
-                $"Gênero: {FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumGenero)_animalSelecionado.Genero)}, Peso: {_animalSelecionado.Peso.ToString()} Kg, " +
-                $"Castrado: {FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumPossibilidades)_animalSelecionado.Castrado)}, " +
-                $"Idade: {GetIdade(_animalSelecionado.DataNascimento)}";
-            rtbAnimal.Text = dadosAnimal;
-
+            rtbAnimal.Text = _animalService.GetDadosResumidos(_animalSelecionado);
             FuncoesGerais.SetImagemPictureBox(pbAnimal, _animalSelecionado.Imagem);
-        }
-
-        private string GetIdade(DateTime nascimento)
-        {
-            var idadeBruta = DateTime.Today.Subtract(nascimento);
-            var anos = (int)Math.Truncate(idadeBruta.TotalDays / 365);
-            var meses = (int)Math.Truncate((idadeBruta.TotalDays % 365) / 30);
-            var dias = (int)Math.Truncate((idadeBruta.TotalDays % 365) % 30);
-
-            var ano = string.Empty;
-            if (anos == 1)
-                ano = "ano";
-            else if (anos > 1)
-                ano = "anos";
-
-            var mes = string.Empty;
-            if (meses == 1)
-                mes = "mês";
-            else if (meses > 1)
-                mes = "meses";
-
-            if (anos == 0 && meses == 0)
-                return $"{dias} dias";
-            else if (anos == 0 && meses > 0)
-                return $"{meses} {mes}";
-            else if (anos > 0 && meses == 0)
-                return $"{anos} {ano}";
-            else
-                return $"{anos} {ano} e {meses} {mes}";
         }
 
         private void CarregarTooltips()
@@ -94,7 +74,7 @@ namespace Desktop.Forms
 
         private void CarregarComboInterno()
         {
-            _usuarios = UsuarioDAO.GetTodosRegistros(Global.Entidade.Id).ToList().Where(k => k.Status != (int)Enumeracoes.EnumStatusUsuario.Inativo);
+            _usuarios = _usuarioService.GetUsuariosAtivos(Global.Entidade.Id);
             comboInterno.DataSource = _usuarios.OrderBy(k => k.Nome).ToList();
             comboInterno.DisplayMember = "Nome";
             comboInterno.SelectedIndex = -1;
@@ -102,7 +82,7 @@ namespace Desktop.Forms
 
         private void CarregarComboColaboradorExternos()
         {
-            _colaboradores = ColaboradorExternoDAO.GetTodosRegistros(Global.Entidade.Id).ToList().Where(k => k.Status != (int)Enumeracoes.EnumStatusUsuario.Inativo);
+            _colaboradores = _colaboradorExternoService.GetColaboradorExternosAtivos(Global.Entidade.Id);
             comboExterno.DataSource = _colaboradores.OrderBy(k => k.NomeEmpresa).ThenBy(k => k.NomeColaborador).ToList();
             comboExterno.DisplayMember = "NomeColaborador";
             //foreach (var item in _colaboradores)
@@ -130,8 +110,8 @@ namespace Desktop.Forms
 
         private void CarregarComboPatologia()
         {
-            _patologias = PatologiaDAO.GetTodosRegistros(Global.Entidade.Id).ToList();
-            comboPatologia.DataSource = _patologias.OrderBy(k => k.Nome).ToList();
+            _patologias = _atendimentoService.GetPatologiasOrdenadasPorNome(Global.Entidade.Id);
+            comboPatologia.DataSource = _patologias;
             comboPatologia.DisplayMember = "Nome";
             comboPatologia.SelectedIndex = -1;
         }
@@ -268,7 +248,8 @@ namespace Desktop.Forms
 
             if (string.IsNullOrEmpty(comboTipoAtendimento.SelectedItem?.ToString()))
             {
-                mensagem = "Você deve selecionar um tipo de atendimento para efetuar o cadastro de um atendimento. Somente assim, o horário de encerramento poderá ser estimado corretamente.";
+                mensagem = "Você deve selecionar um tipo de atendimento para efetuar o cadastro de um atendimento. " +
+                           "Somente assim, o horário de encerramento poderá ser estimado corretamente.";
                 MessageBox.Show(mensagem, "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }

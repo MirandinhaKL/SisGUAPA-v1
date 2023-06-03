@@ -1,8 +1,6 @@
-﻿using System;
-
-/*
+﻿/*
 * Criado em: 15/11/2020
-* Última alteração em: 
+* Última alteração em: 01/06/23
 */
 
 namespace Repositorio.Entidades
@@ -18,16 +16,14 @@ namespace Repositorio.Entidades
         public virtual string Nome { get; set; }
         public virtual int  DuracaoPadrao { get; set; }
         public virtual int  Frequencia { get; set; }
-        public virtual int enumPreAtendimento { get; set; } // É o valor do enumerador, não da classe.
+        public virtual int EnumPreAtendimento { get; set; } // É o valor do enumerador, não da classe.
 
         #endregion
 
         #region Relacionamentos
 
         public virtual Entidade Entidade { get; set; }
-        public virtual Atendimento Atendimento { get; set; }
+        //public virtual Atendimento Atendimento { get; set; }
         #endregion
-
-
     }
 }

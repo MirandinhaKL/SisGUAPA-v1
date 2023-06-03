@@ -1,4 +1,6 @@
-﻿using Repositorio.DAO;
+﻿using Dominio;
+using Dominio.Enums;
+using Repositorio.DAO;
 using Repositorio.Entidades;
 using Repositorio.Interfaces;
 using System;
@@ -7,7 +9,7 @@ using System.Linq;
 
 /*
  * Criado em: 01/05/23
- * Atualizado em: 25/05/23
+ * Atualizado em: 29/05/23
  */
 
 namespace Repositorio.Servicos
@@ -48,10 +50,47 @@ namespace Repositorio.Servicos
             return AnimalDAO.GetTodosRegistros(idEntidade).OrderBy(k => k.Nome).ToList();
         }
 
+        public string GetIdade(DateTime nascimento)
+        {
+            var idadeBruta = DateTime.Today.Subtract(nascimento);
+            var anos = (int)Math.Truncate(idadeBruta.TotalDays / 365);
+            var meses = (int)Math.Truncate((idadeBruta.TotalDays % 365) / 30);
+            var dias = (int)Math.Truncate((idadeBruta.TotalDays % 365) % 30);
+
+            var ano = string.Empty;
+            if (anos == 1)
+                ano = "ano";
+            else if (anos > 1)
+                ano = "anos";
+
+            var mes = string.Empty;
+            if (meses == 1)
+                mes = "mês";
+            else if (meses > 1)
+                mes = "meses";
+
+            if (anos == 0 && meses == 0)
+                return $"{dias} dias";
+            else if (anos == 0 && meses > 0)
+                return $"{meses} {mes}";
+            else if (anos > 0 && meses == 0)
+                return $"{anos} {ano}";
+            else
+                return $"{anos} {ano} e {meses} {mes}";
+        }
         public bool SalvarOuAtualizarAnimal(Animal animal)
         {
             AnimalDAO animalDAO = new AnimalDAO();
             return animalDAO.SalvarOuAtualizar(animal);
+        }
+
+        public string GetDadosResumidos(Animal animal)
+        {
+            return 
+                $"Identificação: {animal.Identificacao}, Nome: {animal.Nome}, Espécie: {animal.AnimalEspecie.Descricao}, " +
+                $"Gênero: {Uteis.GetDescricaoEnum((EnumAnimal.EnumGenero)animal.Genero)}, Peso: {animal.Peso} Kg, " +
+                $"Castrado: {Uteis.GetDescricaoEnum((EnumGeral.EnumPossibilidades)animal.Castrado)}, " +
+                $"Idade: {GetIdade(animal.DataNascimento)}";
         }
 
         #region cor

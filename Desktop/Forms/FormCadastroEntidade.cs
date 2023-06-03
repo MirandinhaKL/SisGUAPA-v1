@@ -13,6 +13,7 @@ namespace SisGUAPA.Forms
         private IEntidadeService _entidadeService;
         private IControleSistemaService _sistemaService;
         private IAnimalService _animalService;
+        private IAtendimentoService _atendimentoService;
 
         public FormEntidade()
         {
@@ -27,6 +28,7 @@ namespace SisGUAPA.Forms
             _entidadeService = IocKernel.Get<IEntidadeService>();
             _sistemaService = IocKernel.Get<IControleSistemaService>();
             _animalService = IocKernel.Get<IAnimalService>();
+            _atendimentoService = IocKernel.Get<IAtendimentoService>();
         }
 
         private bool SalvarEntidade()
@@ -131,22 +133,28 @@ namespace SisGUAPA.Forms
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
+
             if (!DadosValidos())
+            {
+                this.Cursor = Cursors.Default;
                 return;
+            }
 
             string emailJaCadastrado = _entidadeService.EntidadeJaSalva(txtEmail.Text);
             if (!string.IsNullOrEmpty(emailJaCadastrado))
             {
                 MessageBox.Show(emailJaCadastrado, "Atenção!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.Cursor = Cursors.Default;
                 return;
             }
 
-            this.Cursor = Cursors.WaitCursor;
             if (SalvarEntidade())
             {
                 _sistemaService.RegistrarCriacaoBaseDados();
                 _sistemaService.RegistrarCriacaoEntidade(Global.Entidade);
                 _animalService.SalvarDadosIniciaisDoSistema(Global.Entidade);
+                _atendimentoService.SalvarDadosIniciaisDoSistema(Global.Entidade);
                 new FormBase().Show();
                 this.Hide();
             }

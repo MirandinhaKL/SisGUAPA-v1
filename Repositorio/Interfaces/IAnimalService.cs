@@ -1,4 +1,5 @@
 ﻿using Repositorio.Entidades;
+using System;
 using System.Collections.Generic;
 
 /*
@@ -12,7 +13,11 @@ namespace Repositorio.Interfaces
     {
         List<Animal> GetAnimais(int idEntidade);
 
+        string GetIdade(DateTime nascimento);
+
         bool SalvarOuAtualizarAnimal(Animal animal);
+
+        string GetDadosResumidos(Animal animal);
 
         bool SalvarOuAtualizarCor(AnimalCor cor);
 

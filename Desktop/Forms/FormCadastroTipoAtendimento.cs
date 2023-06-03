@@ -1,6 +1,7 @@
 ﻿using Desktop.Classes;
-using Repositorio.Classes;
+using Desktop.DependencyInjection;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,12 +11,15 @@ using System.Windows.Forms;
 
 /*
  * Criado em: 15/11/21
+ * Alterado em: 30/05/23
  */
 
 namespace Desktop.Forms
 {
     public partial class FormCadastroTipoAtendimento : Form
     {
+        private IAtendimentoService _atendimentoService;
+
         private List<TipoAtendimento> _tiposDeAtendimentos;
         private TipoAtendimento _tipoAtendimento = new TipoAtendimento();
         private Dictionary<int, string> _duracoesTempo = new Dictionary<int, string>();
@@ -25,15 +29,21 @@ namespace Desktop.Forms
         public FormCadastroTipoAtendimento()
         {
             InitializeComponent();
+            InitializeServices();
             CarregarToolTips();
             CarregarTiposAtendimentos();
+        }
+
+        private void InitializeServices()
+        {
+            _atendimentoService = IocKernel.Get<IAtendimentoService>();
         }
 
         private void CarregarTiposAtendimentos()
         {
             this.Cursor = Cursors.WaitCursor;
             lvAtendimentos.Items.Clear();
-            _tiposDeAtendimentos = TipoAtendimentoDAO.GetTodosRegistros(Global.Entidade.Id).OrderBy(k => k.Nome).ToList();
+            _tiposDeAtendimentos = _atendimentoService.GetTiposAtendimentosOrdenadosPorNome(Global.Entidade.Id);
 
             if (_tiposDeAtendimentos.Any())
             {
@@ -47,7 +57,7 @@ namespace Desktop.Forms
                     lvi.SubItems.Add(item.Nome == null ? string.Empty : item.Nome);
                     lvi.SubItems.Add(FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumDuracaoPadrao)item.DuracaoPadrao));
                     lvi.SubItems.Add(FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumFrequenciaRecomendada)item.Frequencia));
-                    lvi.SubItems.Add(FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumPreAtendimento)item.enumPreAtendimento));
+                    lvi.SubItems.Add(FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumPreAtendimento)item.EnumPreAtendimento));
 
                     if (contaLinha % 2 == 0)
                         lvi.BackColor = Color.LightCyan;
@@ -121,7 +131,7 @@ namespace Desktop.Forms
             cbPreAtendimento.DisplayMember = "Value";
 
             if (_tipoAtendimento != null && _tipoAtendimento.Id > 0)
-                cbPreAtendimento.SelectedIndex = _tipoAtendimento.enumPreAtendimento;
+                cbPreAtendimento.SelectedIndex = _tipoAtendimento.EnumPreAtendimento;
             else
                 cbPreAtendimento.SelectedIndex = 0;
         }
@@ -174,7 +184,7 @@ namespace Desktop.Forms
             txtNome.Text = _tipoAtendimento.Nome;
             cbDuracao.SelectedIndex = _tipoAtendimento.DuracaoPadrao;
             cbFrequencia.SelectedIndex = _tipoAtendimento.Frequencia;
-            cbPreAtendimento.SelectedIndex = _tipoAtendimento.enumPreAtendimento;
+            cbPreAtendimento.SelectedIndex = _tipoAtendimento.EnumPreAtendimento;
         }
 
         #region Eventos
@@ -207,10 +217,11 @@ namespace Desktop.Forms
                 _tipoAtendimento.Nome = txtNome.Text;
                 _tipoAtendimento.DuracaoPadrao = _duracoesTempo.FirstOrDefault(k => k.Value == cbDuracao.Text).Key;
                 _tipoAtendimento.Frequencia = _frequencias.FirstOrDefault(k => k.Value == cbFrequencia.Text).Key;
-                _tipoAtendimento.enumPreAtendimento = _preAtendimentos.FirstOrDefault(k => k.Value == cbPreAtendimento.Text).Key;
+                _tipoAtendimento.EnumPreAtendimento = _preAtendimentos.FirstOrDefault(k => k.Value == cbPreAtendimento.Text).Key;
                 _tipoAtendimento.Entidade = Global.Entidade;
 
-                if (TipoAtendimentoDAO.Salvar(_tipoAtendimento))
+                var isSaved = _atendimentoService.SalvarOuAtulizarTipoAtendimento(_tipoAtendimento);
+                if (isSaved)
                 {
                     FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
                     this.Close();
@@ -233,7 +244,7 @@ namespace Desktop.Forms
                     if (Convert.ToInt32(lvAtendimentos.SelectedItems[0].SubItems[0].Text) is int idTipoAtendimento)
                     {
                         var tipoAtendimento = _tiposDeAtendimentos.Find(k => k.Id == idTipoAtendimento);
-                        var status = TipoAtendimentoDAO.Apagar(tipoAtendimento);
+                        var status = _atendimentoService.ExcluirTipoAtendimento(tipoAtendimento);
 
                         if (string.IsNullOrEmpty(status))
                         {

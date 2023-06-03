@@ -31,6 +31,7 @@ namespace Repositorio.Mapeamentos
             References(k => k.MotivoFalecimento).Not.LazyLoad();
 
             References(k => k.DadosRecolhimento).Cascade.All().Not.LazyLoad();
+            //References(k => k.Atendimentos).Cascade.All().Not.LazyLoad();
 
             //References(k => k.Adocao).Not.LazyLoad();
             //HasMany(k => k.Hospedagens).Cascade.All().Not.LazyLoad();

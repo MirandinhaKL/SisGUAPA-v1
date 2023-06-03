@@ -1,7 +1,9 @@
-﻿using Repositorio.Classes;
+﻿using Dominio.Enums;
+using Repositorio.Classes;
 using Repositorio.Entidades;
 using Repositorio.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Repositorio.Servicos
 {
@@ -23,6 +25,13 @@ namespace Repositorio.Servicos
         public Usuario GetUsuario(string email, string senha)
         {
             return new UsuarioDAO().ValidarLogin(email, senha);
+        }
+
+        public IEnumerable<Usuario> GetUsuariosAtivos(int idEntidade)
+        {
+            var usuarioDAO = new UsuarioDAO();
+            var usuarios = UsuarioDAO.GetTodosRegistros(idEntidade).ToList().Where(k => k.Status != (int)EnumPessoa.EnumStatusUsuario.Inativo);
+            return usuarios;
         }
 
         public string UsuarioEhValido(int identificador)
@@ -66,6 +75,7 @@ namespace Repositorio.Servicos
 
         public string GetMensagemEnvioSenha()
             => "E-mail enviado com sucesso. Verifique a sua conta de e-mail para obter a sua senha.";
+
 
     }
 }
