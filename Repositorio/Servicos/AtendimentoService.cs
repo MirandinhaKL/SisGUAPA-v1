@@ -12,20 +12,14 @@ namespace Repositorio.Servicos
         public void SalvarDadosIniciaisDoSistema(Entidade entidade)
         {
             var tiposAtendimentos = GetTiposAtemdimentosMoqDados(entidade);
+            var patologias = GetPatologiasMoqDados(entidade);
 
             foreach (var item in tiposAtendimentos)
                 SalvarOuAtulizarTipoAtendimento(item);
-        }
 
-        public List<Patologia> GetPatologiasOrdenadasPorNome(int idEntidade)
-        {
-            List<Patologia> patologias = PatologiaDAO
-                                        .GetTodosRegistros(idEntidade)
-                                        .OrderBy(pat => pat.Nome)
-                                        .ToList();
-            return patologias;
+            foreach (var item in patologias)
+                SalvarOuAtulizarPatologia(item);
         }
-
 
         public List<Atendimento> GetAtendimentoComTratamento(int entidadeId)
             => AtendimentoDAO.GetAtendimentoComTratamento(entidadeId);
@@ -90,6 +84,31 @@ namespace Repositorio.Servicos
 
         #endregion
 
+        #region Patologia
+
+        public List<Patologia> GetPatologiasOrdenadasPorNome(int idEntidade)
+        {
+            List<Patologia> patologias = PatologiaDAO
+                                        .GetTodosRegistros(idEntidade)
+                                        .OrderBy(pat => pat.Nome)
+                                        .ToList();
+            return patologias;
+        }
+
+        public bool SalvarOuAtulizarPatologia(Patologia patologia)
+        {
+            PatologiaDAO patologiaDAO = new PatologiaDAO();
+            return patologiaDAO.SalvarOuAtualizar(patologia);
+        }
+
+        public string ExcluirPatologia(Patologia patologia)
+        {
+            PatologiaDAO patologiaDAO = new PatologiaDAO();
+            return patologiaDAO.Excluir(patologia);
+        }
+
+        #endregion
+
         #region DadosMoqados
 
         private List<TipoAtendimento> GetTiposAtemdimentosMoqDados(Entidade entidade)
@@ -112,6 +131,22 @@ namespace Repositorio.Servicos
                     DuracaoPadrao = (int)EnumAtendimento.EnumDuracaoPadrao.minutos10,
                     EnumPreAtendimento = (int)EnumAtendimento.EnumPreAtendimento.naoNecessario,
                     Frequencia = (int)EnumAtendimento.EnumFrequenciaRecomendada.trimentral }
+            };
+        }
+
+        private List<Patologia> GetPatologiasMoqDados(Entidade entidade)
+        {
+            return new List<Patologia>
+            {
+                new Patologia(){ Entidade = entidade, Nome = "Sarna", Descricao = "A sarna é uma infecção parasitária contagiosa da pele " +
+                "que ocorre entre seres humanos e outros animais. É causada pelo ácaro Sarcoptes scabiei, que se refugia sob a pele do " +
+                "hospedeiro, causando coceira alérgica intensa e borbulhas – como erupção cutânea." },
+                new Patologia(){Entidade = entidade, Nome = "FeLV", Descricao = "A Leucemia felina é uma doença causada pelo vírus FeLV" +
+                " que compromete as defesas imunológicas dos gatos domésticos e felídeos selvagens. Com o vírus, o felino fica vulnerável " +
+                "a doenças infecciosas, lesões na pele, desnutrição, cicatrização mais lenta de feridas e problemas reprodutivos."},
+                new Patologia(){Entidade = entidade, Nome = "Cinomose", Descricao = "É uma doença causada pelo vírus conhecido como CDV, ou" +
+                " Canine Distemper Virus, traduzido para o português como “vírus da esgana canina”. A doença é conhecida por afetar " +
+                "principalmente filhotes ou canídeos que possuem o sistema imunológico debilitado."}
             };
         }
 

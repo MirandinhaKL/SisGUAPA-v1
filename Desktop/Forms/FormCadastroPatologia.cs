@@ -1,39 +1,47 @@
 ﻿using Desktop.Classes;
+using Desktop.DependencyInjection;
 using Repositorio.Classes;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
+using Repositorio.Servicos;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 /*
  * Início em: 15/11/21
+ * Atualizado em: 02/06/23
  */
 
 namespace Desktop.Forms
 {
     public partial class FormCadastroPatologia : Form
     {
+        private IAtendimentoService _atendimentoService;
         private List<Patologia> _patologias;
         private Patologia _patologia = new Patologia();
 
         public FormCadastroPatologia()
         {
             InitializeComponent();
+            InitializeServices();
             CarregarToolTips();
             CarregarPatologias();
+        }
+
+        private void InitializeServices()
+        {
+            _atendimentoService = IocKernel.Get<IAtendimentoService>();
         }
 
         private void CarregarPatologias()
         {
             this.Cursor = Cursors.WaitCursor;
             lvPatologia.Items.Clear();
-            _patologias = PatologiaDAO.GetTodosRegistros(Global.Entidade.Id).OrderBy(k => k.Nome).ToList();
+            _patologias = _atendimentoService.GetPatologiasOrdenadasPorNome(Global.Entidade.Id);
 
             if (_patologias.Any())
             {
@@ -109,14 +117,18 @@ namespace Desktop.Forms
             rtbDescricao.Text = _patologia.Descricao;
         }
 
-        #region Eventos
+        private void LimparCampos()
+        {
+            _patologia = new Patologia();
+            txtNome.Text = rtbDescricao.Text = string.Empty;
+        }
 
+        #region Eventos
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
@@ -126,7 +138,8 @@ namespace Desktop.Forms
                 _patologia.Descricao = rtbDescricao.Text;
                 _patologia.Entidade = Global.Entidade;
 
-                if (PatologiaDAO.Salvar(_patologia))
+                var statusSave = _atendimentoService.SalvarOuAtulizarPatologia(_patologia);
+                if (statusSave)
                 {
                     FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
                     this.Close();
@@ -137,14 +150,6 @@ namespace Desktop.Forms
                 }
             }
         }
-
-        private void LimparCampos()
-        {
-            _patologia = new Patologia();
-            txtNome.Text = rtbDescricao.Text = string.Empty;
-        }
-
-        #endregion
 
         private void btnNovo_Click(object sender, EventArgs e)
         {
@@ -173,7 +178,7 @@ namespace Desktop.Forms
                     if (Convert.ToInt32(lvPatologia.SelectedItems[0].SubItems[0].Text) is int idPatologia)
                     {
                         var patologia = _patologias.Find(k => k.Id == idPatologia);
-                        var status = PatologiaDAO.Apagar(patologia);
+                        var status = _atendimentoService.ExcluirPatologia(patologia);
 
                         if (string.IsNullOrEmpty(status))
                         {
@@ -192,5 +197,7 @@ namespace Desktop.Forms
                 }
             }
         }
+
+        #endregion
     }
 }

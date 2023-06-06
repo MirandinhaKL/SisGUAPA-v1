@@ -3,7 +3,7 @@ using Repositorio.Entidades;
 
 /*
 * Criado em: 15/11/2020
-* Última alteração em: 
+* Última alteração em: 02/06/23
 */
 
 namespace Repositorio.Mapeamentos
@@ -18,9 +18,9 @@ namespace Repositorio.Mapeamentos
             Map(k => k.Descricao).Length(1000);
 
             References(k => k.Entidade);
-            References(k => k.Atendimento).Cascade.All().Not.LazyLoad(); ;
+            //References(k => k.Atendimento).Cascade.All().Not.LazyLoad(); ;
             
-            Table("patologia");
+            Table("Patologia");
         }
     }
 }

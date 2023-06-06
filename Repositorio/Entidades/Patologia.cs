@@ -1,7 +1,6 @@
-﻿using System;
-
-/*
+﻿/*
  * Criada em: 15/11/2021
+ * Atualizado em: 02/06/23
  */
 namespace Repositorio.Entidades
 {
@@ -20,7 +19,7 @@ namespace Repositorio.Entidades
         #region Relacionamentos
 
         public virtual Entidade Entidade { get; set; }
-        public virtual Atendimento Atendimento { get; set; }
+        //public virtual Atendimento Atendimento { get; set; }
         
         #endregion
     }

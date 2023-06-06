@@ -15,6 +15,10 @@ namespace Repositorio.Interfaces
 
         List<Patologia> GetPatologiasOrdenadasPorNome(int idEntidade);
 
+        bool SalvarOuAtulizarPatologia(Patologia patologia);
+
+        string ExcluirPatologia(Patologia patologia);
+
         List<Atendimento> GetAtendimentoComTratamento(int entidadeId);
 
         Medicamento GetMedicamento(Tratamento tratamento, int numeroMedicamento);
