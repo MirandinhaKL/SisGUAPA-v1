@@ -1,5 +1,6 @@
 ﻿/*
 * Criado em: 12/11/2021
+* Alterado em: 05/06/23
 */
 
 namespace Repositorio.Entidades
@@ -24,5 +25,11 @@ namespace Repositorio.Entidades
         public virtual EnderecoColaboradorExterno EnderecoColaboradorExterno { get; set; }
 
         #endregion
+
+        public virtual void SetEnderecoColaborador(EnderecoColaboradorExterno endereco)
+        {
+            endereco.ColaboradorExterno = this;
+            EnderecoColaboradorExterno = endereco;
+        }
     }
 }

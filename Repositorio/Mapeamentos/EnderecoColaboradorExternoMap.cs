@@ -2,6 +2,7 @@
 using Repositorio.Entidades;
 /*
  * Criado em: 23/09/20
+ * Atualizado em: 09/06/23
  */
 namespace Repositorio.Mapeamentos
 {
@@ -9,7 +10,7 @@ namespace Repositorio.Mapeamentos
     {
         public EnderecoColaboradorExternoMap()
         {
-            Id(k => k.Id);
+            Id(k => k.Id).GeneratedBy.Foreign("ColaboradorExterno");
 
             Map(k => k.Estado);
             Map(k => k.Cidade).Length(255);
@@ -19,9 +20,10 @@ namespace Repositorio.Mapeamentos
             Map(k => k.Complemento).Length(255);
             Map(k => k.CEP).Length(10);
 
-            References(k => k.Entidade);
+            //References(k => k.Entidade);
+            HasOne(k => k.ColaboradorExterno);
 
-            Table("endereco_colaborador_externo");
+            Table("EnderecoColaboradorExterno");
         }
     }
 }

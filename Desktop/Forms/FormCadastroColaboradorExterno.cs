@@ -1,6 +1,8 @@
 ﻿using Desktop.Classes;
+using Desktop.DependencyInjection;
 using Repositorio.Classes;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,22 +18,27 @@ namespace Desktop.Forms
 {
     public partial class FormCadastroColaboradorExterno : Form
     {
+        private IColaboradorExternoService _colaboradorService;
         private List<ColaboradorExterno> _colaboradoresExternos;
         private ColaboradorExterno _colaboradorExterno = new ColaboradorExterno();
 
         public FormCadastroColaboradorExterno()
         {
             InitializeComponent();
+            InitializeServices();
             CarregarToolTips();
             CarregaComboBoxEstadosBrasil();
             CarregarColaboradores();
         }
-
+        private void InitializeServices()
+        {
+            _colaboradorService = IocKernel.Get<IColaboradorExternoService>();
+        }
         private void CarregarColaboradores()
         {
             this.Cursor = Cursors.WaitCursor;
             lvColaboradores.Items.Clear();
-            _colaboradoresExternos = ColaboradorExternoDAO.GetTodosRegistros(Global.Entidade.Id).OrderBy(k => k.NomeEmpresa).ToList();
+            _colaboradoresExternos = _colaboradorService.GetColaboradorExternosAtivos(Global.Entidade.Id);
 
             if (_colaboradoresExternos.Any())
             {
@@ -134,6 +141,10 @@ namespace Desktop.Forms
                 txtCidade.Text = _colaboradorExterno.EnderecoColaboradorExterno.Cidade;
                 cbEstado.SelectedIndex = _colaboradorExterno.EnderecoColaboradorExterno.Estado;
             }
+            else
+            {
+                LimparCamposEndereco();
+            }
         }
 
         private void LimparCampos()
@@ -144,6 +155,10 @@ namespace Desktop.Forms
             txtCargo.Text = string.Empty;
             txtEmail.Text = string.Empty;
             txtTelefone.Text = string.Empty;
+        }
+
+        private void LimparCamposEndereco()
+        {
             maskCEP.Text = string.Empty;
             txtLogradouro.Text = string.Empty;
             txtNumero.Text = string.Empty;
@@ -177,10 +192,12 @@ namespace Desktop.Forms
                 _colaboradorExterno.Telefone = txtTelefone.Text;
                 _colaboradorExterno.Email = txtEmail.Text;
                 _colaboradorExterno.Entidade = Global.Entidade;
-                _colaboradorExterno.EnderecoColaboradorExterno = endereco;
                 _colaboradorExterno.Status = (int)Enumeracoes.EnumStatusUsuario.Ativo;
 
-                if (ColaboradorExternoDAO.Salvar(_colaboradorExterno))
+                _colaboradorExterno.SetEnderecoColaborador(endereco);
+
+                var isSaved = _colaboradorService.SalvarOuAtualizarColaborador(_colaboradorExterno);
+                if (isSaved)
                 {
                     FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
                     this.Close();
@@ -195,6 +212,7 @@ namespace Desktop.Forms
         private void btnNovo_Click(object sender, EventArgs e)
         {
             LimparCampos();
+            LimparCamposEndereco();
             HabilitarComponentes(true);
         }
 
@@ -219,20 +237,16 @@ namespace Desktop.Forms
                     if (Convert.ToInt32(lvColaboradores.SelectedItems[0].SubItems[0].Text) is int idColaborador)
                     {
                         var colaborador = _colaboradoresExternos.Find(k => k.Id == idColaborador);
-                        var status = ColaboradorExternoDAO.Apagar(colaborador);
+                        var status = _colaboradorService.InativarColaborador(colaborador);
 
-                        if (string.IsNullOrEmpty(status))
+                        if (status)
                         {
                             FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Excluir);
                             this.Close();
                         }
                         else
                         {
-                            var possuiChaveEstrangeira = status.ToLower().Contains("foreign key");
-                            if (possuiChaveEstrangeira)
-                                FuncoesGerais.MensagemFalhaRestricaoChave();
-                            else
-                                FuncoesGerais.MensagemCRUDFalha(Enumeracoes.EnumMensagemErroAoUsuario.Excluir);
+                            FuncoesGerais.MensagemCRUDFalha(Enumeracoes.EnumMensagemErroAoUsuario.Excluir);
                         }
                     }
                     this.Close(); 

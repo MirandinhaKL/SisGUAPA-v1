@@ -14,6 +14,7 @@ namespace SisGUAPA.Forms
         private IControleSistemaService _sistemaService;
         private IAnimalService _animalService;
         private IAtendimentoService _atendimentoService;
+        private IColaboradorExternoService _colaboradorExternoService;
 
         public FormEntidade()
         {
@@ -29,6 +30,7 @@ namespace SisGUAPA.Forms
             _sistemaService = IocKernel.Get<IControleSistemaService>();
             _animalService = IocKernel.Get<IAnimalService>();
             _atendimentoService = IocKernel.Get<IAtendimentoService>();
+            _colaboradorExternoService = IocKernel.Get<IColaboradorExternoService>();
         }
 
         private bool SalvarEntidade()
@@ -155,6 +157,7 @@ namespace SisGUAPA.Forms
                 _sistemaService.RegistrarCriacaoEntidade(Global.Entidade);
                 _animalService.SalvarDadosIniciaisDoSistema(Global.Entidade);
                 _atendimentoService.SalvarDadosIniciaisDoSistema(Global.Entidade);
+                _colaboradorExternoService.SalvarDadosIniciaisDoSistema(Global.Entidade);
                 new FormBase().Show();
                 this.Hide();
             }
