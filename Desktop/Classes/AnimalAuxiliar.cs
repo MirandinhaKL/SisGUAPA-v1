@@ -1,9 +1,6 @@
 ﻿using Repositorio.Entidades;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Desktop.Classes
 {
@@ -13,12 +10,12 @@ namespace Desktop.Classes
 
         public static string GetClassificaoIdade(DateTime nascimento, DateTime falecimento, int enumStatus)
         {
-            var idade = new TimeSpan();
+            TimeSpan idade = new TimeSpan();
 
             if ((int)Enumeracoes.EnumStatusAnimal.Morto != enumStatus)
-                idade = DateTime.Today.Subtract(nascimento);
+                idade = DateTime.Today - nascimento;
             else
-                idade = falecimento.Subtract(nascimento);
+                idade = falecimento - nascimento;
 
             return ClassificarFaixaEtaria(idade);
         }
@@ -33,9 +30,9 @@ namespace Desktop.Classes
                 Animal animal = item;
 
                 if ((int)Enumeracoes.EnumStatusAnimal.Morto != item.AnimalStatus)
-                    idade = DateTime.Today.Subtract(item.DataNascimento);
+                    idade = DateTime.Today - item.DataNascimento;
                 else
-                    idade = item.DataFalecimento.Subtract(item.DataNascimento);
+                    idade = item.DataFalecimento - item.DataNascimento;
 
                 var faixaEtaria = ClassificarFaixaEtaria(idade);
                 if (faixaEtaria == classificacao)

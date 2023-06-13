@@ -43,6 +43,11 @@ namespace Repositorio.Servicos
 
             foreach (var item in animais)
                 SalvarOuAtualizarAnimal(item);
+
+            var animaisGenericos = GetRandonAnimaisMoqados(entidade);
+
+            foreach (var item in animaisGenericos)
+                SalvarOuAtualizarAnimal(item);
         }
 
         public List<Animal> GetAnimais(int idEntidade)
@@ -86,7 +91,7 @@ namespace Repositorio.Servicos
 
         public string GetDadosResumidos(Animal animal)
         {
-            return 
+            return
                 $"Identificação: {animal.Identificacao}, Nome: {animal.Nome}, Espécie: {animal.AnimalEspecie.Descricao}, " +
                 $"Gênero: {Uteis.GetDescricaoEnum((EnumAnimal.EnumGenero)animal.Genero)}, Peso: {animal.Peso} Kg, " +
                 $"Castrado: {Uteis.GetDescricaoEnum((EnumGeral.EnumPossibilidades)animal.Castrado)}, " +
@@ -100,7 +105,7 @@ namespace Repositorio.Servicos
             AnimalCorDAO corDAO = new AnimalCorDAO();
             return corDAO.SalvarOuAtualizar(cor);
         }
-        
+
         public List<AnimalCor> GetCoresOrdenadasPorNome(int idEntidade)
         {
             List<AnimalCor> cores = AnimalCorDAO.GetTodosRegistros(idEntidade);
@@ -136,7 +141,7 @@ namespace Repositorio.Servicos
             AnimalPorteDAO porteDAO = new AnimalPorteDAO();
             return porteDAO.Excluir(porte);
         }
-        
+
         #endregion porte
 
         #region especie
@@ -458,6 +463,101 @@ namespace Repositorio.Servicos
             return animais;
         }
 
-        #endregion
+        // criado pelo chat GPT
+        private List<Animal> GetRandonAnimaisMoqados(Entidade entidade)
+        {
+            List<Animal> animais = new List<Animal>();
+
+            var cores = GetCoresOrdenadasPorNome(entidade.Id);
+            var especies = GetEspeciesOrdenadasPorNome(entidade.Id);
+            var portes = GetPortesOrdenadosPorNome(entidade.Id);
+            var motivosRecolhimento = GetMotivosRecolhimentosOrdenadosPorNome(entidade.Id);
+
+            Random random = new Random();
+
+            for (int i = 0; i < 50; i++)
+            {
+                var animal = new Animal()
+                {
+                    AnimalCor = cores[random.Next(cores.Count)],
+                    AnimalEspecie = especies[random.Next(especies.Count)],
+                    AnimalPorte = portes[random.Next(portes.Count)],
+                    AnimalStatus = 1,
+                    Castrado = random.Next(2),
+                    DataCadastro = GetRandomDate(DateTime.Today.AddDays(-365), DateTime.Today),
+                    DataNascimento = GetRandomDate(),
+                    Deficiencia = string.Empty,
+                    Genero = random.Next(2),
+                    Identificacao = "CAO" + (i + 1).ToString("D2"),
+                    Nome = "Animal " + (i + 1).ToString("D2"),
+                    Peso = random.Next(1, 30),
+                    Raca = "ND",
+                    Entidade = entidade
+                };
+
+                var recolhimento = new Recolhimento()
+                {
+                    DataRecolhimento = GetRandomDate(DateTime.Today.AddYears(-10), DateTime.Today),
+                    Observacao = "Observation for Animal " + (i + 1).ToString("D2"),
+                    Recolhedor = "Recolhedor " + (i + 1).ToString("D2"),
+                    Entidade = entidade,
+                    Telefone = "54 99999-9999"
+                };
+
+                var motivoRecolhimento = motivosRecolhimento[random.Next(motivosRecolhimento.Count)];
+                recolhimento.SetMotivoRecolhimento(motivoRecolhimento);
+
+                var enderecoRecolhimento = new EnderecoRecolhimento()
+                {
+                    Entidade = entidade,
+                    Estado = 21,
+                    Bairro = "Volta Grande",
+                    Cidade = "Farroupilha",
+                    Complemento = "Igreja evangélica",
+                    Logradouro = "Rua Pedro Grendene",
+                    Numero = "500",
+                    CEP = "95180000"
+                };
+
+                recolhimento.SetEnderecoRecolhimento(enderecoRecolhimento);
+                animal.SetDadosRecolhimento(recolhimento);
+
+                animais.Add(animal);
+            }
+
+            return animais;
+        }
+
+        #endregion  
+
+        // criado pelo chat GPT
+        private DateTime GetRandomDate(DateTime startDate, DateTime endDate)
+        {
+            Random random = new Random();
+            TimeSpan timeSpan = endDate - startDate;
+            TimeSpan newSpan = new TimeSpan(0, random.Next(0, (int)timeSpan.TotalMinutes), 0);
+            return startDate + newSpan;
+        }
+
+        //criado pelo chat GPT - as vezes não fuciona ?!
+        private DateTime GetRandomDate()
+        {
+            Random random = new Random();
+
+            // Generate a random year between 1900 and 2100
+            int year = random.Next(2003, 2023);
+
+            // Generate a random month between 1 and 12
+            int month = random.Next(1, 13);
+
+            // Generate a random day between 1 and the number of days in the selected month
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+            int day = random.Next(1, daysInMonth + 1);
+
+            // Construct a DateTime object with the generated year, month, and day
+            DateTime randomDate = new DateTime(year, month, day);
+
+            return randomDate;
+        }
     }
 }
