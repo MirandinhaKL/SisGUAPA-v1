@@ -54,7 +54,7 @@ namespace Desktop.Forms
 
                 foreach (var atendimento in _atendimentos)
                 {
-                    if (atendimento.PreAtendimento.enumStatusPreAtendimento != (int)Enumeracoes.EnumStatusPreAtendimento.cancelado)
+                    if (atendimento.PreAtendimento.EnumStatusPreAtendimento != (int)Enumeracoes.EnumStatusPreAtendimento.cancelado)
                     {
                         var lvi = new ListViewItem();
 
@@ -78,7 +78,7 @@ namespace Desktop.Forms
                         else if (atendimento.StatusRealizacaoAtendimento == (int)Enumeracoes.StatusRealizacaoAtendimento.realizado)
                             lvi.BackColor = Color.LightGreen;
 
-                        else if (atendimento.TipoAtendimento?.EnumPreAtendimento > 0 && atendimento.PreAtendimento?.enumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.naoRealizado)
+                        else if (atendimento.TipoAtendimento?.EnumPreAtendimento > 0 && atendimento.PreAtendimento?.EnumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.naoRealizado)
                             lvi.BackColor = Color.Yellow;
                         
                         lvAtendimentos.Items.Add(lvi);
@@ -95,7 +95,7 @@ namespace Desktop.Forms
             else 
             {
                 if (atendimento.PreAtendimento != null)
-                   return FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumStatusPreAtendimento)atendimento.PreAtendimento.enumStatusPreAtendimento);
+                   return FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumStatusPreAtendimento)atendimento.PreAtendimento.EnumStatusPreAtendimento);
             }
             return string.Empty;
         }
@@ -119,12 +119,12 @@ namespace Desktop.Forms
                         lvi.SubItems.Add(pre.Atendimento.Animal == null ? string.Empty : $"{pre.Atendimento.Animal?.Identificacao} - {pre.Atendimento.Animal?.Nome} - {pre.Atendimento.Animal?.AnimalEspecie?.Descricao}");
                         lvi.SubItems.Add(pre.TipoAtendimento.Nome);
                         lvi.SubItems.Add(FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumPreAtendimento)pre.Atendimento.TipoAtendimento.EnumPreAtendimento));
-                        lvi.SubItems.Add(FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumStatusPreAtendimento)pre.enumStatusPreAtendimento));
+                        lvi.SubItems.Add(FuncoesGerais.GetDescricaoEnum((Enumeracoes.EnumStatusPreAtendimento)pre.EnumStatusPreAtendimento));
 
-                        if (pre.enumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.cancelado)
+                        if (pre.EnumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.cancelado)
                             lvi.BackColor = Color.Pink;
 
-                        else if (pre.enumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.realizado)
+                        else if (pre.EnumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.realizado)
                             lvi.BackColor = Color.LightGreen;
 
                         lvPreAtendimento.Items.Add(lvi);
@@ -207,7 +207,7 @@ namespace Desktop.Forms
                 {
                     var atendimento = _atendimentos.First(k => k.Id == idAtendimento);
 
-                    if ( atendimento.TipoAtendimento.EnumPreAtendimento != (int)Enumeracoes.EnumPreAtendimento.naoNecessario && atendimento.PreAtendimento?.enumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.naoRealizado)
+                    if ( atendimento.TipoAtendimento.EnumPreAtendimento != (int)Enumeracoes.EnumPreAtendimento.naoNecessario && atendimento.PreAtendimento?.EnumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.naoRealizado)
                     {
                         var mensagem = "O pré-atendimento não foi realizado, por essa razão não é possível realizar o atendimento. Aconhcelha-se a reagendar o mesmo.";
                         MessageBox.Show(mensagem, "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -231,7 +231,7 @@ namespace Desktop.Forms
                 {
                     var atendimento = _atendimentos.First(k => k.Id == idAtendimento);
 
-                    if (atendimento.TipoAtendimento.EnumPreAtendimento != (int)Enumeracoes.EnumPreAtendimento.naoNecessario && atendimento.PreAtendimento?.enumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.naoRealizado)
+                    if (atendimento.TipoAtendimento.EnumPreAtendimento != (int)Enumeracoes.EnumPreAtendimento.naoNecessario && atendimento.PreAtendimento?.EnumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.naoRealizado)
                     {
                         var mensagem = "O pré-atendimento não foi realizado, por essa razão não é possível realizar o atendimento. Aconhcelha-se a reagendar o mesmo.";
                         MessageBox.Show(mensagem, "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -291,7 +291,7 @@ namespace Desktop.Forms
                 {
                     var preAtendimento = _preAtendimentos.First(k => k.Id == idPreAtendimento);
 
-                    if (preAtendimento.enumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.cancelado)
+                    if (preAtendimento.EnumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.cancelado)
                     {
                         MessageBox.Show($"O pré-atendimento do(a) animal {preAtendimento.Atendimento.Animal.Nome} já foi cancelado.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
@@ -306,7 +306,7 @@ namespace Desktop.Forms
 
                     if (solicitacao.Equals(DialogResult.OK) || solicitacao.Equals(DialogResult.Yes))
                     {
-                        preAtendimento.enumStatusPreAtendimento = (int)Enumeracoes.EnumStatusPreAtendimento.cancelado;
+                        preAtendimento.EnumStatusPreAtendimento = (int)Enumeracoes.EnumStatusPreAtendimento.cancelado;
 
                         if (PreAtendimentoDAO.Salvar(preAtendimento))
                         {
@@ -331,13 +331,13 @@ namespace Desktop.Forms
                 {
                     var preAtendimento = _preAtendimentos.First(k => k.Id == idPreAtendimento);
 
-                    if (preAtendimento.enumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.realizado)
+                    if (preAtendimento.EnumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.realizado)
                     {
                         MessageBox.Show($"A confirmação do pré-atendimento do(a) animal {preAtendimento.Atendimento.Animal.Nome} já foi efetuada.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
                     }
 
-                    if (preAtendimento.enumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.cancelado)
+                    if (preAtendimento.EnumStatusPreAtendimento == (int)Enumeracoes.EnumStatusPreAtendimento.cancelado)
                     {
                         MessageBox.Show($"O pré-atendimento do(a) animal {preAtendimento.Atendimento.Animal.Nome} já foi cancelado previamente. Não é possível realizar esse pré-atendimento.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
@@ -352,7 +352,7 @@ namespace Desktop.Forms
 
                     if (solicitacao.Equals(DialogResult.OK) || solicitacao.Equals(DialogResult.Yes))
                     {
-                        preAtendimento.enumStatusPreAtendimento = (int)Enumeracoes.EnumStatusPreAtendimento.realizado;
+                        preAtendimento.EnumStatusPreAtendimento = (int)Enumeracoes.EnumStatusPreAtendimento.realizado;
 
                         if (PreAtendimentoDAO.Salvar(preAtendimento))
                         {

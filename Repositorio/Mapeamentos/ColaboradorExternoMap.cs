@@ -21,8 +21,7 @@ namespace Repositorio.Mapeamentos
             Map(k => k.Status);
 
             References(k => k.Entidade);
-            HasOne(k => k.EnderecoColaboradorExterno)
-                .Cascade.AllDeleteOrphan().Not.LazyLoad();
+            References(k => k.EnderecoColaboradorExterno).Cascade.All().Not.LazyLoad();
 
             Table("ColaboradorExterno");
         }

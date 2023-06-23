@@ -18,5 +18,16 @@ namespace Dominio.Enums
             [Description("Não informado")]
             NaoSei = 2
         }
+
+        public enum EnumStatusAnimal
+        {
+            [Description("Adotado")]
+            Adotado,
+            [Description("Disponível")]
+            Disponivel,
+            [Description("Morto")]
+            Morto
+        }
+
     }
 }

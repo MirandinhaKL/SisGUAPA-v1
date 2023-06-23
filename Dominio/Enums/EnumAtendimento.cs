@@ -83,13 +83,27 @@ namespace Dominio.Enums
         public enum EnumPreAtendimento
         {
             [Description("Não é necessário")]
-            naoNecessario = 0,
+            NaoNecessario = 0,
             [Description("Remover comida e água na noite anterior")]
-            comidaAguaNoiteAnterior = 1,
+            ComidaAguaNoiteAnterior = 1,
             [Description("Remover comida na noite anterior")]
-            comidaNoiteAnterior = 2,
+            ComidaNoiteAnterior = 2,
             [Description("Remover água na noite anterior")]
-            aguaNoiteAnterior = 3,
+            AguaNoiteAnterior = 3,
+        }
+
+
+        /// <summary>
+        /// O estado da execução do pré-atendimento: realizado ou não.
+        /// </summary>
+        public enum EnumStatusPreAtendimento
+        {
+            [Description("Não realizado")]
+            NaoRealizado = 0,
+            [Description("Realizado")]
+            Realizado = 1,
+            [Description("Cancelado")]
+            Cancelado = 2,
         }
 
         public enum EnumFrequenciaRecomendada
@@ -108,6 +122,19 @@ namespace Dominio.Enums
             semestral = 5,
             [Description("Anual")]
             anual = 6,
+        }
+
+        /// <summary>
+        /// O estado da execução atendimento: realizado ou não.
+        /// </summary>
+        public enum StatusRealizacaoAtendimento
+        {
+            [Description("Não realizado")]
+            NaoRealizado = 0,
+            [Description("Realizado")]
+            Realizado = 1,
+            [Description("Cancelado")]
+            Cancelado = 2,
         }
     }
 }

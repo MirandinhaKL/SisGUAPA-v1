@@ -13,7 +13,7 @@ namespace Repositorio.Entidades
 
         public virtual int Id { get; protected set; }
         public virtual DateTime DataPreAtendimento { get; set; }
-        public virtual int enumStatusPreAtendimento { get; set; }
+        public virtual int EnumStatusPreAtendimento { get; set; }
 
         // Relacionamentos
 

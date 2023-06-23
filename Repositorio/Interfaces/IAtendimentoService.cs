@@ -7,6 +7,8 @@ namespace Repositorio.Interfaces
     {
         void SalvarDadosIniciaisDoSistema(Entidade entidade);
 
+        bool SalvarOuAtualizarAtendimento(Atendimento atendimento);
+
         List<TipoAtendimento> GetTiposAtendimentosOrdenadosPorNome(int idEntidade);
 
         bool SalvarOuAtulizarTipoAtendimento(TipoAtendimento tipoAtendimento);

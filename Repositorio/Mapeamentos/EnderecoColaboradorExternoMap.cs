@@ -10,7 +10,7 @@ namespace Repositorio.Mapeamentos
     {
         public EnderecoColaboradorExternoMap()
         {
-            Id(k => k.Id).GeneratedBy.Foreign("ColaboradorExterno");
+            Id(k => k.Id);
 
             Map(k => k.Estado);
             Map(k => k.Cidade).Length(255);
@@ -21,7 +21,7 @@ namespace Repositorio.Mapeamentos
             Map(k => k.CEP).Length(10);
 
             //References(k => k.Entidade);
-            HasOne(k => k.ColaboradorExterno);
+            References(k => k.ColaboradorExterno);
 
             Table("EnderecoColaboradorExterno");
         }

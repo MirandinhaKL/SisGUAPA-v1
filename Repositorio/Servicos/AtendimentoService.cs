@@ -2,6 +2,7 @@
 using Repositorio.Classes;
 using Repositorio.Entidades;
 using Repositorio.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,6 +10,15 @@ namespace Repositorio.Servicos
 {
     public class AtendimentoService : IAtendimentoService
     {
+        private IAnimalService _animalService;
+        private IUsuarioService _usuarioService;
+
+        public AtendimentoService(IAnimalService animalService, IUsuarioService usuarioService)
+        {
+            _animalService = animalService;
+            _usuarioService = usuarioService;
+        }
+
         public void SalvarDadosIniciaisDoSistema(Entidade entidade)
         {
             var tiposAtendimentos = GetTiposAtemdimentosMoqDados(entidade);
@@ -19,6 +29,17 @@ namespace Repositorio.Servicos
 
             foreach (var item in patologias)
                 SalvarOuAtulizarPatologia(item);
+
+            var atendimentos = GetMoqAtendimentos(entidade);
+
+            foreach (var item in atendimentos)
+                SalvarOuAtualizarAtendimento(item);
+        }
+
+        public bool SalvarOuAtualizarAtendimento(Atendimento atendimento)
+        {
+            AtendimentoDAO atendimentoDAO = new AtendimentoDAO();
+            return atendimentoDAO.SalvarOuAtualizar(atendimento);
         }
 
         public List<Atendimento> GetAtendimentoComTratamento(int entidadeId)
@@ -117,19 +138,19 @@ namespace Repositorio.Servicos
             {
                 new TipoAtendimento(){ Nome = "Aplicação de vacina", Entidade = entidade, 
                     DuracaoPadrao = (int)EnumAtendimento.EnumDuracaoPadrao.minutos15, 
-                    EnumPreAtendimento = (int)EnumAtendimento.EnumPreAtendimento.naoNecessario,
+                    EnumPreAtendimento = (int)EnumAtendimento.EnumPreAtendimento.NaoNecessario,
                     Frequencia = (int)EnumAtendimento.EnumFrequenciaRecomendada.naoRecorrente },
                 new TipoAtendimento(){ Nome = "Consulta de rotina", Entidade = entidade, 
                     DuracaoPadrao = (int)EnumAtendimento.EnumDuracaoPadrao.minutos30, 
-                    EnumPreAtendimento = (int)EnumAtendimento.EnumPreAtendimento.naoNecessario,
+                    EnumPreAtendimento = (int)EnumAtendimento.EnumPreAtendimento.NaoNecessario,
                     Frequencia = (int)EnumAtendimento.EnumFrequenciaRecomendada.semestral },
                 new TipoAtendimento(){ Nome = "Castração", Entidade = entidade,
                     DuracaoPadrao = (int)EnumAtendimento.EnumDuracaoPadrao.hora1, 
-                    EnumPreAtendimento = (int)EnumAtendimento.EnumPreAtendimento.comidaAguaNoiteAnterior,
+                    EnumPreAtendimento = (int)EnumAtendimento.EnumPreAtendimento.ComidaAguaNoiteAnterior,
                     Frequencia = (int)EnumAtendimento.EnumFrequenciaRecomendada.naoRecorrente },
                 new TipoAtendimento(){ Nome = "Desverminação", Entidade = entidade,
                     DuracaoPadrao = (int)EnumAtendimento.EnumDuracaoPadrao.minutos10,
-                    EnumPreAtendimento = (int)EnumAtendimento.EnumPreAtendimento.naoNecessario,
+                    EnumPreAtendimento = (int)EnumAtendimento.EnumPreAtendimento.NaoNecessario,
                     Frequencia = (int)EnumAtendimento.EnumFrequenciaRecomendada.trimentral }
             };
         }
@@ -151,5 +172,118 @@ namespace Repositorio.Servicos
         }
 
         #endregion
+
+        private List<Atendimento> GetMoqAtendimentos(Entidade entidade)
+        {
+            var animais = _animalService.GetAnimaisParaAdocao(entidade.Id);
+            var usuarios = _usuarioService.GetUsuariosAtivos(entidade.Id).ToList();
+
+            var tiposAtendimento = GetTiposAtendimentosOrdenadosPorNome(entidade.Id);
+            var tipoCastracao = tiposAtendimento.Find(tip => tip.Nome == "Castração");
+            var tipoDeseverminacao = tiposAtendimento.Find(tip => tip.Nome == "Desverminação");
+           
+            #region animal1
+
+            var dataInicial1 = DateTime.Today;
+            var dataFinal1 = dataInicial1.AddMinutes(tipoCastracao.DuracaoPadrao);
+
+            var preAtendimento1 = new PreAtendimento()
+            {
+                DataPreAtendimento = dataInicial1.AddDays(-1),
+                EnumStatusPreAtendimento = (int)EnumAtendimento.EnumStatusPreAtendimento.Realizado,
+                TipoAtendimento = tipoCastracao,
+                Entidade = entidade
+            };
+
+            var atendimento1 = new Atendimento()
+            {
+                Animal = animais[0],
+                Observacao = "observação 1",
+                DataAtendimentoInicio = dataInicial1,
+                DataAtendimentoFim = dataFinal1,
+                TipoAtendimento = tipoCastracao,
+                ColaboradorExterno = null,
+                ColaboradorInterno = usuarios[0],
+                Entidade = entidade,
+                Patologia = null,
+                StatusRealizacaoAtendimento = (int)EnumAtendimento.StatusRealizacaoAtendimento.Realizado,
+            };
+
+            preAtendimento1.Atendimento = atendimento1;
+            atendimento1.PreAtendimento = preAtendimento1;
+
+            #endregion
+
+            #region animal2
+
+            var dataInicial2 = DateTime.Today.AddMinutes(30);
+            var dataFinal2 = dataInicial2.AddMinutes(tipoDeseverminacao.DuracaoPadrao);
+
+            var preAtendimento2 = new PreAtendimento()
+            {
+                DataPreAtendimento = dataInicial2.AddDays(-1),
+                EnumStatusPreAtendimento = (int)EnumAtendimento.EnumStatusPreAtendimento.NaoRealizado,
+                TipoAtendimento = tipoDeseverminacao,
+                Entidade = entidade
+            };
+
+            var atendimento2 = new Atendimento()
+            {
+                Animal = animais[1],
+                Observacao = "observação 2",
+                DataAtendimentoInicio = dataInicial2,
+                DataAtendimentoFim = dataFinal2,
+                TipoAtendimento = tipoDeseverminacao,
+                ColaboradorExterno = null,
+                ColaboradorInterno = usuarios[0],
+                Entidade = entidade,
+                Patologia = null,
+                StatusRealizacaoAtendimento = (int)EnumAtendimento.StatusRealizacaoAtendimento.Realizado,
+            };
+
+            preAtendimento2.Atendimento = atendimento2;
+            atendimento2.PreAtendimento = preAtendimento2;
+
+            #endregion
+
+            #region animal3
+
+            var dataInicial3 = DateTime.Today.AddMinutes(60);
+            var dataFinal3 = dataInicial3.AddMinutes(tipoCastracao.DuracaoPadrao);
+
+            var preAtendimento3 = new PreAtendimento()
+            {
+                DataPreAtendimento = dataInicial3.AddDays(-1),
+                EnumStatusPreAtendimento = (int)EnumAtendimento.EnumStatusPreAtendimento.Realizado,
+                TipoAtendimento = tipoCastracao,
+                Entidade = entidade
+            };
+
+            var atendimento3 = new Atendimento()
+            {
+                Animal = animais[2],
+                Observacao = "observação 3",
+                DataAtendimentoInicio = dataInicial3,
+                DataAtendimentoFim = dataFinal3,
+                TipoAtendimento = tipoCastracao,
+                ColaboradorExterno = null,
+                ColaboradorInterno = usuarios[0],
+                Entidade = entidade,
+                Patologia = null,
+                StatusRealizacaoAtendimento = (int)EnumAtendimento.StatusRealizacaoAtendimento.NaoRealizado,
+            };
+
+            preAtendimento3.Atendimento = atendimento3;
+            atendimento3.PreAtendimento = preAtendimento3;
+
+            #endregion
+
+            var atendimentos = new List<Atendimento>()
+            {
+                atendimento1, atendimento2, atendimento3
+            };
+
+            return atendimentos;
+        }
     }
 }

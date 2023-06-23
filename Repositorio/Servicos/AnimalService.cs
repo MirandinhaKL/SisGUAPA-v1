@@ -55,6 +55,14 @@ namespace Repositorio.Servicos
             return AnimalDAO.GetTodosRegistros(idEntidade).OrderBy(k => k.Nome).ToList();
         }
 
+        public List<Animal> GetAnimaisParaAdocao(int idEntidade)
+        {
+            return AnimalDAO.GetTodosRegistros(idEntidade)
+                .OrderBy(k => k.Nome)
+                .Where(a => a.AnimalStatus == (int)EnumAnimal.EnumStatusAnimal.Disponivel)
+                .ToList();
+        }
+
         public string GetIdade(DateTime nascimento)
         {
             var idadeBruta = DateTime.Today.Subtract(nascimento);
@@ -539,7 +547,7 @@ namespace Repositorio.Servicos
             return startDate + newSpan;
         }
 
-        //criado pelo chat GPT - as vezes não fuciona ?!
+        //criado pelo chat GPT - as vezes não fuciona 
         private DateTime GetRandomDate()
         {
             Random random = new Random();

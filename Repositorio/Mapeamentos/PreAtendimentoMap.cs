@@ -15,7 +15,7 @@ namespace Repositorio.Mapeamentos
             Id(k => k.Id).GeneratedBy.Identity();
 
             Map(k => k.DataPreAtendimento);
-            Map(k => k.enumStatusPreAtendimento);
+            Map(k => k.EnumStatusPreAtendimento);
 
             References(k => k.Entidade);
             References(k => k.TipoAtendimento);

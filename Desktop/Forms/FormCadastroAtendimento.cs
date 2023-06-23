@@ -1,6 +1,6 @@
 ﻿using Desktop.Classes;
 using Desktop.DependencyInjection;
-using Repositorio.Classes;
+using Dominio.Enums;
 using Repositorio.Entidades;
 using Repositorio.Interfaces;
 using System;
@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 /*
  * Criado em: 12/11/20
- * Alterado em: 29/05/23
+ * Alterado em: 15/06/23
  */
 
 namespace Desktop.Forms
@@ -30,7 +30,6 @@ namespace Desktop.Forms
         private IEnumerable<Atendimento> _atendimentos;
 
         private Atendimento _atendimento = new Atendimento();
-
         private Animal _animalSelecionado;
 
         public FormCadastroAtendimento()
@@ -179,10 +178,10 @@ namespace Desktop.Forms
                 var preAtendimento = new PreAtendimento()
                 {
                     DataPreAtendimento = monthCalendar.SelectionRange.Start.AddDays(-1),
-                    enumStatusPreAtendimento = (int)Enumeracoes.EnumStatusPreAtendimento.naoRealizado,
+                    EnumStatusPreAtendimento = (int)EnumAtendimento.EnumStatusPreAtendimento.NaoRealizado,
                     TipoAtendimento = tipoAtendimento,
                     Entidade = Global.Entidade,
-                    Atendimento = _atendimento
+                    //Atendimento = _atendimento
                 };
 
                 _atendimento.Animal = _animalSelecionado;
@@ -194,10 +193,12 @@ namespace Desktop.Forms
                 _atendimento.ColaboradorInterno = comboInterno.SelectedIndex == -1 ? null : (Usuario)comboInterno.Items[comboInterno.SelectedIndex];
                 _atendimento.Entidade = Global.Entidade;
                 _atendimento.Patologia = comboPatologia.SelectedIndex == -1 ? null : (Patologia)comboPatologia.Items[comboPatologia.SelectedIndex];
-                _atendimento.StatusRealizacaoAtendimento = (int)Enumeracoes.StatusRealizacaoAtendimento.naoRealizado;
+                _atendimento.StatusRealizacaoAtendimento = (int)EnumAtendimento.StatusRealizacaoAtendimento.NaoRealizado;
+
+                preAtendimento.Atendimento = _atendimento;
                 _atendimento.PreAtendimento = preAtendimento;
 
-                if (AtendimentoDAO.Salvar(_atendimento))
+                if (_atendimentoService.SalvarOuAtualizarAtendimento(_atendimento))
                 {
                     FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
                     this.Close();
@@ -257,7 +258,6 @@ namespace Desktop.Forms
             return true;
         }
 
-
         private void btnNovoProcedimento_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
@@ -271,7 +271,6 @@ namespace Desktop.Forms
         {
             CarregarComboTipoAtendimento();
         }
-
 
         private void btnPatologia_Click(object sender, EventArgs e)
         {

@@ -27,7 +27,7 @@ namespace Repositorio.Mapeamentos
             References(k => k.PreAtendimento).Unique().Cascade.All().Not.LazyLoad();
             References(k => k.Tratamento).Unique().Cascade.All().Not.LazyLoad();
 
-            Table("atendimento");
+            Table("Atendimento");
         }
     }
 }

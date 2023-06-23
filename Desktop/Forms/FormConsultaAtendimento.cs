@@ -75,7 +75,7 @@ namespace Desktop.Forms
                 _atendimento.Observacao = rtbObservacao.Text;
 
                 _atendimento.PreAtendimento.DataPreAtendimento = dataInicial.AddDays(-1);
-                _atendimento.PreAtendimento.enumStatusPreAtendimento = (int)Enumeracoes.EnumStatusPreAtendimento.naoRealizado;
+                _atendimento.PreAtendimento.EnumStatusPreAtendimento = (int)Enumeracoes.EnumStatusPreAtendimento.naoRealizado;
                 _atendimento.PreAtendimento.TipoAtendimento = _atendimento.TipoAtendimento;
 
                 if (AtendimentoDAO.Salvar(_atendimento))

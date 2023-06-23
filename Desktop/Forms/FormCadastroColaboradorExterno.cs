@@ -1,6 +1,5 @@
 ﻿using Desktop.Classes;
 using Desktop.DependencyInjection;
-using Repositorio.Classes;
 using Repositorio.Entidades;
 using Repositorio.Interfaces;
 using System;
@@ -194,6 +193,9 @@ namespace Desktop.Forms
                 _colaboradorExterno.Entidade = Global.Entidade;
                 _colaboradorExterno.Status = (int)Enumeracoes.EnumStatusUsuario.Ativo;
 
+                if (_colaboradorExterno.EnderecoColaboradorExterno?.Id > 0)
+                    _colaboradorExterno.EnderecoColaboradorExterno.Id = _colaboradorExterno.EnderecoColaboradorExterno.Id;
+                
                 _colaboradorExterno.SetEnderecoColaborador(endereco);
 
                 var isSaved = _colaboradorService.SalvarOuAtualizarColaborador(_colaboradorExterno);

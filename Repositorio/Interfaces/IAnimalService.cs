@@ -13,6 +13,8 @@ namespace Repositorio.Interfaces
     {
         List<Animal> GetAnimais(int idEntidade);
 
+        List<Animal> GetAnimaisParaAdocao(int idEntidade);
+
         string GetIdade(DateTime nascimento);
 
         bool SalvarOuAtualizarAnimal(Animal animal);
