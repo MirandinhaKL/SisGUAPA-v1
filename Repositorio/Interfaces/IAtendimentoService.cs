@@ -17,7 +17,7 @@ namespace Repositorio.Interfaces
 
         List<Patologia> GetPatologiasOrdenadasPorNome(int idEntidade);
 
-        bool SalvarOuAtulizarPatologia(Patologia patologia);
+        bool SalvarOuAtualizarPatologia(Patologia patologia);
 
         string ExcluirPatologia(Patologia patologia);
 
@@ -25,7 +25,12 @@ namespace Repositorio.Interfaces
 
         Medicamento GetMedicamento(Tratamento tratamento, int numeroMedicamento);
 
-        int GetStatusMedicacaoEmUmTratamento(int ordem, Tratamento tratamento);
+        bool SalvarOuAtualizarMedicamento(Medicamento medicamento);
 
+        List<Medicamento> GetMedicamentosOrdenadasPorNome(int idEntidade);
+
+        string ExcluirMedicamento(Medicamento medicamento);
+
+        int GetStatusMedicacaoEmUmTratamento(int ordem, Tratamento tratamento);
     }
 }

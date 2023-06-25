@@ -26,7 +26,7 @@ namespace Repositorio.Mapeamentos
             References(k => k.Entidade);
             //HasMany(k => k.ControlesMedicamento).Cascade.All().Not.LazyLoad();
 
-            Table("medicamento");
+            Table("Medicamento");
         }
     }
 }

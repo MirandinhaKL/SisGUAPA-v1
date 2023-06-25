@@ -138,7 +138,7 @@ namespace Desktop.Forms
                 _patologia.Descricao = rtbDescricao.Text;
                 _patologia.Entidade = Global.Entidade;
 
-                var statusSave = _atendimentoService.SalvarOuAtulizarPatologia(_patologia);
+                var statusSave = _atendimentoService.SalvarOuAtualizarPatologia(_patologia);
                 if (statusSave)
                 {
                     FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);

@@ -136,5 +136,108 @@ namespace Dominio.Enums
             [Description("Cancelado")]
             Cancelado = 2,
         }
+
+        public enum EnumUnidadeMedicamentos
+        {
+            [Description("Comprimido(s)")]
+            comprimido = 0,
+            [Description("Cápsula(s)")]
+            capsula = 1,
+            [Description("Gota(s)")]
+            gota = 2,
+            [Description("Grama(s)")]
+            grama = 3,
+            [Description("Inalação(ões)")]
+            instalacao = 4,
+            [Description("Injeção(ões)")]
+            injecao = 5,
+            [Description("Miligrama(s)")]
+            miligrama = 6,
+            [Description("Mililitro(s)")]
+            mililitro = 7,
+            [Description("Pedaço(s)")]
+            pedaco = 8,
+            [Description("Pulverização(ões)")]
+            pulverizacao = 9,
+            [Description("Sache(s)")]
+            sache = 10,
+            [Description("Supositório(s)")]
+            supositorio = 11,
+            [Description("Unidade(s)")]
+            unidade = 12
+        }
+
+        public enum EnumFrequenciaIngestao
+        {
+            diariamenteXvezesDia = 0,
+            diariamenteCadaXhoras = 1,
+            cadaXdias = 2,
+            diasDaSemana = 3,
+            ciclosXativosYinativos = 4
+        }
+
+        public static string GetDescricaoFrequenciaIngestao(int enumFrequenciaIngestao, int auxiliarX, int auxiliarY, string diasDaSemana)
+        {
+            var descricao = string.Empty;
+
+            if (enumFrequenciaIngestao == (int)EnumFrequenciaIngestao.diariamenteXvezesDia)
+                return $"{auxiliarX} vez ao dia";
+            if (enumFrequenciaIngestao == (int)EnumFrequenciaIngestao.diariamenteCadaXhoras)
+                return $"A cada {auxiliarX} hora(s)";
+            if (enumFrequenciaIngestao == (int)EnumFrequenciaIngestao.cadaXdias)
+                return $"A cada {auxiliarX} dia(s)";
+            if (enumFrequenciaIngestao == (int)EnumFrequenciaIngestao.diasDaSemana)
+            {
+                char[] dias = diasDaSemana.ToCharArray();
+
+                foreach (var dia in dias)
+                {
+                    if (dia == '2')
+                        descricao += "2ª";
+
+                    if (dia == '3')
+                        if (!string.IsNullOrEmpty(descricao))
+                            descricao += ", 3ª";
+                        else
+                            descricao += "3ª";
+
+                    if (dia == '4')
+                        if (!string.IsNullOrEmpty(descricao))
+                            descricao += ", 4ª";
+                        else
+                            descricao += "4ª";
+
+                    if (dia == '5')
+                        if (!string.IsNullOrEmpty(descricao))
+                            descricao += ", 5ª";
+                        else
+                            descricao += "5ª";
+
+                    if (dia == '6')
+                        if (!string.IsNullOrEmpty(descricao))
+                            descricao += ", 6ª";
+                        else
+                            descricao += "6ª";
+
+                    if (dia == 'S')
+                        if (!string.IsNullOrEmpty(descricao))
+                            descricao += ", Sab";
+                        else
+                            descricao += "Sab";
+
+                    if (dia == 'D')
+                        if (!string.IsNullOrEmpty(descricao))
+                            descricao += ", Dom";
+                        else
+                            descricao += "Dom";
+
+                }
+                return descricao;
+
+            }
+            if (enumFrequenciaIngestao == (int)EnumAtendimento.EnumFrequenciaIngestao.ciclosXativosYinativos)
+                return $"{auxiliarX} dia(s) ativo {auxiliarY} dia(s) inativo";
+            return descricao;
+        }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Desktop.Classes;
+using Desktop.DependencyInjection;
+using Dominio.Enums;
 using Repositorio.Classes;
-using Repositorio.ClassesGerais;
 using Repositorio.Entidades;
+using Repositorio.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,12 +13,15 @@ using System.Windows.Forms;
 
 /*
  * Criado em: 15/11/21
+ * Alterado em: 23/06/23
  */
 
 namespace Desktop.Forms
 {
     public partial class FormCadastroMedicamento : Form
     {
+        private IAtendimentoService _atendimentoService;
+
         private List<Medicamento> _medicamentos;
         private Medicamento _medicamento = new Medicamento();
         private Dictionary<int, string> _unidades = new Dictionary<int, string>();
@@ -24,16 +29,22 @@ namespace Desktop.Forms
         public FormCadastroMedicamento()
         {
             InitializeComponent();
+            InitializeServices();
             CarregarUnidades();
             CarregarToolTips();
             CarregarMedicamentos();
+        }
+
+        private void InitializeServices()
+        {
+            _atendimentoService = IocKernel.Get<IAtendimentoService>();
         }
 
         private void CarregarUnidades()
         {
             if (_unidades == null || _unidades.Count == 0)
             {
-                var unidades = FuncoesGerais.ConverterEnumParaLista<EnumeracoesClasses.EnumUnidadeMedicamentos>();
+                var unidades = FuncoesGerais.ConverterEnumParaLista<EnumAtendimento.EnumUnidadeMedicamentos>();
                 foreach (var item in unidades)
                     _unidades.Add((int)item, FuncoesGerais.GetDescricaoEnum(item));
             }
@@ -46,7 +57,7 @@ namespace Desktop.Forms
         {
             this.Cursor = Cursors.WaitCursor;
             lvMedicamento.Items.Clear();
-            _medicamentos = MedicamentoDAO.GetTodosRegistros(Global.Entidade.Id).OrderBy(k => k.Nome).ToList();
+            _medicamentos = _atendimentoService.GetMedicamentosOrdenadasPorNome(Global.Entidade.Id);
 
             if (_medicamentos.Any())
             {
@@ -58,9 +69,9 @@ namespace Desktop.Forms
 
                     lvi.Text = item.Id.ToString();
                     lvi.SubItems.Add(item.Nome == null ? string.Empty : item.Nome);
-                    lvi.SubItems.Add($"{item.Quantidade} {FuncoesGerais.GetDescricaoEnum((EnumeracoesClasses.EnumUnidadeMedicamentos)item.EnumUnidadeMedicamentos)}");
+                    lvi.SubItems.Add($"{item.Quantidade} {FuncoesGerais.GetDescricaoEnum((EnumAtendimento.EnumUnidadeMedicamentos)item.EnumUnidadeMedicamentos)}");
                     lvi.SubItems.Add(item.Duracao == 0 ? "Sem fim" : $"Por {item.Duracao} dia(s)");
-                    lvi.SubItems.Add(EnumeracoesClasses.GetDescricaoFrequenciaIngestao(item.EnumFrequenciaIngestao, item.AuxiliarX, item.AuxiliarY, item.DiasDaSemana));
+                    lvi.SubItems.Add(EnumAtendimento.GetDescricaoFrequenciaIngestao(item.EnumFrequenciaIngestao, item.AuxiliarX, item.AuxiliarY, item.DiasDaSemana));
 
                     if (contaLinha % 2 == 0)
                         lvi.BackColor = Color.LightCyan;
@@ -180,18 +191,18 @@ namespace Desktop.Forms
             panelDuracao.Visible = false;
         }
 
-           private int GetEnumFrequencia()
+        private int GetEnumFrequencia()
         {
             if (rbDiariamenteXvezDia.Checked)
-                return (int)EnumeracoesClasses.EnumFrequenciaIngestao.diariamenteXvezesDia;
+                return (int)EnumAtendimento.EnumFrequenciaIngestao.diariamenteXvezesDia;
             if (rbDiariamenteXhora.Checked)
-                return (int)EnumeracoesClasses.EnumFrequenciaIngestao.diariamenteCadaXhoras;
+                return (int)EnumAtendimento.EnumFrequenciaIngestao.diariamenteCadaXhoras;
             if (rbCadaXdia.Checked)
-                return (int)EnumeracoesClasses.EnumFrequenciaIngestao.cadaXdias;
+                return (int)EnumAtendimento.EnumFrequenciaIngestao.cadaXdias;
             if (rbDiaDaSemana.Checked)
-                return (int)EnumeracoesClasses.EnumFrequenciaIngestao.diasDaSemana;
+                return (int)EnumAtendimento.EnumFrequenciaIngestao.diasDaSemana;
             if (rbCiclo.Checked)
-                return (int)EnumeracoesClasses.EnumFrequenciaIngestao.ciclosXativosYinativos;
+                return (int)EnumAtendimento.EnumFrequenciaIngestao.ciclosXativosYinativos;
             return -1;
         }
 
@@ -267,22 +278,22 @@ namespace Desktop.Forms
             rbDuracaoXdia.Checked = _medicamento.Duracao > 0;
             numDuracaoDia.Value = _medicamento.Duracao;
 
-            if (_medicamento.EnumFrequenciaIngestao == (int)EnumeracoesClasses.EnumFrequenciaIngestao.diariamenteXvezesDia)
+            if (_medicamento.EnumFrequenciaIngestao == (int)EnumAtendimento.EnumFrequenciaIngestao.diariamenteXvezesDia)
             {
                 rbDiariamenteXvezDia.Checked = true;
                 numDiariamenteXvez.Value = _medicamento.AuxiliarX;
             }
-            else if (_medicamento.EnumFrequenciaIngestao == (int)EnumeracoesClasses.EnumFrequenciaIngestao.diariamenteCadaXhoras)
+            else if (_medicamento.EnumFrequenciaIngestao == (int)EnumAtendimento.EnumFrequenciaIngestao.diariamenteCadaXhoras)
             {
                 rbDiariamenteXhora.Checked = true;
                 numDiariamenteXhora.Value = _medicamento.AuxiliarX;
             }
-            else if (_medicamento.EnumFrequenciaIngestao == (int)EnumeracoesClasses.EnumFrequenciaIngestao.cadaXdias)
+            else if (_medicamento.EnumFrequenciaIngestao == (int)EnumAtendimento.EnumFrequenciaIngestao.cadaXdias)
             {
                 rbCadaXdia.Checked = true;
                 numCadaXdia.Value = _medicamento.AuxiliarX;
             }
-            else if (_medicamento.EnumFrequenciaIngestao == (int)EnumeracoesClasses.EnumFrequenciaIngestao.diasDaSemana)
+            else if (_medicamento.EnumFrequenciaIngestao == (int)EnumAtendimento.EnumFrequenciaIngestao.diasDaSemana)
             {
                 rbDiaDaSemana.Checked = true;
                 var dias = _medicamento.DiasDaSemana;
@@ -303,9 +314,8 @@ namespace Desktop.Forms
                     if (dias.Contains('D'))
                         cbDom.Checked = true;
                 }
-
             }
-            else if (_medicamento.EnumFrequenciaIngestao == (int)EnumeracoesClasses.EnumFrequenciaIngestao.ciclosXativosYinativos)
+            else if (_medicamento.EnumFrequenciaIngestao == (int)EnumAtendimento.EnumFrequenciaIngestao.ciclosXativosYinativos)
             {
                 rbCiclo.Checked = true;
                 numCicloX.Value = _medicamento.AuxiliarX;
@@ -402,7 +412,7 @@ namespace Desktop.Forms
                 _medicamento.DiasDaSemana = GetDiasDaSemana(_medicamento.EnumFrequenciaIngestao);
                 _medicamento.Entidade = Global.Entidade;
 
-                if (MedicamentoDAO.Salvar(_medicamento))
+                if (_atendimentoService.SalvarOuAtualizarMedicamento(_medicamento))
                 {
                     FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Salvar);
                     this.Close();
@@ -413,13 +423,11 @@ namespace Desktop.Forms
                 }
             }
         }
-
      
         private void btnEditar_Click(object sender, EventArgs e)
         {
             EditarDados();
         }
-          
        
         private void lvMedicamento_DoubleClick(object sender, EventArgs e)
         {
@@ -437,7 +445,8 @@ namespace Desktop.Forms
                     if (Convert.ToInt32(lvMedicamento.SelectedItems[0].SubItems[0].Text) is int idMedicamento)
                     {
                         _medicamento = _medicamentos.Find(k => k.Id == idMedicamento);
-                        var status = MedicamentoDAO.Apagar(_medicamento);
+
+                        var status = _atendimentoService.ExcluirMedicamento(_medicamento);
                         if (string.IsNullOrEmpty(status))
                         {
                             FuncoesGerais.MensagemCRUDSucesso(Enumeracoes.EnumMensagemAoUsuario.Excluir);

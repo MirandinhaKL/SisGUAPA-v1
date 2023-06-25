@@ -23,12 +23,16 @@ namespace Repositorio.Servicos
         {
             var tiposAtendimentos = GetTiposAtemdimentosMoqDados(entidade);
             var patologias = GetPatologiasMoqDados(entidade);
+            var medicamentos = GetMoqMedicamentos(entidade);
 
             foreach (var item in tiposAtendimentos)
                 SalvarOuAtulizarTipoAtendimento(item);
 
             foreach (var item in patologias)
-                SalvarOuAtulizarPatologia(item);
+                SalvarOuAtualizarPatologia(item);
+
+            foreach (var item in medicamentos)
+                SalvarOuAtualizarMedicamento(item);
 
             var atendimentos = GetMoqAtendimentos(entidade);
 
@@ -116,7 +120,7 @@ namespace Repositorio.Servicos
             return patologias;
         }
 
-        public bool SalvarOuAtulizarPatologia(Patologia patologia)
+        public bool SalvarOuAtualizarPatologia(Patologia patologia)
         {
             PatologiaDAO patologiaDAO = new PatologiaDAO();
             return patologiaDAO.SalvarOuAtualizar(patologia);
@@ -127,6 +131,29 @@ namespace Repositorio.Servicos
             PatologiaDAO patologiaDAO = new PatologiaDAO();
             return patologiaDAO.Excluir(patologia);
         }
+
+        #endregion
+
+        public bool SalvarOuAtualizarMedicamento(Medicamento medicamento)
+        {
+            MedicamentoDAO medicamentoDAO = new MedicamentoDAO();
+            return medicamentoDAO.SalvarOuAtualizar(medicamento);
+        }
+
+        public List<Medicamento> GetMedicamentosOrdenadasPorNome(int idEntidade)
+        {
+            return MedicamentoDAO.GetTodosRegistros(idEntidade)
+                                 .OrderBy(pat => pat.Nome)
+                                 .ToList();
+        }
+
+        public string ExcluirMedicamento(Medicamento medicamento)
+        {
+            MedicamentoDAO medicamentoDAO = new MedicamentoDAO();
+            return medicamentoDAO.Excluir(medicamento);
+        }
+
+        #region Medicamento
 
         #endregion
 
@@ -170,8 +197,6 @@ namespace Repositorio.Servicos
                 "principalmente filhotes ou canídeos que possuem o sistema imunológico debilitado."}
             };
         }
-
-        #endregion
 
         private List<Atendimento> GetMoqAtendimentos(Entidade entidade)
         {
@@ -285,5 +310,43 @@ namespace Repositorio.Servicos
 
             return atendimentos;
         }
+     
+        private List<Medicamento> GetMoqMedicamentos(Entidade entidade)
+        {
+            var medicamentos = new List<Medicamento>();
+
+            var medicamento1 = new Medicamento()
+            {
+                Entidade = entidade,
+                Nome = "Anti-inflamatório",
+                EnumUnidadeMedicamentos = (int)EnumAtendimento.EnumUnidadeMedicamentos.comprimido,
+                Quantidade = 1,
+                Duracao = 4,
+                EnumFrequenciaIngestao = (int)EnumAtendimento.EnumFrequenciaIngestao.diariamenteXvezesDia,
+                AuxiliarX = 3,
+                AuxiliarY = 0,
+                DiasDaSemana = string.Empty
+            };
+
+            var medicamento2 = new Medicamento()
+            {
+                Entidade = entidade,
+                Nome = "Repositor Hormonal Cepav Tyrox 200 mcg",
+                EnumUnidadeMedicamentos = (int)EnumAtendimento.EnumUnidadeMedicamentos.comprimido,
+                Quantidade = 1,
+                Duracao = 1,
+                EnumFrequenciaIngestao = (int)EnumAtendimento.EnumFrequenciaIngestao.diariamenteXvezesDia,
+                AuxiliarX = 3,
+                AuxiliarY = 0,
+                DiasDaSemana = string.Empty
+            };
+
+            medicamentos.Add(medicamento1);
+            medicamentos.Add(medicamento2);
+
+            return medicamentos;
+        }
+
+        #endregion
     }
 }
